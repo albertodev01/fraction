@@ -1,8 +1,8 @@
 name: fraction
 description: A package that easily helps you dealing with fractions.
 version: 1.0.0
-author: Alberto Miola
-homepage: https://github.com/albertodev01/fraction
+repository: https://github.com/albertodev01/fraction
+homepage: https://fluttercompletereference.com/
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
