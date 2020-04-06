@@ -1,0 +1,16 @@
+name: fraction
+description: A package that easily helps you dealing with fractions.
+version: 1.0.0
+author: Alberto Miola
+homepage: https://github.com/albertodev01/fraction
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
