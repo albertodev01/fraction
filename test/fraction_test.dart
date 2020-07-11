@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:fraction/fraction.dart';
+import 'package:test/test.dart';
 
 void main() {
   group("Constructors", () {
@@ -22,7 +22,7 @@ void main() {
       f = (-1.5).toFraction();
       expect(f.toString(), "-3/2");
 
-      expect(() => Fraction(1, 0), throwsA(isInstanceOf<FractionException>()));
+      expect(() => Fraction(1, 0), throwsA(isA<FractionException>()));
     });
 
     test("Conversion from string", () {
@@ -38,10 +38,10 @@ void main() {
       f = Fraction.fromString("-12");
       expect(f.toString(), "-12");
 
-      expect(() => Fraction.fromString("1/-2"), throwsA(isInstanceOf<FractionException>()));
-      expect(() => Fraction.fromString("1/2-4"), throwsA(isInstanceOf<Exception>()));
-      expect(() => Fraction.fromString("4/"), throwsA(isInstanceOf<Exception>()));
-      expect(() => Fraction.fromString("5/0"), throwsA(isInstanceOf<Exception>()));
+      expect(() => Fraction.fromString("1/-2"), throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromString("1/2-4"), throwsA(isA<Exception>()));
+      expect(() => Fraction.fromString("4/"), throwsA(isA<Exception>()));
+      expect(() => Fraction.fromString("5/0"), throwsA(isA<Exception>()));
     });
 
     test("Conversion from double", () {
@@ -51,8 +51,8 @@ void main() {
       f = Fraction.fromDouble(-1);
       expect(f.toString(), "-1");
 
-      expect(() => Fraction.fromDouble(double.nan), throwsA(isInstanceOf<FractionException>()));
-      expect(() => Fraction.fromDouble(double.infinity), throwsA(isInstanceOf<FractionException>()));
+      expect(() => Fraction.fromDouble(double.nan), throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromDouble(double.infinity), throwsA(isA<FractionException>()));
     });
 
     test("Conversion from a mixed fraction", () {
@@ -60,7 +60,7 @@ void main() {
       final f = Fraction.fromMixedFraction(mixed);
 
       expect(f.toString(), "17/9");
-      expect(() => Fraction.fromDouble(double.nan), throwsA(isInstanceOf<FractionException>()));
+      expect(() => Fraction.fromDouble(double.nan), throwsA(isA<FractionException>()));
     });
   });
 
@@ -118,7 +118,8 @@ void main() {
 
       expect(frac[0], 3);
       expect(frac[1], 7);
-      expect(() => frac[2], throwsA(isInstanceOf<FractionException>()));
+      expect(() => frac[2], throwsA(isA<FractionException>()));
+      expect(() => frac[10], throwsA(isA<FractionException>()));
     });
   });
 

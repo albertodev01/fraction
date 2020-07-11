@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:fraction/fraction.dart';
+import 'package:test/test.dart';
 
 void main() {
   test("Numerator and denominator", () {
@@ -9,9 +9,9 @@ void main() {
     f = MixedFraction(0, -1, 4);
     expect(f.toString(), "-0 1/4");
 
-    expect(() => MixedFraction(3, 7, 2), throwsA(isInstanceOf<MixedFractionException>()));
-    expect(() => MixedFraction(0, 0, 0), throwsA(isInstanceOf<MixedFractionException>()));
-    expect(() => MixedFraction(4, 2, 0), throwsA(isInstanceOf<MixedFractionException>()));
+    expect(() => MixedFraction(3, 7, 2), throwsA(isA<MixedFractionException>()));
+    expect(() => MixedFraction(0, 0, 0), throwsA(isA<MixedFractionException>()));
+    expect(() => MixedFraction(4, 2, 0), throwsA(isA<MixedFractionException>()));
   });
 
   test("Conversions", () {
@@ -30,10 +30,10 @@ void main() {
     f = MixedFraction.fromFraction(Fraction(-71,-22));
     expect(f.toString(), "3 5/22");
 
-    expect(() => MixedFraction.fromString("3 7/2"), throwsA(isInstanceOf<MixedFractionException>()));
-    expect(() => MixedFraction.fromString("1 2/0"), throwsA(isInstanceOf<FractionException>()));
-    expect(() => MixedFraction.fromFraction(Fraction(2, 11)), throwsA(isInstanceOf<MixedFractionException>()));
-    expect(() => MixedFraction.fromFraction(Fraction(-7, 11)), throwsA(isInstanceOf<MixedFractionException>()));
+    expect(() => MixedFraction.fromString("3 7/2"), throwsA(isA<MixedFractionException>()));
+    expect(() => MixedFraction.fromString("1 2/0"), throwsA(isA<FractionException>()));
+    expect(() => MixedFraction.fromFraction(Fraction(2, 11)), throwsA(isA<MixedFractionException>()));
+    expect(() => MixedFraction.fromFraction(Fraction(-7, 11)), throwsA(isA<MixedFractionException>()));
   });
 
   test("Methods", () {
