@@ -22,15 +22,16 @@ import 'package:fraction/fraction.dart';
 /// If the string doesn't represent a valid fraction, a [MixedFractionException] is
 /// thrown.
 class MixedFraction implements Comparable<MixedFraction> {
-
   int _whole;
   int _num;
   int _den;
 
   /// Whole part of the mixed fraction
   int get whole => _whole;
+
   /// Numerator of the fraction
   int get numerator => _num;
+
   /// Denominator of the fraction
   int get denominator => _den;
 
@@ -83,12 +84,12 @@ class MixedFraction implements Comparable<MixedFraction> {
   ///
   /// The negative sign can only stay in front of 'a' or 'b'.
   MixedFraction.fromString(String value) {
-    final errorObj = MixedFractionException("The string must be in the form 'a b/c' "
-        "with exactly one space between the whole part and the fraction");
+    final errorObj =
+        MixedFractionException("The string must be in the form 'a b/c' "
+            "with exactly one space between the whole part and the fraction");
 
     // Check for the space
-    if (!value.contains(' '))
-      throw errorObj;
+    if (!value.contains(' ')) throw errorObj;
 
     /*
      * The 'parts' array must contain exactly 2 pieces:
@@ -97,8 +98,7 @@ class MixedFraction implements Comparable<MixedFraction> {
      * */
     final parts = value.split(" ");
 
-    if (parts.length != 2)
-      throw errorObj;
+    if (parts.length != 2) throw errorObj;
 
     /*
      * At this point the string is made up of 2 "parts" separated by a space. An
@@ -119,6 +119,7 @@ class MixedFraction implements Comparable<MixedFraction> {
   }
 
   @override
+
   /// Two mixed fractions are equal if their "cross product" is equal.
   ///
   /// ```dart
@@ -131,8 +132,7 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// The above example returns true because the "cross product" of `one` and
   /// two` is equal (1*4 = 2*2).
   bool operator ==(Object other) {
-    if (identical(this, other))
-      return true;
+    if (identical(this, other)) return true;
 
     if (other is MixedFraction) {
       final mixedFraction = other;
@@ -176,11 +176,9 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   @override
   int compareTo(other) {
-    if (toDouble() < other.toDouble())
-      return -1;
+    if (toDouble() < other.toDouble()) return -1;
 
-    if (toDouble() > other.toDouble())
-      return 1;
+    if (toDouble() > other.toDouble()) return 1;
 
     return 0;
   }
@@ -212,8 +210,7 @@ class MixedFraction implements Comparable<MixedFraction> {
     if ((_whole < 0) && (_num < 0)) {
       _negative = false;
     } else {
-      if ((_whole < 0) || (_num < 0))
-        _negative = true;
+      if ((_whole < 0) || (_num < 0)) _negative = true;
     }
 
     _whole = _whole.abs();

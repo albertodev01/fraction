@@ -21,12 +21,12 @@ import 'package:fraction/fraction.dart';
 /// If the string doesn't represent a valid fraction, a [FractionException] is
 /// thrown.
 class Fraction implements Comparable<Fraction> {
-
   int _num;
   int _den;
 
   /// The numerator of the fraction
   int get numerator => _num;
+
   /// The denominator of the fraction
   int get denominator => _den;
 
@@ -88,8 +88,7 @@ class Fraction implements Comparable<Fraction> {
     } else {
       final den = int.parse(fraction.substring(barPos + 1));
 
-      if (den == 0)
-        throw const FractionException('Denominator cannot be zero');
+      if (den == 0) throw const FractionException('Denominator cannot be zero');
 
       _num = int.parse(fraction.substring(0, barPos));
       _den = den;
@@ -134,7 +133,7 @@ class Fraction implements Comparable<Fraction> {
     // How many digits is the algorithm going to consider
     var limit = precision;
     var h1 = 1, h2 = 0, k1 = 0, k2 = 1;
-    var y =  value.abs();
+    var y = value.abs();
 
     do {
       var a = y.floor();
@@ -145,7 +144,6 @@ class Fraction implements Comparable<Fraction> {
       k1 = a * k1 + k2;
       k2 = aux;
       y = 1 / (y - a);
-
     } while ((x - h1 / k1).abs() > x * limit);
 
     _num = mul * h1.toInt();
@@ -157,11 +155,11 @@ class Fraction implements Comparable<Fraction> {
     _num = mixed.whole * mixed.denominator + mixed.numerator;
     _den = mixed.denominator;
 
-    if (mixed.isNegative)
-      _num *= -1;
+    if (mixed.isNegative) _num *= -1;
   }
 
   @override
+
   /// Two fractions are equal if their "cross product" is equal.
   ///
   /// ```dart
@@ -173,15 +171,15 @@ class Fraction implements Comparable<Fraction> {
   ///
   /// The above example returns true because the "cross product" of `one` and
   /// two` is equal (1*4 = 2*2).
-  bool operator==(Object other) {
-    if (identical(this, other))
-      return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
     if (other is Fraction) {
       final fraction = other;
 
       return runtimeType == fraction.runtimeType &&
-          (numerator * fraction.denominator == denominator * fraction.numerator);
+          (numerator * fraction.denominator ==
+              denominator * fraction.numerator);
     } else {
       return false;
     }
@@ -196,7 +194,12 @@ class Fraction implements Comparable<Fraction> {
   }
 
   @override
-  String toString() => '$_num/$_den';
+  String toString() {
+    if (_den == 1)
+      return "$_num";
+
+    return "$_num/$_den";
+  }
 
   /// A floating point representation of the fraction
   double toDouble() => _num / _den;
@@ -205,11 +208,7 @@ class Fraction implements Comparable<Fraction> {
   /// if the numerator is greater than the denominator
   MixedFraction toMixedFraction() {
     if (numerator > denominator) {
-      return MixedFraction(
-        _num ~/ _den,
-        _num % _den,
-        denominator
-      );
+      return MixedFraction(_num ~/ _den, _num % _den, denominator);
     }
 
     return null;
@@ -217,11 +216,9 @@ class Fraction implements Comparable<Fraction> {
 
   @override
   int compareTo(Fraction other) {
-    if (toDouble() < other.toDouble())
-      return -1;
+    if (toDouble() < other.toDouble()) return -1;
 
-    if (toDouble() > other.toDouble())
-      return 1;
+    if (toDouble() > other.toDouble()) return 1;
 
     return 0;
   }
@@ -277,51 +274,55 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// Sum between two fractions
-  Fraction operator+(Fraction other) {
+  Fraction operator +(Fraction other) {
     return Fraction(
         numerator * other.denominator + denominator * other.numerator,
-        denominator * other.denominator
-    );
+        denominator * other.denominator);
   }
 
   /// Difference between two fractions
-  Fraction operator-(Fraction other) {
+  Fraction operator -(Fraction other) {
     return Fraction(
         numerator * other.denominator - denominator * other.numerator,
-        denominator * other.denominator
-    );
+        denominator * other.denominator);
   }
 
   /// Multiplication between two fractions
-  Fraction operator*(Fraction other) {
+  Fraction operator *(Fraction other) {
     return Fraction(
-        numerator * other.numerator,
-        denominator * other.denominator
-    );
+        numerator * other.numerator, denominator * other.denominator);
   }
 
   /// Division between two fractions
-  Fraction operator/(Fraction other) {
+  Fraction operator /(Fraction other) {
     return Fraction(
-        numerator * other.denominator,
-        denominator * other.numerator
-    );
+        numerator * other.denominator, denominator * other.numerator);
   }
 
   /// Check if this fraction is equal or greater than the other
-  bool operator>=(Fraction other) =>
-      toDouble() >= other.toDouble();
+  bool operator >=(Fraction other) => toDouble() >= other.toDouble();
 
   /// Check if this fraction is greater than the other
-  bool operator>(Fraction other) =>
-      toDouble() > other.toDouble();
+  bool operator >(Fraction other) => toDouble() > other.toDouble();
 
   /// Check if this fraction is equal or smaller than the other
-  bool operator<=(Fraction other) =>
-      toDouble() <= other.toDouble();
+  bool operator <=(Fraction other) => toDouble() <= other.toDouble();
 
   /// Check if this fraction is smaller than the other
-  bool operator<(Fraction other) =>
-      toDouble() >= other.toDouble();
+  bool operator <(Fraction other) => toDouble() >= other.toDouble();
 
+  /// Access numerator or denominator by giving an index. In particular, ´0´
+  /// refers to the numerator while ´1´ to the denominator.
+  int operator [](int index) {
+    if (index == 0) {
+      return numerator;
+    }
+
+    if (index == 1) {
+      return denominator;
+    }
+
+    throw FractionException("The index you gave ($index) is not valid: it must "
+        "be either 0 or 1.");
+  }
 }

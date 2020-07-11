@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fraction/fraction.dart';
 
@@ -13,10 +11,10 @@ void main() {
       expect(f.toString(), "-1/4");
 
       f = Fraction(6);
-      expect(f.toString(), "6/1");
+      expect(f.toString(), "6");
 
       f = Fraction(-8);
-      expect(f.toString(), "-8/1");
+      expect(f.toString(), "-8");
 
       f = 1.5.toFraction();
       expect(f.toString(), "3/2");
@@ -35,10 +33,10 @@ void main() {
       expect(f.toString(), "-7/25");
 
       f = Fraction.fromString("12");
-      expect(f.toString(), "12/1");
+      expect(f.toString(), "12");
 
       f = Fraction.fromString("-12");
-      expect(f.toString(), "-12/1");
+      expect(f.toString(), "-12");
 
       expect(() => Fraction.fromString("1/-2"), throwsA(isInstanceOf<FractionException>()));
       expect(() => Fraction.fromString("1/2-4"), throwsA(isInstanceOf<Exception>()));
@@ -51,7 +49,7 @@ void main() {
       expect(f.toString(), "5/2");
 
       f = Fraction.fromDouble(-1);
-      expect(f.toString(), "-1/1");
+      expect(f.toString(), "-1");
 
       expect(() => Fraction.fromDouble(double.nan), throwsA(isInstanceOf<FractionException>()));
       expect(() => Fraction.fromDouble(double.infinity), throwsA(isInstanceOf<FractionException>()));
@@ -113,6 +111,14 @@ void main() {
       expect(Fraction(1, 2) == Fraction(1, 2), true);
       expect(Fraction(1) == Fraction(1, 1), true);
       expect(Fraction(0) == Fraction(-0, 3), true);
+    });
+
+    test("Index operator", (){
+      final frac = Fraction(3, 7);
+
+      expect(frac[0], 3);
+      expect(frac[1], 7);
+      expect(() => frac[2], throwsA(isInstanceOf<FractionException>()));
     });
   });
 
