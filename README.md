@@ -13,7 +13,7 @@ You can create an instance of `Fraction` using one of its constructors.
 
    ```dart
    final frac = Fraction(3, 5); // 3/5
-   final frac = Fraction(3, 5); // 3/1
+   final frac = Fraction(3, 1); // 3
    ```
 
  - String: pass the fraction as a string but it has to be well-formed otherwise an exception is
