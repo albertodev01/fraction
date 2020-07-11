@@ -46,8 +46,9 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction(3) // is interpreted as 3/1
   /// ```
   Fraction(int numerator, [int denominator = 1]) {
-    if (denominator == 0)
+    if (denominator == 0) {
       throw const FractionException('Denominator cannot be zero.');
+    }
 
     _checkValue(numerator);
     _checkValue(denominator);
@@ -73,8 +74,9 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction.fromString("5/-2") // throws FractionException
   /// ```
   Fraction.fromString(String value) {
-    if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-')))
+    if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
       throw FractionException('The string $value is not a valid fraction');
+    }
 
     // Remove the leading + if present
     var fraction = value.replaceAll('+', '').trim();
@@ -195,8 +197,7 @@ class Fraction implements Comparable<Fraction> {
 
   @override
   String toString() {
-    if (_den == 1)
-      return "$_num";
+    if (_den == 1) return "$_num";
 
     return "$_num/$_den";
   }
@@ -236,8 +237,9 @@ class Fraction implements Comparable<Fraction> {
   }
 
   void _checkValue(num value) {
-    if ((value.isNaN) || (value.isInfinite))
+    if ((value.isNaN) || (value.isInfinite)) {
       throw const FractionException('NaN and Infinite are not allowed.');
+    }
   }
 
   /// Typical GCD recursive calculation

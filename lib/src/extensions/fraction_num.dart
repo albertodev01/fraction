@@ -4,9 +4,10 @@ import 'package:fraction/fraction.dart';
 extension FractionNum on num {
   /// Returns a fractional representation of an [int] or a [double].
   Fraction toFraction() {
-    if (this is int)
+    if (this is int) {
       return Fraction(toInt(), 1);
-    else
+    } else {
       return Fraction.fromDouble(toDouble());
+    }
   }
 }

@@ -45,12 +45,14 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Creates an instance of a mixed fraction. If the numerator is greater than
   /// the denominator, an exception of type [MixedFractionException] is thrown.
   MixedFraction(int whole, int numerator, int denominator) {
-    if (numerator > denominator)
+    if (numerator > denominator) {
       throw MixedFractionException("The numerator cannot be greater than the"
           "denominator (you have $numerator > $denominator).");
+    }
 
-    if (denominator == 0)
+    if (denominator == 0) {
       throw MixedFractionException('The denominator cannot be zero');
+    }
 
     _whole = whole;
     _num = numerator;
@@ -64,10 +66,11 @@ class MixedFraction implements Comparable<MixedFraction> {
   MixedFraction.fromFraction(Fraction fraction) {
     final f = fraction.toMixedFraction();
 
-    if (f == null)
+    if (f == null) {
       throw MixedFractionException('The given fraction $fraction cannot be '
           'converted into a mixed fraction. Be sure that the numerator is greater '
           'than the denominator.');
+    }
 
     _whole = f.whole;
     _num = f.numerator;
@@ -107,9 +110,10 @@ class MixedFraction implements Comparable<MixedFraction> {
      * */
     final frac = Fraction.fromString(parts[1]);
 
-    if (frac.numerator > frac.denominator)
+    if (frac.numerator > frac.denominator) {
       throw MixedFractionException('The numerator cannot be greater than the'
           'denominator (you have ${frac.numerator} > ${frac.denominator}).');
+    }
 
     _whole = int.parse(parts[0]);
     _num = frac.numerator;
@@ -156,10 +160,11 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   @override
   String toString() {
-    if (_negative)
+    if (_negative) {
       return "-$_whole $_num/$_den";
-    else
+    } else {
       return "$_whole $_num/$_den";
+    }
   }
 
   /// Floating point representation of the mixed fraction

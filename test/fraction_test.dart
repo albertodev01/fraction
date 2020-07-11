@@ -38,7 +38,8 @@ void main() {
       f = Fraction.fromString("-12");
       expect(f.toString(), "-12");
 
-      expect(() => Fraction.fromString("1/-2"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("1/-2"), throwsA(isA<FractionException>()));
       expect(() => Fraction.fromString("1/2-4"), throwsA(isA<Exception>()));
       expect(() => Fraction.fromString("4/"), throwsA(isA<Exception>()));
       expect(() => Fraction.fromString("5/0"), throwsA(isA<Exception>()));
@@ -51,16 +52,19 @@ void main() {
       f = Fraction.fromDouble(-1);
       expect(f.toString(), "-1");
 
-      expect(() => Fraction.fromDouble(double.nan), throwsA(isA<FractionException>()));
-      expect(() => Fraction.fromDouble(double.infinity), throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromDouble(double.nan),
+          throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromDouble(double.infinity),
+          throwsA(isA<FractionException>()));
     });
 
     test("Conversion from a mixed fraction", () {
-      final mixed = MixedFraction(1, 8 ,9);
+      final mixed = MixedFraction(1, 8, 9);
       final f = Fraction.fromMixedFraction(mixed);
 
       expect(f.toString(), "17/9");
-      expect(() => Fraction.fromDouble(double.nan), throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromDouble(double.nan),
+          throwsA(isA<FractionException>()));
     });
   });
 
@@ -91,7 +95,10 @@ void main() {
       final mul = Fraction(2, 5) * Fraction(-1, -6);
       expect(mul.toString(), "2/30");
 
-      mul..reduce()..negate()..reduce();
+      mul
+        ..reduce()
+        ..negate()
+        ..reduce();
       expect(mul.toString(), "-1/15");
     });
 
@@ -113,7 +120,7 @@ void main() {
       expect(Fraction(0) == Fraction(-0, 3), true);
     });
 
-    test("Index operator", (){
+    test("Index operator", () {
       final frac = Fraction(3, 7);
 
       expect(frac[0], 3);

@@ -1,9 +1,13 @@
+## [1.2.1]
+
+ - Fixed some health suggestions.
+
 ## [1.2.0]
 
  - Removed Flutter dependencies
  - Fixes on documentation and examples.
  - Now when calling `toString()` on a fraction whose denominator is 1, only the numerator is printed.
-   For example, `Fraction(3, 1).toString()` returns `3` and not `3/1`,
+   For example, `Fraction(3, 1).toString()` returns `3` and not `3/1`.
 
 ## [1.1.0]
 
