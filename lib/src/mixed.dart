@@ -42,7 +42,7 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// True or false whether the mixed fraction is positive or negative
   bool get isNegative => _negative;
 
-  /// Creates an instance of a mixed fraction. If the numerator is greater than
+  /// Creates an instance of a mixed fraction. If the numerator isn't greater than
   /// the denominator, an exception of type [MixedFractionException] is thrown.
   MixedFraction(int whole, int numerator, int denominator) {
     if (numerator > denominator) {
@@ -61,7 +61,7 @@ class MixedFraction implements Comparable<MixedFraction> {
     _fixSign();
   }
 
-  /// Creates an instance of a mixed fraction. If the numerator is greater than
+  /// Creates an instance of a mixed fraction. If the numerator isn't greater than
   /// the denominator, an exception of type [MixedFractionException] is thrown.
   MixedFraction.fromFraction(Fraction fraction) {
     final f = fraction.toMixedFraction();
