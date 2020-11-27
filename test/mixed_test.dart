@@ -2,71 +2,23 @@ import 'package:fraction/fraction.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Numerator and denominator", () {
-    /*var f = MixedFraction(1, 5, 7);
-    expect(f.toString(), "1 5/7");
+  // Tests on constructors
+  group("Testing the behaviors of the constructors", () {
+    test("Making sure that whole, numerator and denominator are correct", () {
+      final fraction = MixedFraction(whole: 1, numerator: 5, denominator: 7);
 
-    f = MixedFraction(0, -1, 4);
-    expect(f.toString(), "-0 1/4");
+      expect(fraction.whole, equals(1));
+      expect(fraction.numerator, equals(5));
+      expect(fraction.denominator, equals(7));
+      expect(fraction.toString(), equals("1 5/7"));
+    });
 
-    expect(
-        () => MixedFraction(3, 7, 2), throwsA(isA<MixedFractionException>()));
-    expect(
-        () => MixedFraction(0, 0, 0), throwsA(isA<MixedFractionException>()));
-    expect(
-        () => MixedFraction(4, 2, 0), throwsA(isA<MixedFractionException>()));*/
-  });
+    test("Making sure that negative values are properly handled", () {});
 
-  test("Conversions", () {
-    var f = MixedFraction.fromString("5 1/3");
-    expect(f.toString(), "5 1/3");
-
-    f = MixedFraction.fromString("1 -7/4");
-    expect(f.toString(), "-1 7/4");
-
-    f = MixedFraction.fromString("1 0/4");
-    expect(f.toString(), "1 0/4");
-
-    f = MixedFraction.fromFraction(Fraction(11, 2));
-    expect(f.toString(), "5 1/2");
-
-    f = MixedFraction.fromFraction(Fraction(-71, -22));
-    expect(f.toString(), "3 5/22");
-
-    expect(() => MixedFraction.fromString("3 7/2"),
-        throwsA(isA<MixedFractionException>()));
-    expect(() => MixedFraction.fromString("1 2/0"),
-        throwsA(isA<FractionException>()));
-    expect(() => MixedFraction.fromFraction(Fraction(2, 11)),
-        throwsA(isA<MixedFractionException>()));
-    expect(() => MixedFraction.fromFraction(Fraction(-7, 11)),
-        throwsA(isA<MixedFractionException>()));
-  });
-
-  test("Methods", () {
-    var f = MixedFraction.fromString("5 1/4");
-    expect(f.toDouble(), 5.25);
-
-    f = MixedFraction.fromString("3 -3/4");
-    expect(f.toDouble(), -3.75);
-    expect(f.toFraction().toString(), "-15/4");
-
-    f = MixedFraction.fromString("-3 3/4");
-    expect(f.toDouble(), -3.75);
-    expect(f.toFraction().toString(), "-15/4");
-
-    f = MixedFraction.fromString("-3 -3/4");
-    expect(f.toDouble(), 3.75);
-    expect(f.toFraction().toString(), "15/4");
-    expect(f.toDouble(), f.toFraction().toDouble());
-
-    f = MixedFraction.fromString("2 8/16");
-    expect(f.toString(), "2 8/16");
-
-    f.reduce();
-    expect(f.toString(), "2 1/2");
-
-    f = MixedFraction.fromString("2 -2/6")..reduce();
-    expect(f.toString(), "-2 1/3");
+    test("Making sure that an exception is thrown when the denominator is 0",
+        () {
+      expect(() => MixedFraction(whole: 1, numerator: 5, denominator: 0),
+          throwsA(isA<MixedFractionException>()));
+    });
   });
 }
