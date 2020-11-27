@@ -21,14 +21,11 @@ import 'package:fraction/fraction.dart';
 /// If the string doesn't represent a valid fraction, a [FractionException] is
 /// thrown.
 class Fraction implements Comparable<Fraction> {
-  int _num;
-  int _den;
-
   /// The numerator of the fraction
-  int get numerator => _num;
+  late final int numerator;
 
   /// The denominator of the fraction
-  int get denominator => _den;
+  late final int denominator;
 
   // Tested at https://regex101.com
   static final _fractionRegex = RegExp(
@@ -50,13 +47,18 @@ class Fraction implements Comparable<Fraction> {
       throw const FractionException('Denominator cannot be zero.');
     }
 
+    // Making sure that both numerator and denominator valid
     _checkValue(numerator);
     _checkValue(denominator);
 
-    _num = numerator;
-    _den = denominator;
-
-    _fixSign();
+    // Fixing the sign of numerator and denominator
+    if (denominator < 0) {
+      this.numerator = numerator * -1;
+      this.denominator = denominator * -1;
+    } else {
+      this.numerator = numerator;
+      this.denominator = denominator;
+    }
   }
 
   /// Returns an instance of [Fraction] if the source string is a valid representation
@@ -74,28 +76,33 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction.fromString("5/-2") // throws FractionException
   /// ```
   Fraction.fromString(String value) {
+    // Checking the format of the string
     if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
       throw FractionException('The string $value is not a valid fraction');
     }
 
     // Remove the leading + if present
-    var fraction = value.replaceAll('+', '').trim();
+    var fraction = value.replaceAll('+', '');
 
     // Look for the / separator
     var barPos = fraction.indexOf('/');
 
     if (barPos == -1) {
-      _num = int.parse(fraction);
-      _den = 1;
+      numerator = int.parse(fraction);
+      denominator = 1;
     } else {
       final den = int.parse(fraction.substring(barPos + 1));
 
       if (den == 0) throw const FractionException('Denominator cannot be zero');
 
-      _num = int.parse(fraction.substring(0, barPos));
-      _den = den;
-
-      _fixSign();
+      // Fixing the sign of numerator and denominator
+      if (den < 0) {
+        numerator = int.parse(fraction.substring(0, barPos)) * -1;
+        denominator = den * -1;
+      } else {
+        numerator = int.parse(fraction.substring(0, barPos));
+        denominator = den;
+      }
     }
   }
 
@@ -107,12 +114,13 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction.fromDouble(3.8) // represented as 19/5
   /// ```
   ///
-  /// Note that irrational numbers can **not** be represented as a fraction, so
+  /// Note that irrational numbers can **not** be represented as fractions, so
   /// if you try to use this method on π (3.1415...) you won't get a valid result.
   ///
   /// ```dart
   /// Fraction.fromDouble(math.pi)
   /// ```
+  ///
   /// The above returns a fraction because it considers only the first 10 decimal
   /// places since `precision` is set to 1.0E-10.
   ///
@@ -148,16 +156,19 @@ class Fraction implements Comparable<Fraction> {
       y = 1 / (y - a);
     } while ((x - h1 / k1).abs() > x * limit);
 
-    _num = mul * h1.toInt();
-    _den = k1.toInt();
+    numerator = mul * h1.toInt();
+    denominator = k1.toInt();
   }
 
-  /// Converts a [MixedFraction] into a [Fraction]
+  /// Converts a [MixedFraction] into a [Fraction].
   Fraction.fromMixedFraction(MixedFraction mixed) {
-    _num = mixed.whole * mixed.denominator + mixed.numerator;
-    _den = mixed.denominator;
-
-    if (mixed.isNegative) _num *= -1;
+    if (mixed.isNegative) {
+      numerator = (mixed.whole * mixed.denominator + mixed.numerator) * -1;
+      denominator = mixed.denominator;
+    } else {
+      numerator = mixed.whole * mixed.denominator + mixed.numerator;
+      denominator = mixed.denominator;
+    }
   }
 
   @override
@@ -190,26 +201,31 @@ class Fraction implements Comparable<Fraction> {
   @override
   int get hashCode {
     var result = 83;
-    result = 31 * result + _num.hashCode;
-    result = 31 * result + _den.hashCode;
+    result = 31 * result + numerator.hashCode;
+    result = 31 * result + denominator.hashCode;
     return result;
   }
 
   @override
   String toString() {
-    if (_den == 1) return "$_num";
+    if (denominator == 1) return "$numerator";
 
-    return "$_num/$_den";
+    return "$numerator/$denominator";
   }
 
   /// A floating point representation of the fraction
-  double toDouble() => _num / _den;
+  double toDouble() => numerator / denominator;
 
   /// Tries to convert this fraction into a [MixedFraction]. The process fails
-  /// if the numerator is greater than the denominator
-  MixedFraction toMixedFraction() {
+  /// if the numerator is greater than the denominator.
+  ///
+  /// If the conversion fails, `null` is returned.
+  MixedFraction? toMixedFraction() {
     if (numerator > denominator) {
-      return MixedFraction(_num ~/ _den, _num % _den, denominator);
+      return MixedFraction(
+          whole: numerator ~/ denominator,
+          numerator: numerator % denominator,
+          denominator: denominator);
     }
 
     return null;
@@ -224,18 +240,7 @@ class Fraction implements Comparable<Fraction> {
     return 0;
   }
 
-  /// Having a negative denominator is not convenient; if it's the case, the sign
-  /// is removed.
-  ///
-  /// For example, with this method, a fraction in the form "1/-3" is converted
-  /// into "-1/3" so that the minus is assigned to the numerator.
-  void _fixSign() {
-    if (_den < 0) {
-      _num *= -1;
-      _den *= -1;
-    }
-  }
-
+  /// Throws a [FractionException] whether [value] is infinite or NaN.
   void _checkValue(num value) {
     if ((value.isNaN) || (value.isInfinite)) {
       throw const FractionException('NaN and Infinite are not allowed.');
@@ -248,31 +253,33 @@ class Fraction implements Comparable<Fraction> {
     return (rem == 0) ? b : _gcd(b, rem);
   }
 
-  /// Swaps the numerator and the denominator
-  void inverse() {
-    final temp = _num;
-    _num = _den;
-    _den = temp;
+  /// Returns a new instance of [Fraction] whose numerator and denominator have
+  /// been swapped.
+  Fraction inverse() => Fraction(denominator, numerator);
 
-    _fixSign();
-  }
+  /// Returns a new instance of [Fraction] with an opposite sign.
+  Fraction negate() => Fraction(numerator * -1, denominator);
 
-  /// Changes the sign of the fraction
-  void negate() => _num *= -1;
+  /// True or false whether the fraction is positive or negative.
+  bool get isNegative => numerator < 0;
 
-  /// True or false whether the fraction is positive or negative
-  bool get isNegative => _num < 0;
+  /// True of false whether the fraction is whole (which is when the denominator
+  /// is 1).
+  bool get isWhole => denominator == 1;
 
-  /// Reduces the fraction to the lowest terms
-  void reduce() {
-    final sign = (_num < 0) ? -1 : 1;
-    var lgcd = _gcd(_num, _den);
+  /// Returns a new instance of [Fraction] reduced to the lowest terms.
+  Fraction reduce() {
+    // Storing the sign for later use
+    final sign = (numerator < 0) ? -1 : 1;
 
-    _num = (_num * sign) ~/ lgcd;
-    _den = (_den * sign) ~/ lgcd;
+    // Calculating the gcd for reduction
+    var lgcd = _gcd(numerator, denominator);
 
-    // Safety fix
-    _fixSign();
+    final num = (numerator * sign) ~/ lgcd;
+    final den = (denominator * sign) ~/ lgcd;
+
+    // Building the reduced fraction
+    return Fraction(num, den);
   }
 
   /// Sum between two fractions

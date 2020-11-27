@@ -1,7 +1,7 @@
 library fraction;
 
 export 'src/core.dart';
-export 'src/exceptions.dart';
+export 'src/utils/exceptions.dart';
 export 'src/mixed.dart';
 export 'src/extensions/fraction_num.dart';
 export 'src/extensions/fraction_string.dart';

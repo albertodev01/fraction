@@ -1,11 +1,12 @@
 import 'package:fraction/fraction.dart';
 
 /// Dart representation of a mixed fraction which is composed by the whole part
-/// and an proper fraction. An proper fraction is a fraction in which the relation
-/// numerator <= denominator is true.
+/// and a proper fraction. A proper fraction is a fraction in which the relation
+/// `numerator <= denominator` is true.
 ///
-/// It's possible to create an instance of [MixedFraction] either by using
-/// one of the constructors or by using the extension methods on [num] and [String].
+/// There's the possibility to create an instance of [MixedFraction] either by
+/// using one of the constructors or by using the extension methods on [num] and
+/// [String].
 ///
 /// ```dart
 /// final f = MixedFraction.fromDouble(1.5);
@@ -22,43 +23,39 @@ import 'package:fraction/fraction.dart';
 /// If the string doesn't represent a valid fraction, a [MixedFractionException] is
 /// thrown.
 class MixedFraction implements Comparable<MixedFraction> {
-  int _whole;
-  int _num;
-  int _den;
-
   /// Whole part of the mixed fraction
-  int get whole => _whole;
+  late final int whole;
 
   /// Numerator of the fraction
-  int get numerator => _num;
+  late final int numerator;
 
   /// Denominator of the fraction
-  int get denominator => _den;
+  late final int denominator;
 
   /// If true, when the fraction is converted into a double or a string the minus
   /// sign has to be applied.
-  bool _negative = false;
+  var _negative = false;
 
   /// True or false whether the mixed fraction is positive or negative
   bool get isNegative => _negative;
 
   /// Creates an instance of a mixed fraction. If the numerator isn't greater than
   /// the denominator, an exception of type [MixedFractionException] is thrown.
-  MixedFraction(int whole, int numerator, int denominator) {
+  MixedFraction(
+      {required int whole, required int numerator, required int denominator}) {
+    // Making sure the fraction is proper
     if (numerator > denominator) {
       throw MixedFractionException("The numerator cannot be greater than the"
           "denominator (you have $numerator > $denominator).");
     }
 
+    // Denominator cannot be zero
     if (denominator == 0) {
       throw MixedFractionException('The denominator cannot be zero');
     }
 
-    _whole = whole;
-    _num = numerator;
-    _den = denominator;
-
-    _fixSign();
+    // Fixing the potential negative signs
+    _fixSign(whole, numerator, denominator);
   }
 
   /// Creates an instance of a mixed fraction. If the numerator isn't greater than
@@ -66,17 +63,15 @@ class MixedFraction implements Comparable<MixedFraction> {
   MixedFraction.fromFraction(Fraction fraction) {
     final f = fraction.toMixedFraction();
 
+    // The 'toMixedFraction()' method returns a nullable value
     if (f == null) {
       throw MixedFractionException('The given fraction $fraction cannot be '
           'converted into a mixed fraction. Be sure that the numerator is greater '
           'than the denominator.');
     }
 
-    _whole = f.whole;
-    _num = f.numerator;
-    _den = f.denominator;
-
-    _fixSign();
+    // Fixing the potential negative signs
+    _fixSign(whole, numerator, denominator);
   }
 
   /// Creates an instance of a mixed fraction. If the numerator is greater than
@@ -87,9 +82,8 @@ class MixedFraction implements Comparable<MixedFraction> {
   ///
   /// The negative sign can only stay in front of 'a' or 'b'.
   MixedFraction.fromString(String value) {
-    final errorObj =
-        MixedFractionException("The string must be in the form 'a b/c' "
-            "with exactly one space between the whole part and the fraction");
+    const errorObj = MixedFractionException("The string must be in the form 'a "
+        "b/c' with exactly one space between the whole part and the fraction");
 
     // Check for the space
     if (!value.contains(' ')) throw errorObj;
@@ -108,18 +102,17 @@ class MixedFraction implements Comparable<MixedFraction> {
      * exception can occur only if the second part is a malformed string (not a
      * fraction)
      * */
-    final frac = Fraction.fromString(parts[1]);
+    final fraction = Fraction.fromString(parts[1]);
 
-    if (frac.numerator > frac.denominator) {
+    // Checking whether the fractional part is a proper fraction
+    if (fraction.numerator > fraction.denominator) {
       throw MixedFractionException('The numerator cannot be greater than the'
-          'denominator (you have ${frac.numerator} > ${frac.denominator}).');
+          'denominator (you have ${fraction.numerator} > '
+          '${fraction.denominator}).');
     }
 
-    _whole = int.parse(parts[0]);
-    _num = frac.numerator;
-    _den = frac.denominator;
-
-    _fixSign();
+    // Fixing the potential negative signs
+    _fixSign(int.parse(parts[0]), fraction.numerator, fraction.denominator);
   }
 
   @override
@@ -152,31 +145,33 @@ class MixedFraction implements Comparable<MixedFraction> {
   @override
   int get hashCode {
     var result = 83;
-    result = 31 * result + _whole.hashCode;
-    result = 31 * result + _num.hashCode;
-    result = 31 * result + _den.hashCode;
+
+    result = 31 * result + whole.hashCode;
+    result = 31 * result + numerator.hashCode;
+    result = 31 * result + denominator.hashCode;
+
     return result;
   }
 
   @override
   String toString() {
     if (_negative) {
-      return "-$_whole $_num/$_den";
+      return "-$whole $numerator/$denominator";
     } else {
-      return "$_whole $_num/$_den";
+      return "$whole $numerator/$denominator";
     }
   }
 
-  /// Floating point representation of the mixed fraction
+  /// Floating point representation of the mixed fraction.
   double toDouble() {
     if (_negative) {
-      return -(_whole + _num / _den);
+      return -(whole + numerator / denominator);
     } else {
-      return _whole + _num / _den;
+      return whole + numerator / denominator;
     }
   }
 
-  /// Converts this mixed fraction into a fraction
+  /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 
   @override
@@ -189,18 +184,19 @@ class MixedFraction implements Comparable<MixedFraction> {
   }
 
   /// Reduces the fraction to the lowest terms
-  void reduce() {
-    final temp = Fraction(_num, _den)..reduce();
+  MixedFraction reduce() {
+    final fractionalPart = Fraction(numerator, denominator).reduce();
 
-    _num = temp.numerator;
-    _den = temp.denominator;
+    return MixedFraction(
+      whole: whole,
+      numerator: fractionalPart.numerator,
+      denominator: fractionalPart.denominator,
+    );
   }
 
   /// Changes the sign of the fraction
-  void negate() {
-    _num *= -1;
-    _negative = !_negative;
-  }
+  MixedFraction negate() => MixedFraction(
+      whole: whole, numerator: numerator * -1, denominator: denominator);
 
   /// If both the whole part and the numerator are negative, then the entire
   /// fraction is positive.
@@ -211,14 +207,15 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// The absolute values are taken because, internally the sign doesn't really
   /// matter. When converted into other formats, it's sufficient to just put
   /// the sign at the front, if present.
-  void _fixSign() {
-    if ((_whole < 0) && (_num < 0)) {
+  void _fixSign(int whole, int numerator, int denominator) {
+    if ((whole < 0) && (numerator < 0)) {
       _negative = false;
     } else {
-      if ((_whole < 0) || (_num < 0)) _negative = true;
+      if ((whole < 0) || (numerator < 0)) _negative = true;
     }
 
-    _whole = _whole.abs();
-    _num = _num.abs();
+    this.whole = whole.abs();
+    this.numerator = numerator.abs();
+    this.denominator = denominator;
   }
 }
