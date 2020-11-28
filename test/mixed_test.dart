@@ -13,8 +13,6 @@ void main() {
       expect(fraction.toString(), equals("1 5/7"));
     });
 
-    test("Making sure that negative values are properly handled", () {});
-
     test("Making sure that an exception is thrown when the denominator is 0",
         () {
       expect(() => MixedFraction(whole: 1, numerator: 5, denominator: 0),

@@ -96,13 +96,8 @@ class Fraction implements Comparable<Fraction> {
       if (den == 0) throw const FractionException('Denominator cannot be zero');
 
       // Fixing the sign of numerator and denominator
-      if (den < 0) {
-        numerator = int.parse(fraction.substring(0, barPos)) * -1;
-        denominator = den * -1;
-      } else {
-        numerator = int.parse(fraction.substring(0, barPos));
-        denominator = den;
-      }
+      numerator = int.parse(fraction.substring(0, barPos));
+      denominator = den;
     }
   }
 
@@ -208,6 +203,16 @@ class Fraction implements Comparable<Fraction> {
   }
 
   @override
+  int compareTo(Fraction other) {
+    // I don't perform == on floating point values because it's not reliable.
+    // Instead, '>' and '<' are more reliable in terms of machine precision so
+    // 0 is just a fallback.
+    if (toDouble() < other.toDouble()) return -1;
+    if (toDouble() > other.toDouble()) return 1;
+    return 0;
+  }
+
+  @override
   String toString() {
     if (denominator == 1) return "$numerator";
 
@@ -230,13 +235,6 @@ class Fraction implements Comparable<Fraction> {
     }
 
     return null;
-  }
-
-  @override
-  int compareTo(Fraction other) {
-    if (toDouble() < other.toDouble()) return -1;
-    if (toDouble() > other.toDouble()) return 1;
-    return 0;
   }
 
   /// Throws a [FractionException] whether [value] is infinite or NaN.
@@ -319,7 +317,7 @@ class Fraction implements Comparable<Fraction> {
   bool operator <=(Fraction other) => toDouble() <= other.toDouble();
 
   /// Checks whether this fraction is smaller than the other.
-  bool operator <(Fraction other) => toDouble() >= other.toDouble();
+  bool operator <(Fraction other) => toDouble() < other.toDouble();
 
   /// Access numerator or denominator via index. In particular, ´0´ refers to
   /// the numerator while ´1´ to the denominator.
