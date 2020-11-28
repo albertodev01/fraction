@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:fraction/fraction.dart';
 import 'package:test/test.dart';
 
