@@ -92,14 +92,11 @@ void main() {
 
   group("Testing objects equality", () {
     test("Making sure that fractions comparison is made via cross product", () {
-      // 3/12 == 1/4 because 3*4 == 12*1
-      expect(Fraction(3, 12), equals(Fraction(1, 4)));
+      expect(Fraction(3, 12) == Fraction(1, 4), isTrue);
+      expect(Fraction(6, 13) == Fraction(6, 13), isTrue);
 
-      // 3/12 == 3/12 because 3*12 == 12*3
-      expect(Fraction(3, 12), equals(Fraction(3, 12)));
-
-      // 0/2 == 0/1 because 0*1 == 2*0
-      expect(Fraction(0, 2), equals(Fraction(0, 1)));
+      expect(Fraction(3, 12).hashCode != Fraction(1, 4).hashCode, isTrue);
+      expect(Fraction(6, 13).hashCode == Fraction(6, 13).hashCode, isTrue);
     });
 
     test(

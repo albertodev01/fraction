@@ -18,5 +18,12 @@ void main() {
       expect(() => "3/-6".toFraction(), throwsA(isA<FractionException>()));
       expect(() => "".toFraction(), throwsA(isA<FractionException>()));
     });
+
+    test(
+        "Making sure that the boolean check is safe to be used before converting",
+        () {
+      expect("3/5".isFraction(), isTrue);
+      expect("".isFraction(), isFalse);
+    });
   });
 }
