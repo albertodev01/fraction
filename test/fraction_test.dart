@@ -2,7 +2,6 @@ import 'package:fraction/fraction.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   group("Constructors", () {
     test("Making sure that numerator and denominator are correct", () {
       final fraction = Fraction(5, 7);
@@ -20,7 +19,9 @@ void main() {
       expect(fraction.toString(), "-5/7");
     });
 
-    test("Making sure that the sign on the denominator is moved to the numerator", () {
+    test(
+        "Making sure that the sign on the denominator is moved to the numerator",
+        () {
       final fraction = Fraction(5, -7);
 
       expect(fraction.numerator, equals(-5));
@@ -42,12 +43,15 @@ void main() {
       expect(negativeFraction.toString(), "-8");
     });
 
-    test("Making sure an exception is thrown ONLY when the denominator is zero", () {
+    test("Making sure an exception is thrown ONLY when the denominator is zero",
+        () {
       expect(() => Fraction(1, 0), throwsA(isA<FractionException>()));
       expect(Fraction(0), equals(Fraction(0, 1)));
     });
 
-    test("Making sure that the 'fromString()' constructor handles strings properly", () {
+    test(
+        "Making sure that the 'fromString()' constructor handles strings properly",
+        () {
       // Valid conversions
       expect(Fraction.fromString("3/5"), equals(Fraction(3, 5)));
       expect(Fraction.fromString("-3/5"), equals(Fraction(-3, 5)));
@@ -55,17 +59,23 @@ void main() {
       expect(Fraction.fromString("-6"), equals(Fraction(-6, 1)));
 
       // Invalid conversions
-      expect(() => Fraction.fromString("2/-5"), throwsA(isA<FractionException>()));
-      expect(() => Fraction.fromString("1/-0"), throwsA(isA<FractionException>()));
-      expect(() => Fraction.fromString("2/0"), throwsA(isA<FractionException>()));
-      expect(() => Fraction.fromString("0/0"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("2/-5"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("1/-0"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("2/0"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("0/0"), throwsA(isA<FractionException>()));
 
       // Invalid formats
       expect(() => Fraction.fromString("2/"), throwsA(isA<FormatException>()));
       expect(() => Fraction.fromString("3/a"), throwsA(isA<FormatException>()));
     });
 
-    test("Making sure that the 'fromDouble()' constructor handles strings properly", () {
+    test(
+        "Making sure that the 'fromDouble()' constructor handles strings properly",
+        () {
       // Valid conversions
       expect(Fraction.fromDouble(5.6), equals(Fraction(28, 5)));
       expect(Fraction.fromDouble(0.0025), equals(Fraction(1, 400)));
@@ -73,8 +83,10 @@ void main() {
       expect(Fraction.fromDouble(0), equals(Fraction(0, 1)));
 
       // Invalid conversions
-      expect(() => Fraction.fromDouble(double.nan), throwsA(isA<FractionException>()));
-      expect(() => Fraction.fromDouble(double.infinity), throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromDouble(double.nan),
+          throwsA(isA<FractionException>()));
+      expect(() => Fraction.fromDouble(double.infinity),
+          throwsA(isA<FractionException>()));
     });
   });
 
@@ -90,7 +102,9 @@ void main() {
       expect(Fraction(0, 2), equals(Fraction(0, 1)));
     });
 
-    test("Making sure that 'compareTo' returns 1, -1 or 0 according with the natural sorting", () {
+    test(
+        "Making sure that 'compareTo' returns 1, -1 or 0 according with the natural sorting",
+        () {
       expect(Fraction(2).compareTo(Fraction(8)), equals(-1));
       expect(Fraction(2).compareTo(Fraction(-4)), equals(1));
       expect(Fraction(6).compareTo(Fraction(6)), equals(0));
@@ -103,7 +117,8 @@ void main() {
       expect(Fraction(-6, 8).toDouble(), equals(-0.75));
     });
 
-    test("Making sure that the inverse is another fraction with swapped values", () {
+    test("Making sure that the inverse is another fraction with swapped values",
+        () {
       expect(Fraction(10, 2).inverse(), equals(Fraction(2, 10)));
       expect(Fraction(-10, 2).inverse(), equals(Fraction(-2, 10)));
     });
@@ -123,7 +138,8 @@ void main() {
       expect(Fraction(1, 15).isWhole, isFalse);
     });
 
-    test("Making sure that reduction to the lowest terms works as expected", () {
+    test("Making sure that reduction to the lowest terms works as expected",
+        () {
       final positiveFraction = Fraction(16, 46);
       expect(positiveFraction.reduce(), equals(Fraction(8, 23)));
 
@@ -152,7 +168,9 @@ void main() {
       expect(Fraction(8) <= Fraction(8), isTrue);
     });
 
-    test("Making sure that the index operator returns value only when called with 0 and 1", () {
+    test(
+        "Making sure that the index operator returns value only when called with 0 and 1",
+        () {
       final fraction = Fraction(9, 20);
 
       expect(fraction[0], equals(9));
