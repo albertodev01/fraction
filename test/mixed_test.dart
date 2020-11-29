@@ -2,71 +2,178 @@ import 'package:fraction/fraction.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Numerator and denominator", () {
-    var f = MixedFraction(1, 5, 7);
-    expect(f.toString(), "1 5/7");
+  // Tests on constructors
+  group("Testing the behaviors of the constructors", () {
+    test("Making sure that whole, numerator and denominator are correct", () {
+      final fraction = MixedFraction(whole: 1, numerator: 5, denominator: 7);
 
-    f = MixedFraction(0, -1, 4);
-    expect(f.toString(), "-0 1/4");
+      expect(fraction.whole, equals(1));
+      expect(fraction.numerator, equals(5));
+      expect(fraction.denominator, equals(7));
+      expect(fraction.isNegative, isFalse);
+      expect(fraction.toString(), equals("1 5/7"));
+    });
 
-    expect(
-        () => MixedFraction(3, 7, 2), throwsA(isA<MixedFractionException>()));
-    expect(
-        () => MixedFraction(0, 0, 0), throwsA(isA<MixedFractionException>()));
-    expect(
-        () => MixedFraction(4, 2, 0), throwsA(isA<MixedFractionException>()));
+    test("Making sure that whole, numerator and denominator are correct", () {
+      final fraction = MixedFraction(whole: 0, numerator: -1, denominator: -2);
+
+      expect(fraction.whole, equals(0));
+      expect(fraction.numerator, equals(1));
+      expect(fraction.denominator, equals(2));
+      expect(fraction.isNegative, isFalse);
+      expect(fraction.toString(), equals("1/2"));
+    });
+
+    test("Making sure that an exception is thrown when the denominator is zero",
+        () {
+      expect(() => MixedFraction(whole: 1, numerator: 5, denominator: 0),
+          throwsA(isA<MixedFractionException>()));
+    });
+
+    test(
+        "Making sure that when numerator > denominator, the fraction is 'normalized' "
+        "so that the numerator <= denominator relation becomes true", () {
+      final fraction1 = MixedFraction(whole: 1, numerator: 5, denominator: 3);
+
+      expect(fraction1.whole, equals(2));
+      expect(fraction1.numerator, equals(2));
+      expect(fraction1.denominator, equals(3));
+      expect(fraction1.toString(), equals("2 2/3"));
+
+      final fraction2 = MixedFraction(whole: 3, numerator: 18, denominator: -7);
+
+      expect(fraction2.whole, equals(-5));
+      expect(fraction2.numerator, equals(4));
+      expect(fraction2.denominator, equals(7));
+      expect(fraction2.toString(), equals("-5 4/7"));
+
+      final fraction3 = MixedFraction(whole: 2, numerator: -6, denominator: 5);
+
+      expect(fraction3.whole, equals(-3));
+      expect(fraction3.numerator, equals(1));
+      expect(fraction3.denominator, equals(5));
+      expect(fraction3.toString(), equals("-3 1/5"));
+
+      final fraction4 = MixedFraction(whole: -5, numerator: -1, denominator: 3);
+
+      expect(fraction4.whole, equals(5));
+      expect(fraction4.numerator, equals(1));
+      expect(fraction4.denominator, equals(3));
+      expect(fraction4.toString(), equals("5 1/3"));
+    });
+
+    test("Making sure that negative signs are properly handled", () {
+      final fraction1 = MixedFraction(whole: -1, numerator: -4, denominator: 9);
+
+      expect(fraction1.whole, equals(1));
+      expect(fraction1.numerator, equals(4));
+      expect(fraction1.denominator, equals(9));
+      expect(fraction1.toString(), equals("1 4/9"));
+
+      final fraction2 =
+          MixedFraction(whole: -2, numerator: -4, denominator: -11);
+
+      expect(fraction2.whole, equals(-2));
+      expect(fraction2.numerator, equals(4));
+      expect(fraction2.denominator, equals(11));
+      expect(fraction2.toString(), equals("-2 4/11"));
+
+      final fraction3 = MixedFraction(whole: 6, numerator: 2, denominator: -7);
+
+      expect(fraction3.whole, equals(-6));
+      expect(fraction3.numerator, equals(2));
+      expect(fraction3.denominator, equals(7));
+      expect(fraction3.toString(), equals("-6 2/7"));
+    });
+
+    test(
+        "Making sure that mixed fractions are properly constructed from fractions",
+        () {
+      final fraction = MixedFraction.fromFraction(Fraction(19, 3));
+
+      expect(fraction.whole, equals(6));
+      expect(fraction.numerator, equals(1));
+      expect(fraction.denominator, equals(3));
+    });
+
+    test(
+        "Making sure that mixed fractions are properly constructed from strings",
+        () {
+      // Valid conversions
+      expect(MixedFraction.fromString("-3 6/11"),
+          equals(MixedFraction(whole: -3, numerator: 6, denominator: 11)));
+
+      expect(MixedFraction.fromString("1 5/3"),
+          equals(MixedFraction(whole: 2, numerator: 2, denominator: 3)));
+
+      // Invalid conversions
+      expect(() => MixedFraction.fromString("1/2"),
+          throwsA(isA<MixedFractionException>()));
+      expect(() => MixedFraction.fromString("1  3/2"),
+          throwsA(isA<MixedFractionException>()));
+      expect(() => MixedFraction.fromString("2  1/1"),
+          throwsA(isA<MixedFractionException>()));
+      expect(() => MixedFraction.fromString("2 c/0"),
+          throwsA(isA<FractionException>()));
+    });
   });
 
-  test("Conversions", () {
-    var f = MixedFraction.fromString("5 1/3");
-    expect(f.toString(), "5 1/3");
+  group("Testing objects equality", () {
+    test("Making sure that fractions comparison is made via cross product", () {
+      final mixed1 = MixedFraction(whole: 1, numerator: 4, denominator: 7);
+      final mixed2 = MixedFraction(whole: 1, numerator: 8, denominator: 14);
 
-    f = MixedFraction.fromString("1 -7/4");
-    expect(f.toString(), "-1 7/4");
+      expect(mixed1 == MixedFraction(whole: 1, numerator: 4, denominator: 7),
+          isTrue);
+      expect(mixed1 == mixed2, isTrue);
 
-    f = MixedFraction.fromString("1 0/4");
-    expect(f.toString(), "1 0/4");
+      expect(mixed1.hashCode != mixed2.hashCode, isTrue);
+      expect(
+          mixed1.hashCode ==
+              MixedFraction(whole: 1, numerator: 4, denominator: 7).hashCode,
+          isTrue);
+    });
 
-    f = MixedFraction.fromFraction(Fraction(11, 2));
-    expect(f.toString(), "5 1/2");
+    test(
+        "Making sure that 'compareTo' returns 1, -1 or 0 according with the natural sorting",
+        () {
+      final mixed1 = MixedFraction(whole: 0, numerator: -2, denominator: 4);
+      final mixed2 = MixedFraction(whole: 1, numerator: 6, denominator: 4);
 
-    f = MixedFraction.fromFraction(Fraction(-71, -22));
-    expect(f.toString(), "3 5/22");
-
-    expect(() => MixedFraction.fromString("3 7/2"),
-        throwsA(isA<MixedFractionException>()));
-    expect(() => MixedFraction.fromString("1 2/0"),
-        throwsA(isA<FractionException>()));
-    expect(() => MixedFraction.fromFraction(Fraction(2, 11)),
-        throwsA(isA<MixedFractionException>()));
-    expect(() => MixedFraction.fromFraction(Fraction(-7, 11)),
-        throwsA(isA<MixedFractionException>()));
+      expect(mixed1.compareTo(mixed2), equals(-1));
+      expect(mixed2.compareTo(mixed1), equals(1));
+      expect(mixed1.compareTo(mixed1), equals(0));
+    });
   });
 
-  test("Methods", () {
-    var f = MixedFraction.fromString("5 1/4");
-    expect(f.toDouble(), 5.25);
+  group("Testing the API of the MixedFraction class", () {
+    test("Making sure conversions to double are correct", () {
+      expect(MixedFraction(whole: 0, numerator: -4, denominator: 1).toDouble(),
+          equals(-4.0));
+      expect(MixedFraction(whole: 2, numerator: 5, denominator: 4).toDouble(),
+          equals(3.25));
+    });
 
-    f = MixedFraction.fromString("3 -3/4");
-    expect(f.toDouble(), -3.75);
-    expect(f.toFraction().toString(), "-15/4");
+    test("Making sure conversions to fractions are correct", () {
+      final fraction =
+          MixedFraction(whole: 10, numerator: 7, denominator: 2).toFraction();
+      expect(fraction, equals(Fraction(27, 2)));
+    });
 
-    f = MixedFraction.fromString("-3 3/4");
-    expect(f.toDouble(), -3.75);
-    expect(f.toFraction().toString(), "-15/4");
+    test("Making sure reduction on the fractional part properly works", () {
+      final fraction1 =
+          MixedFraction(whole: 1, numerator: 3, denominator: 6).reduce();
 
-    f = MixedFraction.fromString("-3 -3/4");
-    expect(f.toDouble(), 3.75);
-    expect(f.toFraction().toString(), "15/4");
-    expect(f.toDouble(), f.toFraction().toDouble());
+      expect(fraction1.whole, equals(1));
+      expect(fraction1.numerator, equals(1));
+      expect(fraction1.denominator, equals(2));
+    });
 
-    f = MixedFraction.fromString("2 8/16");
-    expect(f.toString(), "2 8/16");
+    test("Making sure negation properly workds", () {
+      final fraction = MixedFraction(whole: -1, numerator: 5, denominator: 3);
 
-    f.reduce();
-    expect(f.toString(), "2 1/2");
-
-    f = MixedFraction.fromString("2 -2/6")..reduce();
-    expect(f.toString(), "-2 1/3");
+      expect(fraction.negate().toDouble(), isPositive);
+      expect(fraction.negate().isNegative, isFalse);
+    });
   });
 }

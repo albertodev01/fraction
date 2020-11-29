@@ -1,3 +1,8 @@
+## [2.0.0]
+
+ - Package migrated to null safety (Dart 2.12)
+ - **BREAKING CHANGE**: Now `Fraction` and `MixedFraction` are immutable classes.
+
 ## [1.2.1]
 
  - Fixed some health suggestions.

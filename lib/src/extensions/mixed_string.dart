@@ -1,6 +1,6 @@
 import 'package:fraction/fraction.dart';
 
-/// Adds [MixedFraction] functionalities to [String]
+/// Adds [MixedFraction] functionalities to [String].
 extension MixedFractionString on String {
   /// Checks whether a string contains a valid representation of a mixed fraction
   /// in the format 'a b/c'.
@@ -20,6 +20,6 @@ extension MixedFractionString on String {
   /// Converts the given string into a [MixedFraction] object.
   ///
   /// If you want to be sure that this method doesn't throw a [MixedFractionException],
-  /// use `isFraction()`.
+  /// use `isFraction()` before.
   MixedFraction toMixedFraction() => MixedFraction.fromString(this);
 }

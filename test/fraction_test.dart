@@ -3,167 +3,193 @@ import 'package:test/test.dart';
 
 void main() {
   group("Constructors", () {
-    test("Numerator and denominator", () {
-      var f = Fraction(5, 7);
-      expect(f.toString(), "5/7");
+    test("Making sure that numerator and denominator are correct", () {
+      final fraction = Fraction(5, 7);
 
-      f = Fraction(1, -4);
-      expect(f.toString(), "-1/4");
+      expect(fraction.numerator, equals(5));
+      expect(fraction.denominator, equals(7));
+      expect(fraction.toString(), "5/7");
+    });
 
-      f = Fraction(6);
-      expect(f.toString(), "6");
+    test("Making sure that the sign on the numerator persists", () {
+      final fraction = Fraction(-5, 7);
 
-      f = Fraction(-8);
-      expect(f.toString(), "-8");
+      expect(fraction.numerator, equals(-5));
+      expect(fraction.denominator, equals(7));
+      expect(fraction.toString(), "-5/7");
+    });
 
-      f = 1.5.toFraction();
-      expect(f.toString(), "3/2");
+    test(
+        "Making sure that the sign on the denominator is moved to the numerator",
+        () {
+      final fraction = Fraction(5, -7);
 
-      f = (-1.5).toFraction();
-      expect(f.toString(), "-3/2");
+      expect(fraction.numerator, equals(-5));
+      expect(fraction.denominator, equals(7));
+      expect(fraction.toString(), "-5/7");
+    });
 
+    test("Making sure that whole fractions have the denominator = 1", () {
+      final fraction = Fraction(10);
+
+      expect(fraction.numerator, equals(10));
+      expect(fraction.denominator, equals(1));
+      expect(fraction.toString(), "10");
+
+      final negativeFraction = Fraction(-8);
+
+      expect(negativeFraction.numerator, equals(-8));
+      expect(negativeFraction.denominator, equals(1));
+      expect(negativeFraction.toString(), "-8");
+    });
+
+    test("Making sure an exception is thrown ONLY when the denominator is zero",
+        () {
       expect(() => Fraction(1, 0), throwsA(isA<FractionException>()));
+      expect(Fraction(0), equals(Fraction(0, 1)));
     });
 
-    test("Conversion from string", () {
-      var f = Fraction.fromString("4/3");
-      expect(f.toString(), "4/3");
+    test(
+        "Making sure that the 'fromString()' constructor handles strings properly",
+        () {
+      // Valid conversions
+      expect(Fraction.fromString("3/5"), equals(Fraction(3, 5)));
+      expect(Fraction.fromString("-3/5"), equals(Fraction(-3, 5)));
+      expect(Fraction.fromString("7"), equals(Fraction(7, 1)));
+      expect(Fraction.fromString("-6"), equals(Fraction(-6, 1)));
 
-      f = Fraction.fromString("-7/25");
-      expect(f.toString(), "-7/25");
-
-      f = Fraction.fromString("12");
-      expect(f.toString(), "12");
-
-      f = Fraction.fromString("-12");
-      expect(f.toString(), "-12");
-
+      // Invalid conversions
       expect(
-          () => Fraction.fromString("1/-2"), throwsA(isA<FractionException>()));
-      expect(() => Fraction.fromString("1/2-4"), throwsA(isA<Exception>()));
-      expect(() => Fraction.fromString("4/"), throwsA(isA<Exception>()));
-      expect(() => Fraction.fromString("5/0"), throwsA(isA<Exception>()));
+          () => Fraction.fromString("2/-5"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("1/-0"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("2/0"), throwsA(isA<FractionException>()));
+      expect(
+          () => Fraction.fromString("0/0"), throwsA(isA<FractionException>()));
+
+      // Invalid formats
+      expect(() => Fraction.fromString("2/"), throwsA(isA<FormatException>()));
+      expect(() => Fraction.fromString("3/a"), throwsA(isA<FormatException>()));
     });
 
-    test("Conversion from double", () {
-      var f = Fraction.fromDouble(2.5);
-      expect(f.toString(), "5/2");
+    test(
+        "Making sure that the 'fromDouble()' constructor handles strings properly",
+        () {
+      // Valid conversions
+      expect(Fraction.fromDouble(5.6), equals(Fraction(28, 5)));
+      expect(Fraction.fromDouble(0.0025), equals(Fraction(1, 400)));
+      expect(Fraction.fromDouble(-3.8), equals(Fraction(-19, 5)));
+      expect(Fraction.fromDouble(0), equals(Fraction(0, 1)));
 
-      f = Fraction.fromDouble(-1);
-      expect(f.toString(), "-1");
-
+      // Invalid conversions
       expect(() => Fraction.fromDouble(double.nan),
           throwsA(isA<FractionException>()));
       expect(() => Fraction.fromDouble(double.infinity),
           throwsA(isA<FractionException>()));
     });
 
-    test("Conversion from a mixed fraction", () {
-      final mixed = MixedFraction(1, 8, 9);
-      final f = Fraction.fromMixedFraction(mixed);
+    test("Making sure that fractions are properly built from mixed fractions",
+        () {
+      final fraction = Fraction.fromMixedFraction(
+          MixedFraction(whole: 3, numerator: 5, denominator: 6));
 
-      expect(f.toString(), "17/9");
-      expect(() => Fraction.fromDouble(double.nan),
-          throwsA(isA<FractionException>()));
+      expect(fraction, equals(Fraction(23, 6)));
+      expect(fraction.isNegative, isFalse);
     });
   });
 
-  group("Operators", () {
-    test("Sum", () {
-      final sum1 = Fraction(3, 7) + Fraction(6, 13);
-      expect(sum1.toString(), "81/91");
+  group("Testing objects equality", () {
+    test("Making sure that fractions comparison is made via cross product", () {
+      expect(Fraction(3, 12) == Fraction(1, 4), isTrue);
+      expect(Fraction(6, 13) == Fraction(6, 13), isTrue);
 
-      final sum2 = Fraction(4, 9) + Fraction(8, 9);
-      expect(sum2.toString(), "108/81");
-
-      sum2.reduce();
-      expect(sum2.toString(), "4/3");
+      expect(Fraction(3, 12).hashCode != Fraction(1, 4).hashCode, isTrue);
+      expect(Fraction(6, 13).hashCode == Fraction(6, 13).hashCode, isTrue);
     });
 
-    test("Subtract", () {
-      final sum1 = Fraction(3, 7) - Fraction(6, 13);
-      expect(sum1.toString(), "-3/91");
-
-      final sum2 = Fraction(4, 9) - Fraction(8, 9);
-      expect(sum2.toString(), "-36/81");
-
-      sum2.reduce();
-      expect(sum2.toString(), "-4/9");
-    });
-
-    test("Multiply", () {
-      final mul = Fraction(2, 5) * Fraction(-1, -6);
-      expect(mul.toString(), "2/30");
-
-      mul
-        ..reduce()
-        ..negate()
-        ..reduce();
-      expect(mul.toString(), "-1/15");
-    });
-
-    test("Divide", () {
-      final div = Fraction(-1, 7) / Fraction(9, 8);
-      expect(div.toString(), "-8/63");
-
-      div.reduce();
-      expect(div.toString(), "-8/63");
-    });
-
-    test("Equality", () {
-      expect(Fraction(1, 2) == Fraction(6, 12), true);
-      expect(Fraction(6) == Fraction(-6, -1), true);
-      expect(Fraction(-2, 6) == Fraction(1, -3), true);
-
-      expect(Fraction(1, 2) == Fraction(1, 2), true);
-      expect(Fraction(1) == Fraction(1, 1), true);
-      expect(Fraction(0) == Fraction(-0, 3), true);
-    });
-
-    test("Index operator", () {
-      final frac = Fraction(3, 7);
-
-      expect(frac[0], 3);
-      expect(frac[1], 7);
-      expect(() => frac[2], throwsA(isA<FractionException>()));
-      expect(() => frac[10], throwsA(isA<FractionException>()));
+    test(
+        "Making sure that 'compareTo' returns 1, -1 or 0 according with the natural sorting",
+        () {
+      expect(Fraction(2).compareTo(Fraction(8)), equals(-1));
+      expect(Fraction(2).compareTo(Fraction(-4)), equals(1));
+      expect(Fraction(6).compareTo(Fraction(6)), equals(0));
     });
   });
 
-  group("Methods", () {
-    test("Convert to double", () {
-      expect(Fraction(1, 2).toDouble(), 0.5);
-      expect(Fraction(-5, 8).toDouble(), -0.625);
+  group("Testing the API of the Fraction class", () {
+    test("Making sure conversions to double are correct", () {
+      expect(Fraction(10, 2).toDouble(), equals(5.0));
+      expect(Fraction(-6, 8).toDouble(), equals(-0.75));
     });
 
-    test("Inverse", () {
-      final frac = Fraction(3, 4)..inverse();
-      expect(frac.toString(), "4/3");
+    test("Making sure conversions to mixed fractions are correct", () {
+      final mixed = Fraction(8, 7).toMixedFraction();
 
-      final fracNegative = Fraction(-3, 4)..inverse();
-      expect(fracNegative.toString(), "-4/3");
+      expect(mixed.whole, equals(1));
+      expect(mixed.numerator, equals(1));
+      expect(mixed.denominator, equals(7));
     });
 
-    test("Negate", () {
-      final f1 = Fraction(-4, 6)..negate();
-      expect(f1.toString(), "4/6");
-
-      final f2 = Fraction(4, -6)..negate();
-      expect(f2.toString(), "4/6");
+    test("Making sure that the inverse is another fraction with swapped values",
+        () {
+      expect(Fraction(10, 2).inverse(), equals(Fraction(2, 10)));
+      expect(Fraction(-10, 2).inverse(), equals(Fraction(-2, 10)));
     });
 
-    test("Reduce", () {
-      final f1 = Fraction(12, 62);
-      expect(f1.toString(), "12/62");
+    test("Making sure that negation changes the sign", () {
+      expect(Fraction(-2, 4).negate(), equals(Fraction(2, 4)));
+      expect(Fraction(2, 4).negate(), equals(Fraction(-1, 2)));
+    });
 
-      f1.reduce();
-      expect(f1.toString(), "6/31");
+    test("Making sure that negation is properly detected", () {
+      expect(Fraction(-1, 2).isNegative, isTrue);
+    });
 
-      final f2 = Fraction(-8, 44);
-      expect(f2.toString(), "-8/44");
+    test("Making sure that whole fraction detection works", () {
+      expect(Fraction(15).isWhole, isTrue);
+      expect(Fraction(15, 1).isWhole, isTrue);
+      expect(Fraction(1, 15).isWhole, isFalse);
+    });
 
-      f2.reduce();
-      expect(f2.toString(), "-2/11");
+    test("Making sure that reduction to the lowest terms works as expected",
+        () {
+      final positiveFraction = Fraction(16, 46);
+      expect(positiveFraction.reduce(), equals(Fraction(8, 23)));
+
+      final negativeFraction = Fraction(-9, 3);
+      expect(negativeFraction.reduce(), equals(Fraction(-3, 1)));
+    });
+  });
+
+  group("Testing operators overloads", () {
+    test("Making sure that operators +, -, * and / do proper calculations", () {
+      final fraction1 = Fraction(7, 13);
+      final fraction2 = Fraction(-4, 3);
+
+      expect(fraction1 + fraction2, equals(Fraction(-31, 39)));
+      expect(fraction1 - fraction2, equals(Fraction(73, 39)));
+      expect(fraction1 * fraction2, equals(Fraction(-28, 39)));
+      expect(fraction1 / fraction2, equals(Fraction(-21, 52)));
+    });
+
+    test("Making sure that comparison operators compare values correctly", () {
+      expect(Fraction(10) > Fraction(8), isTrue);
+      expect(Fraction(10) >= Fraction(8), isTrue);
+      expect(Fraction(10) >= Fraction(10), isTrue);
+      expect(Fraction(8) < Fraction(10), isTrue);
+      expect(Fraction(8) <= Fraction(10), isTrue);
+      expect(Fraction(8) <= Fraction(8), isTrue);
+    });
+
+    test(
+        "Making sure that the index operator returns value only when called with 0 and 1",
+        () {
+      final fraction = Fraction(9, 20);
+
+      expect(fraction[0], equals(9));
+      expect(fraction[1], equals(20));
+      expect(() => fraction[2], throwsA(isA<FractionException>()));
     });
   });
 }
