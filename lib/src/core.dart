@@ -222,20 +222,12 @@ class Fraction implements Comparable<Fraction> {
   /// A floating point representation of the fraction.
   double toDouble() => numerator / denominator;
 
-  /// Tries to convert this fraction into a [MixedFraction]. The process fails
-  /// if the numerator is greater than the denominator.
-  ///
-  /// If the conversion fails, `null` is returned.
-  MixedFraction? toMixedFraction() {
-    if (numerator > denominator) {
-      return MixedFraction(
-          whole: numerator ~/ denominator,
-          numerator: numerator % denominator,
-          denominator: denominator);
-    }
-
-    return null;
-  }
+  /// Converts the current object into a [MixedFraction].
+  MixedFraction toMixedFraction() => MixedFraction(
+    whole: numerator ~/ denominator,
+    numerator: numerator % denominator,
+    denominator: denominator
+  );
 
   /// Throws a [FractionException] whether [value] is infinite or NaN.
   void _checkValue(num value) {
