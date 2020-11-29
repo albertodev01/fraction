@@ -15,9 +15,10 @@ void main() {
       expect(fractionException == FractionException("Message"), isTrue);
       expect(mixedException == MixedFractionException("Message"), isTrue);
 
-      expect(fractionException.hashCode, equals(FractionException("Message").hashCode));
-      expect(
-          mixedException.hashCode, equals(MixedFractionException("Message").hashCode));
+      expect(fractionException.hashCode,
+          equals(FractionException("Message").hashCode));
+      expect(mixedException.hashCode,
+          equals(MixedFractionException("Message").hashCode));
     });
 
     test("Making sure that 'FractionException' prints the correct message", () {

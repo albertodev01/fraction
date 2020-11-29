@@ -224,10 +224,9 @@ class Fraction implements Comparable<Fraction> {
 
   /// Converts the current object into a [MixedFraction].
   MixedFraction toMixedFraction() => MixedFraction(
-    whole: numerator ~/ denominator,
-    numerator: numerator % denominator,
-    denominator: denominator
-  );
+      whole: numerator ~/ denominator,
+      numerator: numerator % denominator,
+      denominator: denominator);
 
   /// Throws a [FractionException] whether [value] is infinite or NaN.
   void _checkValue(num value) {

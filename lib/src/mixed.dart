@@ -71,7 +71,7 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   /// Creates an instance of a mixed fraction.
   factory MixedFraction.fromFraction(Fraction fraction) =>
-    fraction.toMixedFraction();
+      fraction.toMixedFraction();
 
   /// Creates an instance of a mixed fraction. The input string must be in the
   /// form 'a b/c' with exactly one space between the whole part and the fraction.
