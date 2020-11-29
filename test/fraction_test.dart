@@ -88,6 +88,17 @@ void main() {
       expect(() => Fraction.fromDouble(double.infinity),
           throwsA(isA<FractionException>()));
     });
+
+    test("Making sure that fractions are properly built from mixed fractions", () {
+      final fraction = Fraction.fromMixedFraction(MixedFraction(
+        whole: 3,
+        numerator: 5,
+        denominator: 6
+      ));
+
+      expect(fraction, equals(Fraction(23, 6)));
+      expect(fraction.isNegative, isFalse);
+    });
   });
 
   group("Testing objects equality", () {
@@ -112,6 +123,14 @@ void main() {
     test("Making sure conversions to double are correct", () {
       expect(Fraction(10, 2).toDouble(), equals(5.0));
       expect(Fraction(-6, 8).toDouble(), equals(-0.75));
+    });
+
+    test("Making sure conversions to mixed fractions are correct", () {
+      final mixed = Fraction(8, 7).toMixedFraction();
+
+      expect(mixed.whole, equals(1));
+      expect(mixed.numerator, equals(1));
+      expect(mixed.denominator, equals(7));
     });
 
     test("Making sure that the inverse is another fraction with swapped values",

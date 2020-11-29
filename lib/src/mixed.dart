@@ -149,39 +149,27 @@ class MixedFraction implements Comparable<MixedFraction> {
   @override
   int compareTo(other) {
     if (toDouble() < other.toDouble()) return -1;
-
     if (toDouble() > other.toDouble()) return 1;
-
     return 0;
   }
 
   @override
   String toString() {
-    if (_negative) {
-      return "-$whole $numerator/$denominator";
+    if (whole == 0) {
+      return "$numerator/$denominator";
     } else {
       return "$whole $numerator/$denominator";
     }
   }
 
   /// Floating point representation of the mixed fraction.
-  double toDouble() {
-    if (_negative) {
-      return -(whole + numerator / denominator);
-    } else {
-      return whole + numerator / denominator;
-    }
-  }
+  double toDouble() => whole + numerator / denominator;
 
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 
-  /// If true, when the fraction is converted into a double or a string the minus
-  /// sign has to be applied.
-  var _negative = false;
-
   /// True or false whether the mixed fraction is positive or negative.
-  bool get isNegative => _negative;
+  bool get isNegative => whole < 0;
 
   /// Reduces this mixed fraction to the lowest terms and returns the results in
   /// a new [MixedFraction] instance.
@@ -198,5 +186,5 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Changes the sign of this mixed fraction and returns the results in a new
   /// [MixedFraction] instance.
   MixedFraction negate() => MixedFraction(
-      whole: whole, numerator: numerator * -1, denominator: denominator);
+      whole: whole * -1, numerator: numerator, denominator: denominator);
 }
