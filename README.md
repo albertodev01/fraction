@@ -1,11 +1,12 @@
-# fraction
+<p align="center"><img src="https://raw.githubusercontent.com/albertodev01/fraction/nullsafety_release/assets/package_logo.png" alt="fraction package logo" /></p>
+<p align="center">A package that helps you dealing with <b>fractions</b> and <b>mixed fractions</b>.</p>
+<p align="center">
+    <a href="https://codecov.io/gh/albertodev01/fraction"><img src="https://codecov.io/gh/albertodev01/fraction/branch/master/graph/badge.svg?token=YKA1ZYUROR"/></a>
+    <a href="https://github.com/albertodev01/fraction/actions"><img src="https://github.com/albertodev01/fraction/workflows/fractions_ci/badge.svg" alt="CI status" /></a>
+    <a href=""><img src="https://img.shields.io/github/stars/albertodev01/fraction.svg?style=flat&logo=github&colorB=blue&label=stars" alt="Stars count on GitHub" /></a>
+</p>
 
-
-
-A package that helps you dealing with mathematical fractions.
-
-* `Fraction` which represents fractions in the form `a/b`;
-* `MixedFraction` which represents mixed fractions in the form `a b/c`
+---
 
 ## Working with fractions
 
@@ -49,31 +50,33 @@ final f2 = 1.5.toFraction(); // 3/2
 final f3 = "6/5".toFraction(); // 6/5
 ```
 
-The class has a rich API that overloads a lot of operators, for arithmetics and comparisons. The method
-`reduces` reduces the fraction to the lowest terms.
+Note that a `Fraction` object is **immutable** so methods that require changing the internal state of the object return a new instance. For example, `reduce()` method reduces the fraction to the lowest terms but it returns a new instance:
 
 ```dart
 final fraction = Fraction.fromString("12/20"); // 12/20
-fraction.reduce(); // now it's simplified to  3/5
+final reduced = fraction.reduce(); // now it's simplified to  3/5
 ```
 
-Two fractions are equal if their "cross product" is equal. For example `1/2` and `3/6` are said to be
-equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`).
+Two fractions are equal if their "cross product" is equal. For example `1/2` and `3/6` are said to be equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`). Be sure to check out the official documentation at pub.dev for a complete overview of the API.
 
 ## Working with mixed fractions
 
-A mixed fraction is made up of a whole part and a proper fraction (a fraction in which numerator <= denominator). It's easy to build a `MixedFraction` object:
+A mixed fraction is made up of a whole part and a proper fraction (a fraction in which numerator <= denominator). Building `MixedFraction` objects can't be easier:
 
 ```dart
-final f1 = MixedFraction(3, 4, 7);
+final f1 = MixedFraction(
+  whole: 3, 
+  numerator: 4, 
+  denominator: 7
+);
 final f2 = MixedFraction.fromDouble(1.5);
 final f3 = MixedFraction.fromString("1 1/2");
 ```
 
-There is also the possibility to initialize a `MixedFraction` using extension methods:
+There is also the possibility to initialize a `MixedFraction` using extension methods, as it happens with `Fraction`:
 
 ```dart
 final f1 = "1 1/2".toMixedFraction();
 ```
 
-If you try to create an instance in which the numerator is greater than the denominator, a `MixedFractionException` is thrown.
+Note that `MixedFraction` objects are **immutable** exactly like `Fraction` objects so you're guaranteed that the internal state of the instance won't change during its lifetime.
