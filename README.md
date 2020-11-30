@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/albertodev01/fraction/nullsafety_release/assets/package_logo.png" alt="fraction package logo" /></p>
+<p align="center"><img src="https://github.com/albertodev01/fraction/blob/master/assets/package_logo.png" alt="fraction package logo" /></p>
 <p align="center">A package that helps you dealing with <b>fractions</b> and <b>mixed fractions</b>.</p>
 <p align="center">
     <a href="https://codecov.io/gh/albertodev01/fraction"><img src="https://codecov.io/gh/albertodev01/fraction/branch/master/graph/badge.svg?token=YKA1ZYUROR"/></a>
@@ -57,7 +57,7 @@ final fraction = Fraction.fromString("12/20"); // 12/20
 final reduced = fraction.reduce(); // now it's simplified to  3/5
 ```
 
-Two fractions are equal if their "cross product" is equal. For example `1/2` and `3/6` are said to be equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`). Be sure to check out the official documentation at pub.dev for a complete overview of the API.
+Two fractions are equal if their "cross product" is equal. For example `1/2` and `3/6` are said to be equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`). Be sure to check out the official documentation at [pub.dev](https://pub.dev/documentation/fraction/latest/fraction/Fraction-class.html) for a complete overview of the API.
 
 ## Working with mixed fractions
 
@@ -79,4 +79,4 @@ There is also the possibility to initialize a `MixedFraction` using extension me
 final mixed = "1 1/2".toMixedFraction();
 ```
 
-Note that `MixedFraction` objects are **immutable** exactly like `Fraction` objects so you're guaranteed that the internal state of the instance won't change during its lifetime.
+Note that `MixedFraction` objects are **immutable** exactly like `Fraction` objects so you're guaranteed that the internal state of the instance won't change during its lifetime. Make sure to check out the official documentation at [pub.dev](https://pub.dev/documentation/fraction/latest/fraction/MixedFraction-class.html) for a complete overview of the API.
