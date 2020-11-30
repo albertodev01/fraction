@@ -110,26 +110,23 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   @override
 
-  /// Two mixed fractions are equal if their "cross product" is equal.
+  /// Two mixed fractions are equal if the whole part and the "cross product" of
+  /// the fractional part is equal.
   ///
   /// ```dart
-  /// final one = Fraction(1, 2);
-  /// final two = Fraction(2, 4);
+  /// final one = MixedFraction(whole: 1, numerator: 3, denominator: 4);
+  /// final two = MixedFraction(whole: 1, numerator: 6, denominator: 8);
   ///
   /// print(one == two); //true
   /// ```
   ///
-  /// The above example returns true because the "cross product" of `one` and
-  /// two` is equal (1*4 = 2*2).
+  /// The above example returns true because the whole part is equal (1 = 1) and
+  /// the "cross product" of `one` and two` is equal (3*8 = 6*4).
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     if (other is MixedFraction) {
-      final mixedFraction = other;
-
-      return runtimeType == mixedFraction.runtimeType &&
-          whole == mixedFraction.whole &&
-          toFraction() == mixedFraction.toFraction();
+      return toFraction() == other.toFraction();
     } else {
       return false;
     }
@@ -171,6 +168,9 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// True or false whether the mixed fraction is positive or negative.
   bool get isNegative => whole < 0;
 
+  /// Returns the fractional part of the mixed fraction as [Fraction] object.
+  Fraction get fractionalPart => Fraction(numerator, denominator);
+
   /// Reduces this mixed fraction to the lowest terms and returns the results in
   /// a new [MixedFraction] instance.
   MixedFraction reduce() {
@@ -187,4 +187,56 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// [MixedFraction] instance.
   MixedFraction negate() => MixedFraction(
       whole: whole * -1, numerator: numerator, denominator: denominator);
+
+  /// Sum between two mixed fractions.
+  MixedFraction operator +(MixedFraction other) =>
+      (toFraction() + other.toFraction()).toMixedFraction().reduce();
+
+  /// Difference between two mixed fractions.
+  MixedFraction operator -(MixedFraction other) =>
+      (toFraction() - other.toFraction()).toMixedFraction();
+
+  /// Multiplication between two mixed fractions.
+  MixedFraction operator *(MixedFraction other) =>
+      (toFraction() * other.toFraction()).toMixedFraction();
+
+  /// Division between two mixed fractions.
+  MixedFraction operator /(MixedFraction other) =>
+      (toFraction() / other.toFraction()).toMixedFraction();
+
+  /// Checks whether this mixed fraction is greater or equal than the other.
+  bool operator >=(MixedFraction other) => toDouble() >= other.toDouble();
+
+  /// Checks whether this mixed fraction is greater than the other.
+  bool operator >(MixedFraction other) => toDouble() > other.toDouble();
+
+  /// Checks whether this mixed fraction is smaller or equal than the other.
+  bool operator <=(MixedFraction other) => toDouble() <= other.toDouble();
+
+  /// Checks whether this mixed fraction is smaller than the other.
+  bool operator <(MixedFraction other) => toDouble() < other.toDouble();
+
+  /// Access the whole part, the numerator or the denominator of the fraction
+  /// via index. In particular:
+  ///
+  ///  - `0` refers to the whole part
+  ///  - `1` refers to the numerator
+  ///  - `2` refers to the denominator
+  ///
+  /// Any other value which is not `0`, `1` or `2` will throw an exception of
+  /// type [MixedFractionException].
+  int operator [](int index) {
+    switch (index) {
+      case 0:
+        return whole;
+      case 1:
+        return numerator;
+      case 2:
+        return denominator;
+      default:
+        throw MixedFractionException(
+            'The index you gave ($index) is not valid: '
+            'it must be either 0, 1 or 2.');
+    }
+  }
 }

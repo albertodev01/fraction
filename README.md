@@ -12,14 +12,14 @@
 
 You can create an instance of `Fraction` using one of its constructors.
 
- - Basic: it just requires the numerator and/or the denominator.
+ - **Basic**: it just requires the numerator and/or the denominator.
 
    ```dart
    final frac = Fraction(3, 5); // 3/5
    final frac = Fraction(3, 1); // 3
    ```
 
- - String: pass the fraction as a string but it has to be well-formed otherwise an exception is
+ - **String**: pass the fraction as a string but it has to be well-formed otherwise an exception is
    thrown.
 
    ```dart
@@ -29,15 +29,15 @@ You can create an instance of `Fraction` using one of its constructors.
    final frac4 = Fraction.fromString("-2"); // -2/1
    ```
 
- - double: represents a double as a fraction. Note that irrational numbers cannot be converted into
+ - **double**: represents a double as a fraction. Note that irrational numbers cannot be converted into
    a fraction by definition; the constructor has the `precision` parameter which decides how precise
    the representation has to be.
 
    ```dart
    final frac1 = Fraction.fromDouble(1.5); // 3/2
-   final frac2 = Fraction.fromString(-8.5); // -17/2
-   final frac3 = Fraction.fromString(math.pi); // 208341/66317
-   final frac4 = Fraction.fromString(math.pi, 1.0E-4); // 333/106
+   final frac2 = Fraction.fromDouble(-8.5); // -17/2
+   final frac3 = Fraction.fromDouble(math.pi); // 208341/66317
+   final frac4 = Fraction.fromDouble(math.pi, 1.0E-4); // 333/106
    ```
 
    The constant `pi` cannot be represented as a fraction because it's an irrational number. The constructor considers only `precison` decimal digits to create a fraction. With rational numbers instead you don't have problems.
@@ -64,19 +64,19 @@ Two fractions are equal if their "cross product" is equal. For example `1/2` and
 A mixed fraction is made up of a whole part and a proper fraction (a fraction in which numerator <= denominator). Building `MixedFraction` objects can't be easier:
 
 ```dart
-final f1 = MixedFraction(
+final mixed1 = MixedFraction(
   whole: 3, 
   numerator: 4, 
   denominator: 7
 );
-final f2 = MixedFraction.fromDouble(1.5);
-final f3 = MixedFraction.fromString("1 1/2");
+final mixed2 = MixedFraction.fromDouble(1.5);
+final mixed3 = MixedFraction.fromString("1 1/2");
 ```
 
 There is also the possibility to initialize a `MixedFraction` using extension methods, as it happens with `Fraction`:
 
 ```dart
-final f1 = "1 1/2".toMixedFraction();
+final mixed = "1 1/2".toMixedFraction();
 ```
 
 Note that `MixedFraction` objects are **immutable** exactly like `Fraction` objects so you're guaranteed that the internal state of the instance won't change during its lifetime.
