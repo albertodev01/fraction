@@ -169,11 +169,51 @@ void main() {
       expect(fraction1.denominator, equals(2));
     });
 
-    test("Making sure negation properly workds", () {
+    test("Making sure negation properly works", () {
       final fraction = MixedFraction(whole: -1, numerator: 5, denominator: 3);
 
       expect(fraction.negate().toDouble(), isPositive);
       expect(fraction.negate().isNegative, isFalse);
+    });
+
+    test("Making sure that the fractional part is properly constructed", () {
+      final fraction = MixedFraction(whole: 5, numerator: 4, denominator: 7);
+
+      expect(fraction.fractionalPart, equals(Fraction(4, 7)));
+    });
+  });
+
+  group("Testing operators overloads", () {
+    final mixed1 = MixedFraction(whole: 1, numerator: 7, denominator: 10);
+    final mixed2 = MixedFraction(whole: 2, numerator: 1, denominator: 4);
+
+    test("Making sure that operators +, -, * and / do proper calculations", () {
+      expect(mixed1 + mixed2,
+          equals(MixedFraction(whole: 3, numerator: 19, denominator: 20)));
+      expect(mixed1 - mixed2,
+          equals(MixedFraction(whole: -1, numerator: 11, denominator: 20)));
+      expect(mixed1 * mixed2,
+          equals(MixedFraction(whole: 3, numerator: 33, denominator: 40)));
+      expect(mixed1 / mixed2,
+          equals(MixedFraction(whole: 0, numerator: 34, denominator: 45)));
+    });
+
+    test("Making sure that comparison operators compare values correctly", () {
+      expect(mixed2 > mixed1, isTrue);
+      expect(mixed2 >= mixed1, isTrue);
+      expect(mixed2 >= mixed2, isTrue);
+      expect(mixed1 < mixed2, isTrue);
+      expect(mixed1 <= mixed2, isTrue);
+      expect(mixed1 <= mixed2, isTrue);
+    });
+
+    test(
+        "Making sure that the index operator returns value only when called "
+        "with 0, 1 and 2", () {
+      expect(mixed1[0], equals(1));
+      expect(mixed1[1], equals(7));
+      expect(mixed1[2], equals(10));
+      expect(() => mixed1[3], throwsA(isA<MixedFractionException>()));
     });
   });
 }

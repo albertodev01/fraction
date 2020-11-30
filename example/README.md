@@ -50,15 +50,23 @@ final mul = f1 * f2; // -> 5/7 * 1/5
 final div = f1 / f2; // -> 5/7 / 1/5
 ```
 
-The method `reduces` reduces the fraction to the lowest terms.
+The method `reduce()` reduces the fraction to the lowest terms.
 
 ```dart
-final fraction = Fraction.fromString("12/20"); // 12/20
-fraction.reduce(); // now it's simplified to  3/5
+final fraction = Fraction.fromString("12/20");  // 12/20
+final reduced = fraction.reduce();              // 3/5
 ```
 
 Two fractions are equal if their "cross product" is equal. For example `1/2` and `3/6` are said to be
-equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`).
+equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`). The API is very wide:
+
+```dart
+final fraction1 = Fraction(10, 2).toDouble();  // 5.0
+final fraction2 = Fraction(10, 2).inverse();   // 2/10
+final fraction3 = Fraction(1, 15).isWhole;     // false
+
+final sum = fraction1 + fraction3; // 76/15
+```
 
 ## Working with mixed fractions
 

@@ -160,11 +160,11 @@ class Fraction implements Comparable<Fraction> {
   Fraction.fromMixedFraction(MixedFraction mixed) {
     if (mixed.isNegative) {
       numerator = (mixed.whole * mixed.denominator + mixed.numerator) * -1;
-      denominator = mixed.denominator;
     } else {
       numerator = mixed.whole * mixed.denominator + mixed.numerator;
-      denominator = mixed.denominator;
     }
+
+    denominator = mixed.denominator;
   }
 
   @override
@@ -273,30 +273,22 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// Sum between two fractions.
-  Fraction operator +(Fraction other) {
-    return Fraction(
-        numerator * other.denominator + denominator * other.numerator,
-        denominator * other.denominator);
-  }
+  Fraction operator +(Fraction other) => Fraction(
+      numerator * other.denominator + denominator * other.numerator,
+      denominator * other.denominator);
 
   /// Difference between two fractions.
-  Fraction operator -(Fraction other) {
-    return Fraction(
-        numerator * other.denominator - denominator * other.numerator,
-        denominator * other.denominator);
-  }
+  Fraction operator -(Fraction other) => Fraction(
+      numerator * other.denominator - denominator * other.numerator,
+      denominator * other.denominator);
 
   /// Multiplication between two fractions.
-  Fraction operator *(Fraction other) {
-    return Fraction(
-        numerator * other.numerator, denominator * other.denominator);
-  }
+  Fraction operator *(Fraction other) =>
+      Fraction(numerator * other.numerator, denominator * other.denominator);
 
   /// Division between two fractions.
-  Fraction operator /(Fraction other) {
-    return Fraction(
-        numerator * other.denominator, denominator * other.numerator);
-  }
+  Fraction operator /(Fraction other) =>
+      Fraction(numerator * other.denominator, denominator * other.numerator);
 
   /// Checks whether this fraction is greater or equal than the other.
   bool operator >=(Fraction other) => toDouble() >= other.toDouble();
