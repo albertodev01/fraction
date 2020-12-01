@@ -123,6 +123,16 @@ void main() {
       expect(Fraction(-6, 8).toDouble(), equals(-0.75));
     });
 
+    test("Making sure conversions to double are correct", () {
+      final fraction = Fraction(3, 7);
+      expect(fraction.isProper, equals(true));
+      expect(fraction.isImproper, equals(false));
+
+      final inverse = fraction.inverse();
+      expect(inverse.isProper, equals(false));
+      expect(inverse.isImproper, equals(true));
+    });
+
     test("Making sure conversions to mixed fractions are correct", () {
       final mixed = Fraction(8, 7).toMixedFraction();
 

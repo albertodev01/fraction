@@ -256,6 +256,18 @@ class Fraction implements Comparable<Fraction> {
   /// is 1).
   bool get isWhole => denominator == 1;
 
+  /// Returns `true` if the numerator is smaller than the denominator.
+  ///
+  /// The `numerator < denominator` relation must be satisfied in order to return
+  /// `true`.
+  bool get isProper => numerator < denominator;
+
+  /// Returns `true` if the numerator is equal or greater than the denominator.
+  ///
+  /// The `numerator >= denominator` relation must be satisfied in order to return
+  /// `true`.
+  bool get isImproper => numerator >= denominator;
+
   /// Reduces the current object to the lowest terms and returns the result in a
   /// new [Fraction] instance.
   Fraction reduce() {
