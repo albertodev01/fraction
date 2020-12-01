@@ -28,6 +28,7 @@ class Fraction implements Comparable<Fraction> {
   late final int denominator;
 
   // Tested at https://regex101.com
+
   static final _fractionRegex = RegExp(
     '(^-?|^\\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
@@ -102,8 +103,9 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// Tries to give a fractional representation of a double according with the
-  /// given precision. This implementation takes inspiration from the [continued fraction]
-  /// [https://en.wikipedia.org/wiki/Continued_fraction] algorithm.
+  /// given precision. This implementation takes inspiration from the
+  /// (continued fraction)[https://en.wikipedia.org/wiki/Continued_fraction]
+  /// algorithm.
   ///
   /// ```dart
   /// Fraction.fromDouble(3.8) // represented as 19/5
