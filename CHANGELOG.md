@@ -1,3 +1,9 @@
+## [2.0.0-nullsafety.2]
+
+ - Minor updates in the README.md file.
+ - Minor fixes in the documentation
+ - Added `isProper` and `isImproper` getters on `Fraction`
+
 ## [2.0.0-nullsafety.1]
 
  - Minor updates in the README.md file.

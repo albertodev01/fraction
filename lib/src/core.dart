@@ -28,6 +28,7 @@ class Fraction implements Comparable<Fraction> {
   late final int denominator;
 
   // Tested at https://regex101.com
+
   static final _fractionRegex = RegExp(
     '(^-?|^\\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
@@ -102,8 +103,9 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// Tries to give a fractional representation of a double according with the
-  /// given precision. This implementation takes inspiration from the [continued fraction]
-  /// [https://en.wikipedia.org/wiki/Continued_fraction] algorithm.
+  /// given precision. This implementation takes inspiration from the
+  /// (continued fraction)[https://en.wikipedia.org/wiki/Continued_fraction]
+  /// algorithm.
   ///
   /// ```dart
   /// Fraction.fromDouble(3.8) // represented as 19/5
@@ -255,6 +257,18 @@ class Fraction implements Comparable<Fraction> {
   /// True of false whether the fraction is whole (which is when the denominator
   /// is 1).
   bool get isWhole => denominator == 1;
+
+  /// Returns `true` if the numerator is smaller than the denominator.
+  ///
+  /// The `numerator < denominator` relation must be satisfied in order to return
+  /// `true`.
+  bool get isProper => numerator < denominator;
+
+  /// Returns `true` if the numerator is equal or greater than the denominator.
+  ///
+  /// The `numerator >= denominator` relation must be satisfied in order to return
+  /// `true`.
+  bool get isImproper => numerator >= denominator;
 
   /// Reduces the current object to the lowest terms and returns the result in a
   /// new [Fraction] instance.

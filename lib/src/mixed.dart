@@ -86,8 +86,8 @@ class MixedFraction implements Comparable<MixedFraction> {
 
     /*
      * The 'parts' array must contain exactly 2 pieces:
-     *  > parts[0]: the whole part (an integer)
-     *  > parts[1]: the fraction (a string)
+     *  - parts[0]: the whole part (an integer)
+     *  - parts[1]: the fraction (a string)
      * */
     final parts = value.split(" ");
 
