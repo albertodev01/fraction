@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/albertodev01/fraction/blob/master/assets/package_logo.png" alt="fraction package logo" /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/albertodev01/fraction/master/assets/package_logo.png" alt="fraction package logo" /></p>
 <p align="center">A package that helps you dealing with <b>fractions</b> and <b>mixed fractions</b>.</p>
 <p align="center">
     <a href="https://codecov.io/gh/albertodev01/fraction"><img src="https://codecov.io/gh/albertodev01/fraction/branch/master/graph/badge.svg?token=YKA1ZYUROR"/></a>
