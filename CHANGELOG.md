@@ -1,3 +1,8 @@
+## [2.0.0]
+
+ - Migration to stable null safety
+ - Dependencies versions update
+
 ## [2.0.0-nullsafety.2]
 
  - Minor updates in the README.md file.
