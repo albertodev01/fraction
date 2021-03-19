@@ -9,11 +9,13 @@ class FractionException implements Exception {
   const FractionException(this.message);
 
   @override
-  String toString() => "FractionException: $message";
+  String toString() => 'FractionException: $message';
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
 
     if (other is FractionException) {
       final exception = other;
@@ -26,11 +28,7 @@ class FractionException implements Exception {
   }
 
   @override
-  int get hashCode {
-    var result = 83;
-    result = 31 * result + message.hashCode;
-    return result;
-  }
+  int get hashCode => 31 * 83 + message.hashCode;
 }
 
 /// Exception object thrown by [MixedFractionException]
@@ -42,11 +40,13 @@ class MixedFractionException implements Exception {
   const MixedFractionException(this.message);
 
   @override
-  String toString() => "MixedFractionException: $message";
+  String toString() => 'MixedFractionException: $message';
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
 
     if (other is MixedFractionException) {
       final exception = other;
@@ -59,9 +59,5 @@ class MixedFractionException implements Exception {
   }
 
   @override
-  int get hashCode {
-    var result = 83;
-    result = 31 * result + message.hashCode;
-    return result;
-  }
+  int get hashCode => 31 * 83 + message.hashCode;
 }

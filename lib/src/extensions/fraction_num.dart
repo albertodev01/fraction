@@ -5,7 +5,7 @@ extension FractionNum on num {
   /// Returns the fractional representation of an [int] or a [double].
   Fraction toFraction() {
     if (this is int) {
-      return Fraction(toInt(), 1);
+      return Fraction(toInt());
     } else {
       return Fraction.fromDouble(toDouble());
     }

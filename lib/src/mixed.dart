@@ -46,7 +46,7 @@ class MixedFraction implements Comparable<MixedFraction> {
       {required int whole, required int numerator, required int denominator}) {
     // Denominator cannot be zero
     if (denominator == 0) {
-      throw MixedFractionException('The denominator cannot be zero');
+      throw const MixedFractionException('The denominator cannot be zero');
     }
 
     // The sign of the fractional part doesn't persist on the fraction itself;
@@ -82,16 +82,20 @@ class MixedFraction implements Comparable<MixedFraction> {
         "b/c' with exactly one space between the whole part and the fraction");
 
     // Check for the space
-    if (!value.contains(' ')) throw errorObj;
+    if (!value.contains(' ')) {
+      throw errorObj;
+    }
 
     /*
      * The 'parts' array must contain exactly 2 pieces:
      *  - parts[0]: the whole part (an integer)
      *  - parts[1]: the fraction (a string)
      * */
-    final parts = value.split(" ");
+    final parts = value.split(' ');
 
-    if (parts.length != 2) throw errorObj;
+    if (parts.length != 2) {
+      throw errorObj;
+    }
 
     /*
      * At this point the string is made up of 2 "parts" separated by a space. An
@@ -123,7 +127,9 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// The above example returns true because the whole part is equal (1 = 1) and
   /// the "cross product" of `one` and two` is equal (3*8 = 6*4).
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
 
     if (other is MixedFraction) {
       return toFraction() == other.toFraction();
@@ -144,18 +150,24 @@ class MixedFraction implements Comparable<MixedFraction> {
   }
 
   @override
-  int compareTo(other) {
-    if (toDouble() < other.toDouble()) return -1;
-    if (toDouble() > other.toDouble()) return 1;
+  int compareTo(MixedFraction other) {
+    if (toDouble() < other.toDouble()) {
+      return -1;
+    }
+
+    if (toDouble() > other.toDouble()) {
+      return 1;
+    }
+
     return 0;
   }
 
   @override
   String toString() {
     if (whole == 0) {
-      return "$numerator/$denominator";
+      return '$numerator/$denominator';
     } else {
-      return "$whole $numerator/$denominator";
+      return '$whole $numerator/$denominator';
     }
   }
 

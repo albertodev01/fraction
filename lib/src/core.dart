@@ -83,10 +83,10 @@ class Fraction implements Comparable<Fraction> {
     }
 
     // Remove the leading + if present
-    var fraction = value.replaceAll('+', '');
+    final fraction = value.replaceAll('+', '');
 
     // Look for the / separator
-    var barPos = fraction.indexOf('/');
+    final barPos = fraction.indexOf('/');
 
     if (barPos == -1) {
       numerator = int.parse(fraction);
@@ -94,7 +94,9 @@ class Fraction implements Comparable<Fraction> {
     } else {
       final den = int.parse(fraction.substring(barPos + 1));
 
-      if (den == 0) throw const FractionException('Denominator cannot be zero');
+      if (den == 0) {
+        throw const FractionException('Denominator cannot be zero');
+      }
 
       // Fixing the sign of numerator and denominator
       numerator = int.parse(fraction.substring(0, barPos));
@@ -134,16 +136,16 @@ class Fraction implements Comparable<Fraction> {
     _checkValue(value);
     _checkValue(precision);
 
-    var mul = (value >= 0) ? 1 : -1;
-    var x = value.abs();
+    final mul = (value >= 0) ? 1 : -1;
+    final x = value.abs();
 
     // How many digits is the algorithm going to consider
-    var limit = precision;
+    final limit = precision;
     var h1 = 1, h2 = 0, k1 = 0, k2 = 1;
     var y = value.abs();
 
     do {
-      var a = y.floor();
+      final a = y.floor();
       var aux = h1;
       h1 = a * h1 + h2;
       h2 = aux;
@@ -183,7 +185,9 @@ class Fraction implements Comparable<Fraction> {
   /// The above example returns true because the "cross product" of `one` and
   /// two` is equal (1*4 = 2*2).
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
 
     if (other is Fraction) {
       final fraction = other;
@@ -209,16 +213,24 @@ class Fraction implements Comparable<Fraction> {
     // I don't perform == on floating point values because it's not reliable.
     // Instead, '>' and '<' are more reliable in terms of machine precision so
     // 0 is just a fallback.
-    if (toDouble() < other.toDouble()) return -1;
-    if (toDouble() > other.toDouble()) return 1;
+    if (toDouble() < other.toDouble()) {
+      return -1;
+    }
+
+    if (toDouble() > other.toDouble()) {
+      return 1;
+    }
+
     return 0;
   }
 
   @override
   String toString() {
-    if (denominator == 1) return "$numerator";
+    if (denominator == 1) {
+      return '$numerator';
+    }
 
-    return "$numerator/$denominator";
+    return '$numerator/$denominator';
   }
 
   /// A floating point representation of the fraction.
@@ -239,7 +251,7 @@ class Fraction implements Comparable<Fraction> {
 
   /// Typical GCD recursive calculation
   int _gcd(int a, int b) {
-    var rem = a % b;
+    final rem = a % b;
     return (rem == 0) ? b : _gcd(b, rem);
   }
 
@@ -277,7 +289,7 @@ class Fraction implements Comparable<Fraction> {
     final sign = (numerator < 0) ? -1 : 1;
 
     // Calculating the gcd for reduction
-    var lgcd = _gcd(numerator, denominator);
+    final lgcd = _gcd(numerator, denominator);
 
     final num = (numerator * sign) ~/ lgcd;
     final den = (denominator * sign) ~/ lgcd;
