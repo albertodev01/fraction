@@ -11,9 +11,13 @@ void main() {
       expect(fractionException, equals(const FractionException('Message')));
       expect(mixedException, equals(const MixedFractionException('Message')));
       expect(fractionException, isNot(mixedException));
+      expect(mixedException, isNot(fractionException));
 
       expect(fractionException == const FractionException('Message'), isTrue);
       expect(mixedException == const MixedFractionException('Message'), isTrue);
+
+      expect(fractionException == const FractionException('Other msg'), isFalse);
+      expect(mixedException == const MixedFractionException('Other msg'), isFalse);
 
       expect(fractionException.hashCode,
           equals(const FractionException('Message').hashCode));
