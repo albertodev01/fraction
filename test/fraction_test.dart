@@ -56,6 +56,7 @@ void main() {
       expect(Fraction.fromString('3/5'), equals(Fraction(3, 5)));
       expect(Fraction.fromString('-3/5'), equals(Fraction(-3, 5)));
       expect(Fraction.fromString('7'), equals(Fraction(7)));
+      expect(Fraction.fromString('½'), equals(Fraction(1, 2)));
       expect(Fraction.fromString('-6'), equals(Fraction(-6)));
 
       // Invalid conversions

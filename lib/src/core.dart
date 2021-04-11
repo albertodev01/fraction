@@ -1,4 +1,5 @@
 import 'package:fraction/fraction.dart';
+import 'package:fraction/src/utils/fraction_glyphs.dart';
 
 /// Dart representation of a fraction having both the numerator and the denominator
 /// as integers.
@@ -77,13 +78,17 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction.fromString("5/-2") // throws FractionException
   /// ```
   Fraction.fromString(String value) {
-    // Checking the format of the string
-    if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
+    // Convert any unicode fraction glyphs (e.g. '½' to '1/2')
+    final decodedValue = decodeFractionGlyphs(value);
+
+    // Check the format of the string
+    final matchesRegex = _fractionRegex.hasMatch(decodedValue);
+    if (!matchesRegex || decodedValue.contains('/-')) {
       throw FractionException('The string $value is not a valid fraction');
     }
 
     // Remove the leading + if present
-    final fraction = value.replaceAll('+', '');
+    final fraction = decodedValue.replaceAll('+', '');
 
     // Look for the / separator
     final barPos = fraction.indexOf('/');
