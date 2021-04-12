@@ -32,6 +32,7 @@ void main() {
         'Making sure that the boolean check is safe to be used before converting',
         () {
       expect('1 3/5'.isMixedFraction(), isTrue);
+      expect('3 ¾'.isMixedFraction(), isTrue);
       expect('0 -3/5'.isMixedFraction(), isTrue);
       expect(''.isMixedFraction(), isFalse);
       expect('7/4'.isMixedFraction(), isFalse);

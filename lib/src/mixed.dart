@@ -81,8 +81,11 @@ class MixedFraction implements Comparable<MixedFraction> {
     const errorObj = MixedFractionException("The string must be in the form 'a "
         "b/c' with exactly one space between the whole part and the fraction");
 
+    // Convert any unicode fraction glyphs (e.g. '½' to '1/2')
+    final decodedValue = decodeFractionGlyphs(value);
+
     // Check for the space
-    if (!value.contains(' ')) {
+    if (!decodedValue.contains(' ')) {
       throw errorObj;
     }
 
@@ -91,7 +94,7 @@ class MixedFraction implements Comparable<MixedFraction> {
      *  - parts[0]: the whole part (an integer)
      *  - parts[1]: the fraction (a string)
      * */
-    final parts = value.split(' ');
+    final parts = decodedValue.split(' ');
 
     if (parts.length != 2) {
       throw errorObj;

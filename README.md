@@ -29,6 +29,7 @@ You can create an instance of `Fraction` using one of its constructors.
    final frac2 = Fraction.fromString("-2/4"); // -2/4
    final frac3 = Fraction.fromString("2/-4"); // Error
    final frac4 = Fraction.fromString("-2"); // -2/1
+   final frac5 = Fraction.fromString("¼"); // 1/4
    ```
 
  - **double**: represents a double as a fraction. Note that irrational numbers cannot be converted into
@@ -57,6 +58,12 @@ Note that a `Fraction` object is **immutable** so methods that require changing 
 ```dart
 final fraction = Fraction.fromString("12/20"); // 12/20
 final reduced = fraction.reduce(); // now it's simplified to  3/5
+```
+
+Fraction strings can be encoded to unicode fraction glyphs when possible.
+
+```dart
+final fractionGlyph = encodeFractionGlyphs('1/2'); // ½
 ```
 
 Two fractions are equal if their "cross product" is equal. For example `1/2` and `3/6` are said to be equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`). Be sure to check out the official documentation at [pub.dev](https://pub.dev/documentation/fraction/latest/fraction/Fraction-class.html) for a complete overview of the API.
