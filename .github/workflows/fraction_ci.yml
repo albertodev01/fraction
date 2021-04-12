@@ -1,27 +1,41 @@
 name: fractions_ci
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    types:
+      - opened
 
 jobs:
-  build:
+  verify_fraction_package:
+    name: Fraction package - CI action
     runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.12.0
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Installing the dependencies
         run: dart pub get
-      - name: Format
+
+      - name: Making sure the package is formatted
         run: dart format --set-exit-if-changed .
-      - name: Analyze
+
+      - name: Making sure that there are no analysis warnings or errors
         run: dart analyze --fatal-infos --fatal-warnings .
-      - name: Run tests
+
+      - name: Runing unit tests
         run: dart test --coverage=coverage && dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.packages --report-on=lib
-      - name: Check Code Coverage
+
+      - name: Making sure that code coverage is at least 95
         uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
         with:
           min_coverage: 95
-      - name: Upload coverage to Codecov
+          
+      - name: Uploading coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
