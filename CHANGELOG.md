@@ -1,3 +1,8 @@
+## [2.1.0]
+
+ - Added support for egyptian fractions
+ - Added support for encoding/decoding unicode fraction glyphs
+
 ## [2.0.1]
 
  - Improved static analysis with a more elaborated `analysis_options.yaml` file
