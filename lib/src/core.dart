@@ -1,5 +1,4 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/utils/fraction_glyphs.dart';
 
 /// Dart representation of a fraction having both the numerator and the denominator
 /// as integers.
@@ -28,11 +27,54 @@ class Fraction implements Comparable<Fraction> {
   /// The denominator of the fraction
   late final int denominator;
 
-  // Tested at https://regex101.com
-
+  /// This regulax expression makes sure that a string represents a fraction.
   static final _fractionRegex = RegExp(
     '(^-?|^\\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
+
+  /// Maps fraction glyphs to fraction values.
+  static final _glyphsToValues = {
+    '½': Fraction(1, 2),
+    '⅓': Fraction(1, 3),
+    '⅔': Fraction(2, 3),
+    '¼': Fraction(1, 4),
+    '¾': Fraction(3, 4),
+    '⅕': Fraction(1, 5),
+    '⅖': Fraction(2, 5),
+    '⅗': Fraction(3, 5),
+    '⅘': Fraction(4, 5),
+    '⅙': Fraction(1, 6),
+    '⅚': Fraction(5, 6),
+    '⅐': Fraction(1, 7),
+    '⅛': Fraction(1, 8),
+    '⅜': Fraction(3, 8),
+    '⅝': Fraction(5, 8),
+    '⅞': Fraction(7, 8),
+    '⅑': Fraction(1, 9),
+    '⅒': Fraction(1, 10),
+  };
+
+  /// Maps fraction values to fraction glyphs.
+  static final _valuesToGlyphs = {
+    Fraction(1, 2): '½',
+    Fraction(1, 3): '⅓',
+    Fraction(2, 3): '⅔',
+    Fraction(1, 4): '¼',
+    Fraction(3, 4): '¾',
+    Fraction(1, 5): '⅕',
+    Fraction(2, 5): '⅖',
+    Fraction(3, 5): '⅗',
+    Fraction(4, 5): '⅘',
+    Fraction(1, 6): '⅙',
+    Fraction(5, 6): '⅚',
+    Fraction(1, 7): '⅐',
+    Fraction(1, 8): '⅛',
+    Fraction(3, 8): '⅜',
+    Fraction(5, 8): '⅝',
+    Fraction(7, 8): '⅞',
+    Fraction(1, 9): '⅑',
+    Fraction(1, 10): '⅒',
+  };
 
   /// Creates a new representation of a fraction. If the denominator is negative,
   /// the fraction is normalized so that the minus sign can only appear in front
@@ -77,18 +119,17 @@ class Fraction implements Comparable<Fraction> {
   /// ```dart
   /// Fraction.fromString("5/-2") // throws FractionException
   /// ```
+  ///
+  /// If the given string [value] doesn't represent a fraction, then an instance
+  /// of [FractionException] is thrown.
   Fraction.fromString(String value) {
-    // Convert any unicode fraction glyphs (e.g. '½' to '1/2')
-    final decodedValue = decodeFractionGlyphs(value);
-
     // Check the format of the string
-    final matchesRegex = _fractionRegex.hasMatch(decodedValue);
-    if (!matchesRegex || decodedValue.contains('/-')) {
+    if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
       throw FractionException('The string $value is not a valid fraction');
     }
 
     // Remove the leading + if present
-    final fraction = decodedValue.replaceAll('+', '');
+    final fraction = value.replaceAll('+', '');
 
     // Look for the / separator
     final barPos = fraction.indexOf('/');
@@ -107,6 +148,28 @@ class Fraction implements Comparable<Fraction> {
       numerator = int.parse(fraction.substring(0, barPos));
       denominator = den;
     }
+  }
+
+  /// Returns an instance of [Fraction] if the source string is a glyph representing
+  /// a fraction.  A 'glyph' (or 'number form') is an unicode character that
+  /// represents a fraction. For example, the glyph for "1/7" is ⅐. Only a very
+  /// small subset of fractions have a glyph representation.
+  ///
+  /// ```dart
+  /// Fraction.fromString("⅐") // 1/7
+  /// Fraction.fromString("⅔") // 2/3
+  /// Fraction.fromString("⅞") // 7/8
+  /// ```
+  ///
+  /// If the given string [value] doesn't represent a fraction glyph, then an
+  /// instance of [FractionException] is thrown.
+  factory Fraction.fromGlyph(String value) {
+    if (_glyphsToValues.containsKey(value)) {
+      return _glyphsToValues[value]!;
+    }
+
+    throw FractionException('The given string ($value) does not represent a '
+        'valid fraction glyph!');
   }
 
   /// Tries to give a fractional representation of a double according with the
@@ -177,19 +240,18 @@ class Fraction implements Comparable<Fraction> {
   }
 
   @override
-
-  /// Two fractions are equal if their "cross product" is equal.
-  ///
-  /// ```dart
-  /// final one = Fraction(1, 2);
-  /// final two = Fraction(2, 4);
-  ///
-  /// final areEqual = (one == two); //true
-  /// ```
-  ///
-  /// The above example returns true because the "cross product" of `one` and
-  /// two` is equal (1*4 = 2*2).
   bool operator ==(Object other) {
+    // Two fractions are equal if their "cross product" is equal.
+    //
+    // ```dart
+    // final one = Fraction(1, 2);
+    // final two = Fraction(2, 4);
+    //
+    // final areEqual = (one == two); //true
+    // ```
+    //
+    // The above example returns true because the "cross product" of `one` and
+    // two` is equal (1*4 = 2*2).
     if (identical(this, other)) {
       return true;
     }
@@ -236,6 +298,28 @@ class Fraction implements Comparable<Fraction> {
     }
 
     return '$numerator/$denominator';
+  }
+
+  /// If possible, this method converts this [Fraction] instance into an unicode
+  /// glyph string. A 'glyph' (or 'number form') is an unicode character that
+  /// represents a fraction. For example, the glyph for "1/7" is ⅐. Only a very
+  /// small subset of fractions have a glyph representation.
+  ///
+  /// ```dart
+  /// final fraction = Fraction(1, 7);
+  /// final str = fraction.toStringAsGlyph() // "⅐"
+  /// ```
+  ///
+  /// If the conversion is not possible, a [FractionException] is thrown. You
+  /// can use the [hasUnicodeGlyph] getter to determine whether this fraction
+  /// can be converted into an unicode glyph or not.
+  String toStringAsGlyph() {
+    if (_valuesToGlyphs.containsKey(this)) {
+      return _valuesToGlyphs[this]!;
+    }
+
+    throw FractionException('This fraction ($this) does not have an unicode '
+        'fraction glyph!');
   }
 
   /// A floating point representation of the fraction.
@@ -286,6 +370,18 @@ class Fraction implements Comparable<Fraction> {
   /// The `numerator >= denominator` relation must be satisfied in order to return
   /// `true`.
   bool get isImproper => numerator >= denominator;
+
+  /// Returns `true` if this [Fraction] instance has an unicode glyph associated.
+  /// For example:
+  ///
+  /// ```dart
+  /// final fraction = Fraction(1, 2).hasUnicodeGlyph; // true
+  /// ```
+  ///
+  /// The above returns `true` because "1/2" can be represented as ½, which is
+  /// an 'unicode glyph' or 'number form'. Only a very small subset of fractions
+  /// have a glyph representing them.
+  bool get hasUnicodeGlyph => _valuesToGlyphs.containsKey(this);
 
   /// Reduces the current object to the lowest terms and returns the result in a
   /// new [Fraction] instance.

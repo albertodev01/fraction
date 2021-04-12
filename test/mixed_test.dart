@@ -106,7 +106,7 @@ void main() {
       expect(MixedFraction.fromString('1 5/3'),
           equals(MixedFraction(whole: 2, numerator: 2, denominator: 3)));
 
-      expect(MixedFraction.fromString('3⅕'),
+      expect(MixedFraction.fromString('3 ⅕'),
           equals(MixedFraction(whole: 3, numerator: 1, denominator: 5)));
 
       // Invalid conversions

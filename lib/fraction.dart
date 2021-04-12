@@ -7,4 +7,3 @@ export 'src/extensions/mixed_num.dart';
 export 'src/extensions/mixed_string.dart';
 export 'src/mixed.dart';
 export 'src/utils/exceptions.dart';
-export 'src/utils/fraction_glyphs.dart';

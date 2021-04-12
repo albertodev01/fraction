@@ -8,7 +8,7 @@ extension MixedFractionString on String {
   ///  * 'a', 'b' and 'c' must be integers;
   ///  * there can be the minus sign only in front of a;
   ///  * there must be exactly one space between the whole part and the fraction.
-  bool isMixedFraction() {
+  bool get isMixedFraction {
     try {
       MixedFraction.fromString(this);
       return true;

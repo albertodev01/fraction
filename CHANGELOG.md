@@ -1,5 +1,7 @@
 ## [2.1.0]
 
+ - **BREAKING**: the extension method for `Fraction` on `String` now has `bool get isFraction` instead of `bool isFraction()`
+ - **BREAKING**: the extension method for `MixedFraction` on `String` now has `bool get isMixedFraction` instead of `bool isMixedFraction()`
  - Added support for egyptian fractions
  - Added support for encoding/decoding unicode fraction glyphs
 

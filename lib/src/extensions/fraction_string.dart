@@ -7,12 +7,17 @@ extension FractionString on String {
   ///
   ///  * 'a' and 'b' must be integers;
   ///  * there can be the minus sign only in front of a;
-  bool isFraction() {
+  bool get isFraction {
     try {
       Fraction.fromString(this);
       return true;
     } on FractionException {
-      return false;
+      try {
+        Fraction.fromGlyph(this);
+        return true;
+      } on FractionException {
+        return false;
+      }
     }
   }
 
@@ -20,5 +25,11 @@ extension FractionString on String {
   ///
   /// If you want to be sure that this method doesn't throw a [FractionException],
   /// use `isFraction()` before.
-  Fraction toFraction() => Fraction.fromString(this);
+  Fraction toFraction() {
+    try {
+      return Fraction.fromString(this);
+    } on FractionException {
+      return Fraction.fromGlyph(this);
+    }
+  }
 }
