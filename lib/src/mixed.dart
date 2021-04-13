@@ -213,6 +213,19 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 
+  /// Creates a **deep** copy of this object with the given fields replaced
+  /// with the new values.
+  MixedFraction copyWith({
+    int? whole,
+    int? numerator,
+    int? denominator,
+  }) =>
+      MixedFraction(
+        whole: whole ?? this.whole,
+        numerator: numerator ?? this.numerator,
+        denominator: denominator ?? this.denominator,
+      );
+
   /// True or false whether the mixed fraction is positive or negative.
   bool get isNegative => whole < 0;
 

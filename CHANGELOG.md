@@ -1,9 +1,11 @@
-## [2.1.0]
+## [3.0.0]
 
  - **BREAKING**: the extension method for `Fraction` on `String` now has `bool get isFraction` instead of `bool isFraction()`
  - **BREAKING**: the extension method for `MixedFraction` on `String` now has `bool get isMixedFraction` instead of `bool isMixedFraction()`
  - Added support for egyptian fractions
  - Added support for encoding/decoding unicode fraction glyphs
+ - Added the `percentage` property on `Fraction` and `MixedFraction` to express the percentage represented by the fraction
+ - Added the `primeFactorization()` method on `Fraction` to find which prime numbers multiply together to make the numerator and denominator
 
 ## [2.0.1]
 

@@ -331,6 +331,17 @@ class Fraction implements Comparable<Fraction> {
       numerator: numerator % denominator,
       denominator: denominator);
 
+  /// Creates a **deep** copy of this object with the given fields replaced
+  /// with the new values.
+  Fraction copyWith({
+    int? numerator,
+    int? denominator,
+  }) =>
+      Fraction(
+        numerator ?? this.numerator,
+        denominator ?? this.denominator,
+      );
+
   /// Throws a [FractionException] whether [value] is infinite or NaN.
   void _checkValue(num value) {
     if ((value.isNaN) || (value.isInfinite)) {
