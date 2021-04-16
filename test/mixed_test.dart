@@ -183,6 +183,34 @@ void main() {
       expect(() => frac3.toStringAsGlyph(), throwsA(isA<FractionException>()));
     });
 
+    test("Making sure that 'copyWith' works properly", () {
+      final fraction = MixedFraction(whole: -2, numerator: 1, denominator: 2);
+
+      final copy1 = fraction.copyWith();
+      expect(
+        copy1,
+        equals(MixedFraction(whole: -2, numerator: 1, denominator: 2)),
+      );
+
+      final copy2 = fraction.copyWith(numerator: 4);
+      expect(
+        copy2,
+        equals(MixedFraction(whole: -2, numerator: 4, denominator: 2)),
+      );
+
+      final copy3 = fraction.copyWith(denominator: 79);
+      expect(
+        copy3,
+        equals(MixedFraction(whole: -2, numerator: 1, denominator: 79)),
+      );
+
+      final copy4 = fraction.copyWith(whole: 4);
+      expect(
+        copy4,
+        equals(MixedFraction(whole: 4, numerator: 1, denominator: 2)),
+      );
+    });
+
     test('Making sure conversions to double are correct', () {
       expect(
         MixedFraction(whole: 0, numerator: -4, denominator: 1).toDouble(),

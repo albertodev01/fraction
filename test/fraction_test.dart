@@ -165,6 +165,20 @@ void main() {
       expect(Fraction(-6, 8).toDouble(), equals(-0.75));
     });
 
+    test("Making sure that 'copyWith' works properly", () {
+      final fraction1 = Fraction(1, 3).copyWith();
+      expect(fraction1, equals(Fraction(1, 3)));
+
+      final fraction2 = Fraction(1, 3).copyWith(numerator: 2);
+      expect(fraction2, equals(Fraction(2, 3)));
+
+      final fraction3 = Fraction(1, 3).copyWith(denominator: -3);
+      expect(fraction3, equals(Fraction(1, -3)));
+
+      final fraction4 = fraction3.copyWith(numerator: 5, denominator: 7);
+      expect(fraction4, equals(Fraction(5, 7)));
+    });
+
     test('Making sure conversions to double are correct', () {
       final fraction = Fraction(3, 7);
       expect(fraction.isProper, equals(true));
