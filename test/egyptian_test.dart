@@ -96,6 +96,7 @@ void main() {
 
       // Calling 'toString' twice to make sure that CI coverage also covers the
       // case where the instance is cached
+      EgyptianFraction.clearCache();
       expect('$egyptian', equals('1/2 + 1/8'));
     });
 

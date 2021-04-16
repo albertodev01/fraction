@@ -89,3 +89,22 @@ final mixed = "1 1/2".toMixedFraction();
 ```
 
 Note that `MixedFraction` objects are **immutable** exactly like `Fraction` objects so you're guaranteed that the internal state of the instance won't change during its lifetime. Make sure to check out the official documentation at [pub.dev](https://pub.dev/documentation/fraction/latest/fraction/MixedFraction-class.html) for a complete overview of the API.
+
+## Egyptian fractions
+
+An Egyptian fraction is a finite sum of distinct fractions where the numerator is always 1 and, the denominator is a positive number and all the denominators differ from each other. For example:
+
+  - 5/8 = 1/2 + 1/8 (where "1/2 + 1/8" is the egyptian fraction)
+
+Basically, egyptian fractions are a sum of fractions in the form 1/x that represent a proper or an improper fraction. Here's how you can work with them:
+
+```dart
+final egyptianObject = EgyptianFraction(
+  fraction: Fraction(5, 8),
+);
+
+final egyptianFraction = egyptianObject.compute();
+print("$egyptianFraction"); // prints "1/2 + 1/8"
+```
+
+The `compute()` method returns an iterable of type `List<Fraction>`.
