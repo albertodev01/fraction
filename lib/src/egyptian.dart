@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:fraction/fraction.dart';
 
 /// An Egyptian fraction is a finite sum of distinct fractions where the numerator
