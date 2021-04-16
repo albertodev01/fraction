@@ -311,7 +311,7 @@ class Fraction implements Comparable<Fraction> {
   /// ```
   ///
   /// If the conversion is not possible, a [FractionException] is thrown. You
-  /// can use the [hasUnicodeGlyph] getter to determine whether this fraction
+  /// can use the [isFractionGlyph] getter to determine whether this fraction
   /// can be converted into an unicode glyph or not.
   String toStringAsGlyph() {
     if (_valuesToGlyphs.containsKey(this)) {
@@ -392,7 +392,7 @@ class Fraction implements Comparable<Fraction> {
   /// The above returns `true` because "1/2" can be represented as ½, which is
   /// an 'unicode glyph' or 'number form'. Only a very small subset of fractions
   /// have a glyph representing them.
-  bool get hasUnicodeGlyph => _valuesToGlyphs.containsKey(this);
+  bool get isFractionGlyph => _valuesToGlyphs.containsKey(this);
 
   /// Reduces the current object to the lowest terms and returns the result in a
   /// new [Fraction] instance.

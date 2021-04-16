@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:fraction/fraction.dart';
 
 /// An Egyptian fraction is a finite sum of distinct fractions where the numerator
@@ -17,57 +19,56 @@ import 'package:fraction/fraction.dart';
 /// In various cases, the value of the denominator can be so big that an overflow
 /// error happens.
 class EgyptianFraction implements Comparable<EgyptianFraction> {
+  /// This variable caches the result of the [compute] method.
+  static final _cache = <Fraction, List<Fraction>>{};
+
+  /// Clears the internal cache.
+  static void clearCache() => _cache.clear();
+
+  /// Determines whether in-memory caching is enabled or not. This caching
+  /// strategy does **NOT** persist data on disk.
+  ///
+  /// This is `true` by default. If you want to purge and disable the cache, set
+  /// this param to `false` and then call [EgyptianFraction.clearCache].
+  static bool cachingEnabled = true;
+
   /// The fraction to be converted into an egyptian fraction.
   final Fraction fraction;
 
-  /// This variable caches the result of the [compute] method.
-  final List<Fraction> _cache = [];
-
   /// Both proper and improper fractions are accepted.
+  ///
+  /// By default, the `enableCache` parameter is set to `true` allowing some
+  /// performance optimizations.
   EgyptianFraction({
     required this.fraction,
-  });
+  }) : assert(!fraction.isNegative, 'The fraction must be positive!');
 
   /// Returns a series of [Fraction] representing the egyptian fraction of the
   /// current [fraction] object.
   List<Fraction> compute() {
     // If the result is in the cache, then return it immediately
-    if (_cache.isNotEmpty) {
-      return List<Fraction>.from(_cache);
+    if (cachingEnabled && _cache.containsKey(fraction)) {
+      return _cache[fraction]!;
     }
 
-    // No data in the cache so let's compute the egyptian fraction
+    // Computing the fraction
     final results = <Fraction>[];
 
-    // We need a new fraction object because it had to be modified
-    var egFrac = fraction.copyWith();
-    final one = Fraction(1);
+    var numerator = fraction.numerator;
+    var denominator = fraction.denominator;
 
-    // Computing the egyptian fraction
-    if (egFrac.compareTo(one) >= 0) {
-      if (egFrac.denominator == 1) {
-        results.add(egFrac);
-        return results;
-      }
+    while (numerator > 0) {
+      final egyptianDen = (denominator + numerator - 1) ~/ numerator;
+      results.add(Fraction(1, egyptianDen));
 
-      results.add(egFrac.copyWith());
-      egFrac -= results[0];
+      numerator = _modulo(-denominator, numerator);
+      denominator *= egyptianDen;
     }
 
-    while (egFrac.numerator != 1) {
-      final q = egFrac.numerator + egFrac.denominator - 1;
-      final intDen = (q / egFrac.numerator).round();
-
-      results.add(Fraction(1, intDen));
-
-      final newNumerator = _modulo(-egFrac.denominator, egFrac.numerator);
-      egFrac = Fraction(newNumerator, egFrac.denominator * intDen);
+    // If the result isn't in the cache, add it
+    if (cachingEnabled && !_cache.containsKey(fraction)) {
+      _cache[fraction] = List<Fraction>.from(results);
     }
-
-    results.add(egFrac);
-
-    // Updating the cache
-    _cache.addAll(List<Fraction>.from(results));
 
     return results;
   }
@@ -95,16 +96,21 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
 
   @override
   String toString() {
-    var egyptian = _cache;
+    var results = <Fraction>[];
 
-    // If there's nothing in the cache, then compute the result and update the
-    // cache too
-    if (egyptian.isEmpty) {
-      egyptian = compute();
-      _cache.addAll(List<Fraction>.from(egyptian));
+    // Trying to not compute the fraction (if possible)
+    if (cachingEnabled && _cache.containsKey(fraction)) {
+      results = _cache[fraction]!;
+    } else {
+      results = compute();
+
+      // We can cache it if caching is enabled
+      if (cachingEnabled) {
+        _cache[fraction] = List<Fraction>.from(results);
+      }
     }
 
-    final buffer = StringBuffer()..writeAll(egyptian, ' + ');
+    final buffer = StringBuffer()..writeAll(results, ' + ');
     return buffer.toString();
   }
 }

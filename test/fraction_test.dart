@@ -196,6 +196,22 @@ void main() {
       expect(Fraction(1, 10).toStringAsGlyph(), equals('⅒'));
     });
 
+    test('Making sure that gliphs are recognized', () {
+      expect(Fraction(1, 2).isFractionGlyph, isTrue);
+      expect(Fraction(-1, 2).isFractionGlyph, isFalse);
+      expect(Fraction(-1, -2).isFractionGlyph, isTrue);
+      expect(Fraction(1, -2).isFractionGlyph, isFalse);
+    });
+
+    test(
+        'Making sure that a non-gliph encodeable fraction throws when trying '
+        'to convert it into a glyph', () {
+      expect(
+        () => Fraction(10, 37).toStringAsGlyph(),
+        throwsA(isA<FractionException>()),
+      );
+    });
+
     test('Making sure conversions to mixed fractions are correct', () {
       final mixed = Fraction(8, 7).toMixedFraction();
 
