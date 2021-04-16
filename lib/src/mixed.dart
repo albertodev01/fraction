@@ -75,8 +75,16 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   /// Creates an instance of a mixed fraction. The input string must be in the
   /// form 'a b/c' with exactly one space between the whole part and the fraction.
+  /// The fraction can also be a glyph.
   ///
-  /// The negative sign can only stay in front of 'a' or 'b'.
+  /// The negative sign can only stay in front of 'a' or 'b'. Some valid examples
+  /// are:
+  ///
+  /// ```dart
+  /// MixedFraction.fromString('-2 2/5');
+  /// MixedFraction.fromString('1 1/3');
+  /// MixedFraction.fromString('3 ⅐');
+  /// ```
   factory MixedFraction.fromString(String value) {
     const errorObj = MixedFractionException("The string must be in the form 'a "
         "b/c' with exactly one space between the whole part and the fraction");
@@ -93,6 +101,7 @@ class MixedFraction implements Comparable<MixedFraction> {
      * */
     final parts = value.split(' ');
 
+    // Throw because this is not in the form 'a b/c'
     if (parts.length != 2) {
       throw errorObj;
     }
@@ -102,7 +111,15 @@ class MixedFraction implements Comparable<MixedFraction> {
      * exception can occur only if the second part is a malformed string (not a
      * fraction)
      * */
-    final fraction = Fraction.fromString(parts[1]);
+    late final Fraction fraction;
+
+    // The string must be either a fraction with numbers and a slash or a glyph.
+    // If that's not the case, then a 'FractionException' is thrown.
+    try {
+      fraction = Fraction.fromString(parts[1]);
+    } on FractionException {
+      fraction = Fraction.fromGlyph(parts[1]);
+    }
 
     // Fixing the potential negative signs
     return MixedFraction(
@@ -171,11 +188,43 @@ class MixedFraction implements Comparable<MixedFraction> {
     }
   }
 
+  /// If possible, this method converts this [MixedFraction] instance into an
+  /// unicode glyph string. For example:
+  ///
+  /// ```dart
+  /// final fraction = MixedFraction(whole: 3, numerator: 1, denominator: 7)
+  /// final str = fraction.toStringAsGlyph() // "⅐"
+  /// ```
+  ///
+  /// If the conversion is not possible, a [FractionException] is thrown.
+  String toStringAsGlyph() {
+    final glyph = Fraction(numerator, denominator).toStringAsGlyph();
+
+    if (whole == 0) {
+      return glyph;
+    } else {
+      return '$whole $glyph';
+    }
+  }
+
   /// Floating point representation of the mixed fraction.
   double toDouble() => whole + numerator / denominator;
 
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
+
+  /// Creates a **deep** copy of this object with the given fields replaced
+  /// with the new values.
+  MixedFraction copyWith({
+    int? whole,
+    int? numerator,
+    int? denominator,
+  }) =>
+      MixedFraction(
+        whole: whole ?? this.whole,
+        numerator: numerator ?? this.numerator,
+        denominator: denominator ?? this.denominator,
+      );
 
   /// True or false whether the mixed fraction is positive or negative.
   bool get isNegative => whole < 0;

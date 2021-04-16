@@ -58,19 +58,61 @@ void main() {
       expect(Fraction.fromString('7'), equals(Fraction(7)));
       expect(Fraction.fromString('-6'), equals(Fraction(-6)));
 
+      expect(
+        () => Fraction.fromString('½'),
+        throwsA(isA<FractionException>()),
+      );
+
       // Invalid conversions
       expect(
-          () => Fraction.fromString('2/-5'), throwsA(isA<FractionException>()));
+        () => Fraction.fromString('2/-5'),
+        throwsA(isA<FractionException>()),
+      );
       expect(
-          () => Fraction.fromString('1/-0'), throwsA(isA<FractionException>()));
+        () => Fraction.fromString('1/-0'),
+        throwsA(isA<FractionException>()),
+      );
       expect(
-          () => Fraction.fromString('2/0'), throwsA(isA<FractionException>()));
+        () => Fraction.fromString('2/0'),
+        throwsA(isA<FractionException>()),
+      );
       expect(
-          () => Fraction.fromString('0/0'), throwsA(isA<FractionException>()));
+        () => Fraction.fromString('0/0'),
+        throwsA(isA<FractionException>()),
+      );
 
       // Invalid formats
-      expect(() => Fraction.fromString('2/'), throwsA(isA<FormatException>()));
-      expect(() => Fraction.fromString('3/a'), throwsA(isA<FormatException>()));
+      expect(
+        () => Fraction.fromString('2/'),
+        throwsA(isA<FormatException>()),
+      );
+      expect(
+        () => Fraction.fromString('3/a'),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test(
+        "Making sure that the 'fromGlyph()' constructor handles strings properly",
+        () {
+      expect(Fraction.fromGlyph('½'), equals(Fraction(1, 2)));
+      expect(Fraction.fromGlyph('⅓'), equals(Fraction(1, 3)));
+      expect(Fraction.fromGlyph('⅔'), equals(Fraction(2, 3)));
+      expect(Fraction.fromGlyph('¼'), equals(Fraction(1, 4)));
+      expect(Fraction.fromGlyph('¾'), equals(Fraction(3, 4)));
+      expect(Fraction.fromGlyph('⅕'), equals(Fraction(1, 5)));
+      expect(Fraction.fromGlyph('⅖'), equals(Fraction(2, 5)));
+      expect(Fraction.fromGlyph('⅗'), equals(Fraction(3, 5)));
+      expect(Fraction.fromGlyph('⅘'), equals(Fraction(4, 5)));
+      expect(Fraction.fromGlyph('⅙'), equals(Fraction(1, 6)));
+      expect(Fraction.fromGlyph('⅚'), equals(Fraction(5, 6)));
+      expect(Fraction.fromGlyph('⅐'), equals(Fraction(1, 7)));
+      expect(Fraction.fromGlyph('⅛'), equals(Fraction(1, 8)));
+      expect(Fraction.fromGlyph('⅜'), equals(Fraction(3, 8)));
+      expect(Fraction.fromGlyph('⅝'), equals(Fraction(5, 8)));
+      expect(Fraction.fromGlyph('⅞'), equals(Fraction(7, 8)));
+      expect(Fraction.fromGlyph('⅑'), equals(Fraction(1, 9)));
+      expect(Fraction.fromGlyph('⅒'), equals(Fraction(1, 10)));
     });
 
     test(
@@ -123,6 +165,20 @@ void main() {
       expect(Fraction(-6, 8).toDouble(), equals(-0.75));
     });
 
+    test("Making sure that 'copyWith' works properly", () {
+      final fraction1 = Fraction(1, 3).copyWith();
+      expect(fraction1, equals(Fraction(1, 3)));
+
+      final fraction2 = Fraction(1, 3).copyWith(numerator: 2);
+      expect(fraction2, equals(Fraction(2, 3)));
+
+      final fraction3 = Fraction(1, 3).copyWith(denominator: -3);
+      expect(fraction3, equals(Fraction(1, -3)));
+
+      final fraction4 = fraction3.copyWith(numerator: 5, denominator: 7);
+      expect(fraction4, equals(Fraction(5, 7)));
+    });
+
     test('Making sure conversions to double are correct', () {
       final fraction = Fraction(3, 7);
       expect(fraction.isProper, equals(true));
@@ -131,6 +187,43 @@ void main() {
       final inverse = fraction.inverse();
       expect(inverse.isProper, equals(false));
       expect(inverse.isImproper, equals(true));
+    });
+
+    test('Making sure that the gliph conversion is correct', () {
+      expect(Fraction(1, 2).toStringAsGlyph(), equals('½'));
+      expect(Fraction(1, 3).toStringAsGlyph(), equals('⅓'));
+      expect(Fraction(2, 3).toStringAsGlyph(), equals('⅔'));
+      expect(Fraction(1, 4).toStringAsGlyph(), equals('¼'));
+      expect(Fraction(3, 4).toStringAsGlyph(), equals('¾'));
+      expect(Fraction(1, 5).toStringAsGlyph(), equals('⅕'));
+      expect(Fraction(2, 5).toStringAsGlyph(), equals('⅖'));
+      expect(Fraction(3, 5).toStringAsGlyph(), equals('⅗'));
+      expect(Fraction(4, 5).toStringAsGlyph(), equals('⅘'));
+      expect(Fraction(1, 6).toStringAsGlyph(), equals('⅙'));
+      expect(Fraction(5, 6).toStringAsGlyph(), equals('⅚'));
+      expect(Fraction(1, 7).toStringAsGlyph(), equals('⅐'));
+      expect(Fraction(1, 8).toStringAsGlyph(), equals('⅛'));
+      expect(Fraction(3, 8).toStringAsGlyph(), equals('⅜'));
+      expect(Fraction(5, 8).toStringAsGlyph(), equals('⅝'));
+      expect(Fraction(7, 8).toStringAsGlyph(), equals('⅞'));
+      expect(Fraction(1, 9).toStringAsGlyph(), equals('⅑'));
+      expect(Fraction(1, 10).toStringAsGlyph(), equals('⅒'));
+    });
+
+    test('Making sure that gliphs are recognized', () {
+      expect(Fraction(1, 2).isFractionGlyph, isTrue);
+      expect(Fraction(-1, 2).isFractionGlyph, isFalse);
+      expect(Fraction(-1, -2).isFractionGlyph, isTrue);
+      expect(Fraction(1, -2).isFractionGlyph, isFalse);
+    });
+
+    test(
+        'Making sure that a non-gliph encodeable fraction throws when trying '
+        'to convert it into a glyph', () {
+      expect(
+        () => Fraction(10, 37).toStringAsGlyph(),
+        throwsA(isA<FractionException>()),
+      );
     });
 
     test('Making sure conversions to mixed fractions are correct', () {

@@ -16,13 +16,23 @@ void main() {
       expect(fractionException == const FractionException('Message'), isTrue);
       expect(mixedException == const MixedFractionException('Message'), isTrue);
 
-      expect(fractionException == const FractionException('Other msg'), isFalse);
-      expect(mixedException == const MixedFractionException('Other msg'), isFalse);
+      expect(
+        fractionException == const FractionException('Other msg'),
+        isFalse,
+      );
+      expect(
+        mixedException == const MixedFractionException('Other msg'),
+        isFalse,
+      );
 
-      expect(fractionException.hashCode,
-          equals(const FractionException('Message').hashCode));
-      expect(mixedException.hashCode,
-          equals(const MixedFractionException('Message').hashCode));
+      expect(
+        fractionException.hashCode,
+        equals(const FractionException('Message').hashCode),
+      );
+      expect(
+        mixedException.hashCode,
+        equals(const MixedFractionException('Message').hashCode),
+      );
     });
 
     test("Making sure that 'FractionException' prints the correct message", () {
