@@ -85,3 +85,23 @@ final f1 = "1 1/2".toMixedFraction();
 ```
 
 If you try to create an instance in which the numerator is greater than the denominator, a `MixedFractionException` is thrown.
+
+## Working with egyptian fractions
+
+If you want to compute the egyptian fraction of a `Fraction` or `MixedFraction` instance, you can use the `EgyptianFraction` type to perform the calculation. Here's a simple example:
+
+```dart
+final egyptian = EgyptianFraction(
+   fraction: Fraction(3, 5),
+);
+
+final result = egyptian.compute() // [Fraction(1, 2), Fraction(1, 10)]
+```
+
+You can obtain the same result by calling the `EgyptianFraction.fromMixedFraction()` named constructor with the only difference that it takes a `MixedFraction` object rather than a `Fraction`.
+
+```dart
+print("$egyptian"); // 1/2 + 1/10
+```
+
+When you print an `EgyptianFraction` object, you get the egyptian fraction representation of the input you passed. An exception will be thrown if you pass in a negative fraction.

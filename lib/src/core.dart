@@ -21,10 +21,10 @@ import 'package:fraction/fraction.dart';
 /// If the string doesn't represent a valid fraction, a [FractionException] is
 /// thrown.
 class Fraction implements Comparable<Fraction> {
-  /// The numerator of the fraction
+  /// The numerator of the fraction.
   late final int numerator;
 
-  /// The denominator of the fraction
+  /// The denominator of the fraction.
   late final int denominator;
 
   /// This regulax expression makes sure that a string represents a fraction.
@@ -348,14 +348,14 @@ class Fraction implements Comparable<Fraction> {
         denominator ?? this.denominator,
       );
 
-  /// Throws a [FractionException] whether [value] is infinite or NaN.
+  /// Throws a [FractionException] whether [value] is infinite or [double.nan].
   void _checkValue(num value) {
     if ((value.isNaN) || (value.isInfinite)) {
       throw const FractionException('NaN and Infinite are not allowed.');
     }
   }
 
-  /// Typical GCD recursive calculation
+  /// Typical GCD recursive calculation.
   int _gcd(int a, int b) {
     final rem = a % b;
     return (rem == 0) ? b : _gcd(b, rem);

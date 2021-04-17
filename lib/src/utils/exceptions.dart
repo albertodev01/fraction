@@ -1,11 +1,11 @@
 import 'package:fraction/fraction.dart';
 
-/// Exception thrown by [Fraction]
+/// Exception thrown by [Fraction].
 class FractionException implements Exception {
-  /// Error message
+  /// Error message.
   final String message;
 
-  /// Represents an error for the [Fraction] class
+  /// Represents an error for the [Fraction] class.
   const FractionException(this.message);
 
   @override
@@ -31,12 +31,12 @@ class FractionException implements Exception {
   int get hashCode => 31 * 83 + message.hashCode;
 }
 
-/// Exception object thrown by [MixedFraction]
+/// Exception object thrown by [MixedFraction].
 class MixedFractionException implements Exception {
-  /// Error message
+  /// Error message.
   final String message;
 
-  /// Represents an error for the [MixedFraction] class
+  /// Represents an error for the [MixedFraction] class.
   const MixedFractionException(this.message);
 
   @override

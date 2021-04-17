@@ -6,7 +6,7 @@ extension FractionString on String {
   /// the format 'a/b'.
   ///
   ///  * 'a' and 'b' must be integers;
-  ///  * there can be the minus sign only in front of a;
+  ///  * there can be the minus sign only in front of a.
   bool get isFraction {
     try {
       Fraction.fromString(this);
