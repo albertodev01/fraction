@@ -165,6 +165,17 @@ void main() {
       expect(Fraction(-6, 8).toDouble(), equals(-0.75));
     });
 
+    test('Making sure conversions to egyptian fractions are correct', () {
+      expect(
+        Fraction(2, 3).toEgyptianFraction(),
+        unorderedEquals([Fraction(1, 2), Fraction(1, 6)]),
+      );
+      expect(
+        Fraction(3, 5).toEgyptianFraction(),
+        unorderedEquals([Fraction(1, 2), Fraction(1, 10)]),
+      );
+    });
+
     test("Making sure that 'copyWith' works properly", () {
       final fraction1 = Fraction(1, 3).copyWith();
       expect(fraction1, equals(Fraction(1, 3)));

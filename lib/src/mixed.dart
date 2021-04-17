@@ -210,6 +210,12 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Floating point representation of the mixed fraction.
   double toDouble() => whole + numerator / denominator;
 
+  /// Represents the current mixed fraction as an egyptian fraction.
+  ///
+  /// For more info, see [EgyptianFraction].
+  List<Fraction> toEgyptianFraction() =>
+      EgyptianFraction(fraction: toFraction()).compute();
+
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 

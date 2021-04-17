@@ -331,6 +331,12 @@ class Fraction implements Comparable<Fraction> {
       numerator: numerator % denominator,
       denominator: denominator);
 
+  /// Represents the current fraction as an egyptian fraction.
+  ///
+  /// For more info, see [EgyptianFraction].
+  List<Fraction> toEgyptianFraction() =>
+      EgyptianFraction(fraction: this).compute();
+
   /// Creates a **deep** copy of this object with the given fields replaced
   /// with the new values.
   Fraction copyWith({

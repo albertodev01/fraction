@@ -31,7 +31,7 @@ class FractionException implements Exception {
   int get hashCode => 31 * 83 + message.hashCode;
 }
 
-/// Exception object thrown by [MixedFractionException]
+/// Exception object thrown by [MixedFraction]
 class MixedFractionException implements Exception {
   /// Error message
   final String message;
