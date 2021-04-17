@@ -23,13 +23,13 @@ import 'package:fraction/fraction.dart';
 /// If the string doesn't represent a valid fraction, a [MixedFractionException]
 /// is thrown.
 class MixedFraction implements Comparable<MixedFraction> {
-  /// Whole part of the mixed fraction
+  /// Whole part of the mixed fraction.
   late final int whole;
 
-  /// Numerator of the fraction
+  /// Numerator of the fraction.
   late final int numerator;
 
-  /// Denominator of the fraction
+  /// Denominator of the fraction.
   late final int denominator;
 
   /// Creates an instance of a mixed fraction. If the numerator isn't greater than
@@ -209,6 +209,12 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   /// Floating point representation of the mixed fraction.
   double toDouble() => whole + numerator / denominator;
+
+  /// Represents the current mixed fraction as an egyptian fraction.
+  ///
+  /// For more info, see [EgyptianFraction].
+  List<Fraction> toEgyptianFraction() =>
+      EgyptianFraction(fraction: toFraction()).compute();
 
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);

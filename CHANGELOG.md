@@ -1,3 +1,8 @@
+## [3.0.1]
+ - Added the `toEgyptianFraction()` method on `Fraction` and `MixedFraction`
+ - Added a the new named constructor `EgyptianFraction.fromMixedFraction()`
+ - Minor documentation fixes
+
 ## [3.0.0]
 
  - **BREAKING**: the extension method for `Fraction` on `String` now has `bool get isFraction` instead of `bool isFraction()`

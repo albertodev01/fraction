@@ -183,6 +183,20 @@ void main() {
       expect(() => frac3.toStringAsGlyph(), throwsA(isA<FractionException>()));
     });
 
+    test('Making sure conversions to egyptian fractions are correct', () {
+      final mixedFraction1 = Fraction(2, 3).toMixedFraction();
+      final mixedFraction2 = Fraction(3, 5).toMixedFraction();
+
+      expect(
+        mixedFraction1.toEgyptianFraction(),
+        unorderedEquals([Fraction(1, 2), Fraction(1, 6)]),
+      );
+      expect(
+        mixedFraction2.toEgyptianFraction(),
+        unorderedEquals([Fraction(1, 2), Fraction(1, 10)]),
+      );
+    });
+
     test("Making sure that 'copyWith' works properly", () {
       final fraction = MixedFraction(whole: -2, numerator: 1, denominator: 2);
 
