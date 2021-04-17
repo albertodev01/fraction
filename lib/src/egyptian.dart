@@ -1,5 +1,8 @@
 import 'package:fraction/fraction.dart';
 
+/// This class converts a [Fraction] or a [MixedFraction] type into its egyptian
+/// fraction representation. Only positive number are allowed.
+///
 /// An Egyptian fraction is a finite sum of distinct fractions where the numerator
 /// is always 1 and, the denominator is a positive number and all the denominators
 /// differ from each other. For example:
@@ -33,18 +36,23 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
   /// The fraction to be converted into an egyptian fraction.
   final Fraction fraction;
 
-  /// Both proper and improper fractions are accepted.
-  ///
-  /// By default, the `enableCache` parameter is set to `true` allowing some
-  /// performance optimizations.
+  /// Both proper and improper fractions are accepted. The given [fraction] will
+  /// be converted into an egyptian fraction by calling the [compute] method.
   EgyptianFraction({
     required this.fraction,
   }) : assert(!fraction.isNegative, 'The fraction must be positive!');
 
+  /// Creates an instance of [EgyptianFraction] starting from a [MixedFraction].
+  /// The given [fraction] will be converted into an egyptian fraction by
+  /// calling the [compute] method.
+  EgyptianFraction.fromMixedFraction({
+    required MixedFraction mixedFraction
+  }) : this(fraction: mixedFraction.toFraction());
+
   /// Returns a series of [Fraction] representing the egyptian fraction of the
   /// current [fraction] object.
   List<Fraction> compute() {
-    // If the result is in the cache, then return it immediately
+    // If the result is in the cache, then return it immediately.
     if (cachingEnabled && _cache.containsKey(fraction)) {
       return _cache[fraction]!;
     }
@@ -63,7 +71,7 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
       denominator *= egyptianDen;
     }
 
-    // If the result isn't in the cache, add it
+    // If the result isn't in the cache, add it.
     if (cachingEnabled && !_cache.containsKey(fraction)) {
       _cache[fraction] = List<Fraction>.from(results);
     }
@@ -96,13 +104,13 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
   String toString() {
     var results = <Fraction>[];
 
-    // Trying to not compute the fraction (if possible)
+    // Trying to not compute the fraction (if possible).
     if (cachingEnabled && _cache.containsKey(fraction)) {
       results = _cache[fraction]!;
     } else {
       results = compute();
 
-      // We can cache it if caching is enabled
+      // We can cache it if caching is enabled.
       if (cachingEnabled) {
         _cache[fraction] = List<Fraction>.from(results);
       }
