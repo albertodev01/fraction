@@ -1,3 +1,7 @@
+## [3.0.2]
+ - Dependencies updates
+ - Fixed formatting to increase pub score
+
 ## [3.0.1]
  - Added the `toEgyptianFraction()` method on `Fraction` and `MixedFraction`
  - Added a the new named constructor `EgyptianFraction.fromMixedFraction()`

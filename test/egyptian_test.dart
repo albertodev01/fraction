@@ -8,7 +8,8 @@ void main() {
       expect(egyptian.fraction, equals(Fraction(2, 5)));
     });
 
-    test('Making sure that the class can correctly be instantiated with the '
+    test(
+        'Making sure that the class can correctly be instantiated with the '
         'mixed fraction constructor', () {
       final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
       final egyptian = EgyptianFraction.fromMixedFraction(mixedFraction: mixed);
