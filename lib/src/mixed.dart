@@ -42,7 +42,7 @@ class MixedFraction implements Comparable<MixedFraction> {
   ///
   /// In this case, the object `m` is built as '3 1/3' rather than '1 7/3' since
   /// the latter format is invalid.
-  MixedFraction({
+  factory MixedFraction({
     required int whole,
     required int numerator,
     required int denominator,
@@ -62,15 +62,26 @@ class MixedFraction implements Comparable<MixedFraction> {
     // to transform the fraction and make it proper. The sign whole part may
     // change depending on the sign of the fractional part.
     if (absNumerator > absDenominator) {
-      this.whole = (absNumerator ~/ absDenominator + whole) * sign;
-      this.numerator = absNumerator % absDenominator;
-      this.denominator = absDenominator;
+      return MixedFraction._(
+        whole: (absNumerator ~/ absDenominator + whole) * sign,
+        numerator: absNumerator % absDenominator,
+        denominator: absDenominator,
+      );
     } else {
-      this.whole = whole * sign;
-      this.numerator = absNumerator;
-      this.denominator = absDenominator;
+      return MixedFraction._(
+        whole: whole * sign,
+        numerator: absNumerator,
+        denominator: absDenominator,
+      );
     }
   }
+
+  /// The default constructor.
+  MixedFraction._({
+    required this.whole,
+    required this.numerator,
+    required this.denominator,
+  });
 
   /// Creates an instance of a mixed fraction.
   factory MixedFraction.fromFraction(Fraction fraction) =>
