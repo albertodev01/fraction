@@ -42,8 +42,11 @@ class MixedFraction implements Comparable<MixedFraction> {
   ///
   /// In this case, the object `m` is built as '3 1/3' rather than '1 7/3' since
   /// the latter format is invalid.
-  MixedFraction(
-      {required int whole, required int numerator, required int denominator}) {
+  factory MixedFraction({
+    required int whole,
+    required int numerator,
+    required int denominator,
+  }) {
     // Denominator cannot be zero
     if (denominator == 0) {
       throw const MixedFractionException('The denominator cannot be zero');
@@ -59,15 +62,26 @@ class MixedFraction implements Comparable<MixedFraction> {
     // to transform the fraction and make it proper. The sign whole part may
     // change depending on the sign of the fractional part.
     if (absNumerator > absDenominator) {
-      this.whole = (absNumerator ~/ absDenominator + whole) * sign;
-      this.numerator = absNumerator % absDenominator;
-      this.denominator = absDenominator;
+      return MixedFraction._(
+        whole: (absNumerator ~/ absDenominator + whole) * sign,
+        numerator: absNumerator % absDenominator,
+        denominator: absDenominator,
+      );
     } else {
-      this.whole = whole * sign;
-      this.numerator = absNumerator;
-      this.denominator = absDenominator;
+      return MixedFraction._(
+        whole: whole * sign,
+        numerator: absNumerator,
+        denominator: absDenominator,
+      );
     }
   }
+
+  /// The default constructor.
+  MixedFraction._({
+    required this.whole,
+    required this.numerator,
+    required this.denominator,
+  });
 
   /// Creates an instance of a mixed fraction.
   factory MixedFraction.fromFraction(Fraction fraction) =>
@@ -159,9 +173,9 @@ class MixedFraction implements Comparable<MixedFraction> {
   int get hashCode {
     var result = 83;
 
-    result = 31 * result + whole.hashCode;
-    result = 31 * result + numerator.hashCode;
-    result = 31 * result + denominator.hashCode;
+    result = result * 31 + whole.hashCode;
+    result = result * 31 + numerator.hashCode;
+    result = result * 31 + denominator.hashCode;
 
     return result;
   }
@@ -253,7 +267,10 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Changes the sign of this mixed fraction and returns the results in a new
   /// [MixedFraction] instance.
   MixedFraction negate() => MixedFraction(
-      whole: whole * -1, numerator: numerator, denominator: denominator);
+        whole: whole * -1,
+        numerator: numerator,
+        denominator: denominator,
+      );
 
   /// Sum between two mixed fractions.
   MixedFraction operator +(MixedFraction other) =>
@@ -302,8 +319,9 @@ class MixedFraction implements Comparable<MixedFraction> {
         return denominator;
       default:
         throw MixedFractionException(
-            'The index you gave ($index) is not valid: '
-            'it must be either 0, 1 or 2.');
+          'The index you gave ($index) is not valid: '
+          'it must be either 0, 1 or 2.',
+        );
     }
   }
 }

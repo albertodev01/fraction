@@ -10,10 +10,12 @@ extension FractionString on String {
   bool get isFraction {
     try {
       Fraction.fromString(this);
+
       return true;
     } on FractionException {
       try {
         Fraction.fromGlyph(this);
+
         return true;
       } on FractionException {
         return false;

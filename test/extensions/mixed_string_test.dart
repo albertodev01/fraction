@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:fraction/fraction.dart';
+import 'package:test/test.dart';
 
 void main() {
   group("Testing the extension method on 'String'", () {
@@ -26,38 +26,41 @@ void main() {
       );
     });
 
-    test('Making sure that invalid strings conversions throw and exception',
-        () {
-      expect(
-        () => '1/'.toMixedFraction(),
-        throwsA(isA<MixedFractionException>()),
-      );
-      expect(
-        () => '1/0'.toMixedFraction(),
-        throwsA(isA<MixedFractionException>()),
-      );
-      expect(
-        () => 'x'.toMixedFraction(),
-        throwsA(isA<MixedFractionException>()),
-      );
-      expect(
-        () => '3/-6'.toMixedFraction(),
-        throwsA(isA<MixedFractionException>()),
-      );
-      expect(
-        () => ''.toMixedFraction(),
-        throwsA(isA<MixedFractionException>()),
-      );
-    });
+    test(
+      'Making sure that invalid strings conversions throw and exception',
+      () {
+        expect(
+          () => '1/'.toMixedFraction(),
+          throwsA(isA<MixedFractionException>()),
+        );
+        expect(
+          () => '1/0'.toMixedFraction(),
+          throwsA(isA<MixedFractionException>()),
+        );
+        expect(
+          () => 'x'.toMixedFraction(),
+          throwsA(isA<MixedFractionException>()),
+        );
+        expect(
+          () => '3/-6'.toMixedFraction(),
+          throwsA(isA<MixedFractionException>()),
+        );
+        expect(
+          () => ''.toMixedFraction(),
+          throwsA(isA<MixedFractionException>()),
+        );
+      },
+    );
 
     test(
-        'Making sure that the boolean check is safe to be used before converting',
-        () {
-      expect('1 3/5'.isMixedFraction, isTrue);
-      expect('3 ¾'.isMixedFraction, isTrue);
-      expect('0 -3/5'.isMixedFraction, isTrue);
-      expect(''.isMixedFraction, isFalse);
-      expect('7/4'.isMixedFraction, isFalse);
-    });
+      'Making sure that the boolean check is safe to be used before converting',
+      () {
+        expect('1 3/5'.isMixedFraction, isTrue);
+        expect('3 ¾'.isMixedFraction, isTrue);
+        expect('0 -3/5'.isMixedFraction, isTrue);
+        expect(''.isMixedFraction, isFalse);
+        expect('7/4'.isMixedFraction, isFalse);
+      },
+    );
   });
 }

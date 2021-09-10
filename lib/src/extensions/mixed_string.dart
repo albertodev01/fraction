@@ -11,6 +11,7 @@ extension MixedFractionString on String {
   bool get isMixedFraction {
     try {
       MixedFraction.fromString(this);
+
       return true;
     } on MixedFractionException {
       return false;

@@ -45,8 +45,9 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
   /// Creates an instance of [EgyptianFraction] starting from a [MixedFraction].
   /// The given [fraction] will be converted into an egyptian fraction by
   /// calling the [compute] method.
-  EgyptianFraction.fromMixedFraction({required MixedFraction mixedFraction})
-      : this(fraction: mixedFraction.toFraction());
+  EgyptianFraction.fromMixedFraction({
+    required MixedFraction mixedFraction,
+  }) : this(fraction: mixedFraction.toFraction());
 
   /// Returns a series of [Fraction] representing the egyptian fraction of the
   /// current [fraction] object.
@@ -116,6 +117,7 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
     }
 
     final buffer = StringBuffer()..writeAll(results, ' + ');
+
     return buffer.toString();
   }
 }

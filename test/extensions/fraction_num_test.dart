@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:fraction/fraction.dart';
+import 'package:test/test.dart';
 
 void main() {
   group("Testing the extension method on 'num'", () {
