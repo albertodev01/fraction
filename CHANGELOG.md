@@ -1,3 +1,7 @@
+## [3.1.0]
+ - Added stricter linter rules with `lints` and `dart_code_metrics` packages
+ - Dependencies updates
+
 ## [3.0.2]
  - Dependencies updates
  - Fixed formatting to increase pub score

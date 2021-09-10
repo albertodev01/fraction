@@ -116,6 +116,7 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
     }
 
     final buffer = StringBuffer()..writeAll(results, ' + ');
+
     return buffer.toString();
   }
 }

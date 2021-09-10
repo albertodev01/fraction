@@ -9,20 +9,25 @@ void main() {
     });
 
     test(
-        'Making sure that the class can correctly be instantiated with the '
-        'mixed fraction constructor', () {
-      final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
-      final egyptian = EgyptianFraction.fromMixedFraction(mixedFraction: mixed);
-      expect(egyptian.fraction, equals(Fraction(27, 2)));
-    });
+      'Making sure that the class can correctly be instantiated with the '
+      'mixed fraction constructor',
+      () {
+        final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
+        final egyptian =
+            EgyptianFraction.fromMixedFraction(mixedFraction: mixed);
+        expect(egyptian.fraction, equals(Fraction(27, 2)));
+      },
+    );
 
-    test('Making sure that the constructor throws in case of invalid fraction',
-        () {
-      expect(
-        () => EgyptianFraction(fraction: Fraction(2, 0)),
-        throwsA(isA<FractionException>()),
-      );
-    });
+    test(
+      'Making sure that the constructor throws in case of invalid fraction',
+      () {
+        expect(
+          () => EgyptianFraction(fraction: Fraction(2, 0)),
+          throwsA(isA<FractionException>()),
+        );
+      },
+    );
 
     test('Making sure that the constructor throws with negative fractions', () {
       expect(
@@ -32,10 +37,14 @@ void main() {
     });
 
     test('Making sure that static methods can be accessed', () {
-      expect(() {
-        EgyptianFraction.clearCache();
-        return EgyptianFraction.cachingEnabled;
-      }(), isTrue);
+      expect(
+        () {
+          EgyptianFraction.clearCache();
+
+          return EgyptianFraction.cachingEnabled;
+        }(),
+        isTrue,
+      );
     });
 
     test('Making sure that caching properly works', () {
