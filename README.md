@@ -1,5 +1,5 @@
 <p align="center"><img src="https://raw.githubusercontent.com/albertodev01/fraction/master/assets/package_logo.png" alt="fraction package logo" /></p>
-<p align="center">A package that helps you dealing with <b>fractions</b> and <b>mixed fractions</b>.</p>
+<p align="center">A package that helps you working with <b>fractions</b> and <b>mixed fractions</b>.</p>
 <p align="center">
     <a href="https://codecov.io/gh/albertodev01/fraction"><img src="https://codecov.io/gh/albertodev01/fraction/branch/master/graph/badge.svg?token=YKA1ZYUROR"/></a>
     <a href="https://github.com/albertodev01/fraction/actions"><img src="https://github.com/albertodev01/fraction/workflows/fractions_ci/badge.svg" alt="CI status" /></a>
@@ -52,7 +52,7 @@ final f2 = 1.5.toFraction(); // 3/2
 final f3 = "6/5".toFraction(); // 6/5
 ```
 
-Note that a `Fraction` object is **immutable** so methods that require changing the internal state of the object return a new instance. For example, `reduce()` method reduces the fraction to the lowest terms but it returns a new instance:
+Note that a `Fraction` object is **immutable** so methods that require changing the internal state of the object return a new instance. For example, the `reduce()` method reduces the fraction to the lowest terms and returns a **new** instance:
 
 ```dart
 final fraction = Fraction.fromString("12/20"); // 12/20

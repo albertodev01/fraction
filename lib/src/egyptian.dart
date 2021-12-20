@@ -20,7 +20,7 @@ import 'package:fraction/fraction.dart';
 /// In various cases, the value of the denominator can be so big that an overflow
 /// error happens.
 class EgyptianFraction implements Comparable<EgyptianFraction> {
-  /// This variable caches the result of the [compute] method.
+  /// This variable caches the result of the `compute()` method.
   static final _cache = <Fraction, List<Fraction>>{};
 
   /// Clears the internal cache.

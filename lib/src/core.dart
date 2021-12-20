@@ -27,10 +27,10 @@ class Fraction implements Comparable<Fraction> {
   );
 
   /// The numerator of the fraction.
-  late final int numerator;
+  final int numerator;
 
   /// The denominator of the fraction.
-  late final int denominator;
+  final int denominator;
 
   /// Maps fraction glyphs to fraction values.
   static final _glyphsToValues = {
@@ -104,7 +104,7 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// The default constructor.
-  Fraction._(this.numerator, this.denominator);
+  const Fraction._(this.numerator, this.denominator);
 
   /// Returns an instance of [Fraction] if the source string is a valid representation
   /// of a fraction. Some valid examples are:
@@ -167,8 +167,9 @@ class Fraction implements Comparable<Fraction> {
       return _glyphsToValues[value]!;
     }
 
-    throw FractionException('The given string ($value) does not represent a '
-        'valid fraction glyph!');
+    throw FractionException(
+      'The given string ($value) does not represent a valid fraction glyph!',
+    );
   }
 
   /// Tries to give a fractional representation of a double according with the
@@ -317,36 +318,43 @@ class Fraction implements Comparable<Fraction> {
       return _valuesToGlyphs[this]!;
     }
 
-    throw FractionException('This fraction ($this) does not have an unicode '
-        'fraction glyph!');
+    throw FractionException(
+      'This fraction ($this) does not have an unicode fraction glyph!',
+    );
   }
 
   /// A floating point representation of the fraction.
   double toDouble() => numerator / denominator;
 
   /// Converts the current object into a [MixedFraction].
-  MixedFraction toMixedFraction() => MixedFraction(
-        whole: numerator ~/ denominator,
-        numerator: numerator % denominator,
-        denominator: denominator,
-      );
+  MixedFraction toMixedFraction() {
+    return MixedFraction(
+      whole: numerator ~/ denominator,
+      numerator: numerator % denominator,
+      denominator: denominator,
+    );
+  }
 
   /// Represents the current fraction as an egyptian fraction.
   ///
   /// For more info, see [EgyptianFraction].
-  List<Fraction> toEgyptianFraction() =>
-      EgyptianFraction(fraction: this).compute();
+  List<Fraction> toEgyptianFraction() {
+    return EgyptianFraction(
+      fraction: this,
+    ).compute();
+  }
 
   /// Creates a **deep** copy of this object with the given fields replaced
   /// with the new values.
   Fraction copyWith({
     int? numerator,
     int? denominator,
-  }) =>
-      Fraction(
-        numerator ?? this.numerator,
-        denominator ?? this.denominator,
-      );
+  }) {
+    return Fraction(
+      numerator ?? this.numerator,
+      denominator ?? this.denominator,
+    );
+  }
 
   /// Throws a [FractionException] whether [value] is infinite or [double.nan].
   static void _checkValue(num value) {
@@ -418,28 +426,36 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// Sum between two fractions.
-  Fraction operator +(Fraction other) => Fraction(
-        numerator * other.denominator + denominator * other.numerator,
-        denominator * other.denominator,
-      );
+  Fraction operator +(Fraction other) {
+    return Fraction(
+      numerator * other.denominator + denominator * other.numerator,
+      denominator * other.denominator,
+    );
+  }
 
   /// Difference between two fractions.
-  Fraction operator -(Fraction other) => Fraction(
-        numerator * other.denominator - denominator * other.numerator,
-        denominator * other.denominator,
-      );
+  Fraction operator -(Fraction other) {
+    return Fraction(
+      numerator * other.denominator - denominator * other.numerator,
+      denominator * other.denominator,
+    );
+  }
 
   /// Multiplication between two fractions.
-  Fraction operator *(Fraction other) => Fraction(
-        numerator * other.numerator,
-        denominator * other.denominator,
-      );
+  Fraction operator *(Fraction other) {
+    return Fraction(
+      numerator * other.numerator,
+      denominator * other.denominator,
+    );
+  }
 
   /// Division between two fractions.
-  Fraction operator /(Fraction other) => Fraction(
-        numerator * other.denominator,
-        denominator * other.numerator,
-      );
+  Fraction operator /(Fraction other) {
+    return Fraction(
+      numerator * other.denominator,
+      denominator * other.numerator,
+    );
+  }
 
   /// Checks whether this fraction is greater or equal than the other.
   bool operator >=(Fraction other) => toDouble() >= other.toDouble();
@@ -464,7 +480,8 @@ class Fraction implements Comparable<Fraction> {
       return denominator;
     }
 
-    throw FractionException('The index you gave ($index) is not valid: it must '
-        'be either 0 or 1.');
+    throw FractionException(
+      'The index you gave ($index) is not valid: it must be either 0 or 1.',
+    );
   }
 }

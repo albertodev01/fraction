@@ -1,3 +1,8 @@
+## [3.1.1]
+ - Added some more `dart_code_metrics` rules and minor README fixes
+ - Code polish
+ - Dependencies updates
+
 ## [3.1.0]
  - Added stricter linter rules with `lints` and `dart_code_metrics` packages
  - Dependencies updates

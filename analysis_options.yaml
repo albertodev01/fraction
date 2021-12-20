@@ -1,6 +1,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  exclude:
+    - example/**
   plugins:
     - dart_code_metrics
 
@@ -14,14 +16,20 @@ dart_code_metrics:
   metrics-exclude:
     - test/**
   rules:
-    - avoid-unused-parameters
-    - avoid-wrapping-in-padding
+    - avoid-missing-enum-constant-in-map
+    - avoid-nested-conditional-expressions
+    - avoid-throw-in-catch-block
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
     - binary-expression-operand-order
     - double-literal-format
     - newline-before-return
     - no-boolean-literal-compare
     - no-equal-then-else
     - no-object-declaration
+    - prefer-correct-type-name
+    - prefer-first
+    - prefer-last
     - prefer-trailing-comma
 
 linter:
