@@ -38,7 +38,7 @@ final f2 = 1.5.toFraction(); // 3/2
 final f3 = "6/5".toFraction(); // 6/5
 ```
 
-You can easily sum, subtract, multiply and divide fractions thanks to the operators:
+You can easily sum, subtract, multiply and divide fractions thanks to arithmetic operator:
 
 ```dart
 final f1 = Fraction(5, 7);
@@ -85,7 +85,7 @@ Any other index value different from `0` and `1` throws a `FractionException` ex
 
 ## Working with mixed fractions
 
-A mixed fraction is made up of a whole part and a proper fraction (a fraction in which numerator <= denominator). It's easy to build a `MixedFraction` object:
+A mixed fraction is made up of a whole part and a proper fraction (a fraction in which numerator <= denominator). Building a `MixedFraction` object is very easy:
 
 ```dart
 final f1 = MixedFraction(3, 4, 7);
@@ -93,7 +93,7 @@ final f2 = MixedFraction.fromDouble(1.5);
 final f3 = MixedFraction.fromString("1 1/2");
 ```
 
-There is also the possibility to initialize a `MixedFraction` using extension methods:
+There also is the possibility to initialize a `MixedFraction` using extension methods:
 
 ```dart
 final f1 = "1 1/2".toMixedFraction();
@@ -103,7 +103,7 @@ If you try to create an instance in which the numerator is greater than the deno
 
 ## Working with egyptian fractions
 
-If you want to compute the egyptian fraction of a `Fraction` or `MixedFraction` instance, you can use the `EgyptianFraction` type to perform the calculation. Here's a simple example:
+If you want to compute the egyptian fraction of a `Fraction` or `MixedFraction` object, you can use the `EgyptianFraction` type to make the calculation. Here's a simple example:
 
 ```dart
 final egyptian = EgyptianFraction(
@@ -119,4 +119,4 @@ You can obtain the same result by calling the `EgyptianFraction.fromMixedFractio
 print("$egyptian"); // 1/2 + 1/10
 ```
 
-When you print an `EgyptianFraction` object, you get the egyptian fraction representation of the input you passed. An exception will be thrown if you pass in a negative fraction.
+When you print an `EgyptianFraction` object, you get the egyptian fraction representation of the fraction you passed via constructor.

@@ -52,7 +52,7 @@ final f2 = 1.5.toFraction(); // 3/2
 final f3 = "6/5".toFraction(); // 6/5
 ```
 
-Note that a `Fraction` object is **immutable** so methods that require changing the internal state of the object return a new instance. For example, `reduce()` method reduces the fraction to the lowest terms but it returns a new instance:
+Note that a `Fraction` object is **immutable** so methods that require changing the internal state of the object return a new instance. For example, the `reduce()` method reduces the fraction to the lowest terms and returns a **new** instance:
 
 ```dart
 final fraction = Fraction.fromString("12/20"); // 12/20
