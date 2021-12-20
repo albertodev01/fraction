@@ -64,9 +64,24 @@ equivalent because `1*6 = 3*2` (and in fact `3/6` is the same as `1/2`). The API
 final fraction1 = Fraction(10, 2).toDouble();  // 5.0
 final fraction2 = Fraction(10, 2).inverse();   // 2/10
 final fraction3 = Fraction(1, 15).isWhole;     // false
+final fraction4 = Fraction(2, 3).negate();     // -2/3
+final fraction5 = Fraction(1, 15).isImproper;  // false
+final fraction6 = Fraction(1, 15).isProper;    // true
+
 
 final sum = fraction1 + fraction3; // 76/15
 ```
+
+You can also access numerator and denominator by index:
+
+```dart
+final fraction = Fraction(-7, 12);
+
+print('${fraction[0]}'); // -7
+print('${fraction[1]}'); // 12
+```
+
+Any other index value different from `0` and `1` throws a `FractionException` exception.
 
 ## Working with mixed fractions
 

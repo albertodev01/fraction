@@ -13,8 +13,9 @@ void main() {
       'mixed fraction constructor',
       () {
         final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
-        final egyptian =
-            EgyptianFraction.fromMixedFraction(mixedFraction: mixed);
+        final egyptian = EgyptianFraction.fromMixedFraction(
+          mixedFraction: mixed,
+        );
         expect(egyptian.fraction, equals(Fraction(27, 2)));
       },
     );

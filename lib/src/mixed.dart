@@ -24,13 +24,13 @@ import 'package:fraction/fraction.dart';
 /// is thrown.
 class MixedFraction implements Comparable<MixedFraction> {
   /// Whole part of the mixed fraction.
-  late final int whole;
+  final int whole;
 
   /// Numerator of the fraction.
-  late final int numerator;
+  final int numerator;
 
   /// Denominator of the fraction.
-  late final int denominator;
+  final int denominator;
 
   /// Creates an instance of a mixed fraction. If the numerator isn't greater than
   /// the denominator, the values are automatically transformed so that a valid
@@ -77,7 +77,7 @@ class MixedFraction implements Comparable<MixedFraction> {
   }
 
   /// The default constructor.
-  MixedFraction._({
+  const MixedFraction._({
     required this.whole,
     required this.numerator,
     required this.denominator,
@@ -100,8 +100,10 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// MixedFraction.fromString('3 ⅐');
   /// ```
   factory MixedFraction.fromString(String value) {
-    const errorObj = MixedFractionException("The string must be in the form 'a "
-        "b/c' with exactly one space between the whole part and the fraction");
+    const errorObj = MixedFractionException(
+      "The string must be in the form 'a b/c' with exactly one space between "
+      'the whole part and the fraction',
+    );
 
     // Check for the space
     if (!value.contains(' ')) {
@@ -137,27 +139,26 @@ class MixedFraction implements Comparable<MixedFraction> {
 
     // Fixing the potential negative signs
     return MixedFraction(
-      whole: int.parse(parts[0]),
+      whole: int.parse(parts.first),
       numerator: fraction.numerator,
       denominator: fraction.denominator,
     );
   }
 
   @override
-
-  /// Two mixed fractions are equal if the whole part and the "cross product" of
-  /// the fractional part is equal.
-  ///
-  /// ```dart
-  /// final one = MixedFraction(whole: 1, numerator: 3, denominator: 4);
-  /// final two = MixedFraction(whole: 1, numerator: 6, denominator: 8);
-  ///
-  /// print(one == two); //true
-  /// ```
-  ///
-  /// The above example returns true because the whole part is equal (1 = 1) and
-  /// the "cross product" of `one` and two` is equal (3*8 = 6*4).
   bool operator ==(Object other) {
+    // Two mixed fractions are equal if the whole part and the "cross product"
+    // of the fractional part is equal.
+    //
+    // ```dart
+    // final one = MixedFraction(whole: 1, numerator: 3, denominator: 4);
+    // final two = MixedFraction(whole: 1, numerator: 6, denominator: 8);
+    //
+    // print(one == two); //true
+    // ```
+    //
+    // The above example returns true because the whole part is equal (1 = 1)
+    // and the "cross product" of `one` and two` is equal (3 * 8 = 6 * 4).
     if (identical(this, other)) {
       return true;
     }
@@ -227,8 +228,11 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Represents the current mixed fraction as an egyptian fraction.
   ///
   /// For more info, see [EgyptianFraction].
-  List<Fraction> toEgyptianFraction() =>
-      EgyptianFraction(fraction: toFraction()).compute();
+  List<Fraction> toEgyptianFraction() {
+    return EgyptianFraction(
+      fraction: toFraction(),
+    ).compute();
+  }
 
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
@@ -239,12 +243,13 @@ class MixedFraction implements Comparable<MixedFraction> {
     int? whole,
     int? numerator,
     int? denominator,
-  }) =>
-      MixedFraction(
-        whole: whole ?? this.whole,
-        numerator: numerator ?? this.numerator,
-        denominator: denominator ?? this.denominator,
-      );
+  }) {
+    return MixedFraction(
+      whole: whole ?? this.whole,
+      numerator: numerator ?? this.numerator,
+      denominator: denominator ?? this.denominator,
+    );
+  }
 
   /// True or false whether the mixed fraction is positive or negative.
   bool get isNegative => whole < 0;
@@ -266,27 +271,41 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   /// Changes the sign of this mixed fraction and returns the results in a new
   /// [MixedFraction] instance.
-  MixedFraction negate() => MixedFraction(
-        whole: whole * -1,
-        numerator: numerator,
-        denominator: denominator,
-      );
+  MixedFraction negate() {
+    return MixedFraction(
+      whole: whole * -1,
+      numerator: numerator,
+      denominator: denominator,
+    );
+  }
 
   /// Sum between two mixed fractions.
-  MixedFraction operator +(MixedFraction other) =>
-      (toFraction() + other.toFraction()).toMixedFraction().reduce();
+  MixedFraction operator +(MixedFraction other) {
+    final sum = toFraction() + other.toFraction();
+
+    return sum.toMixedFraction();
+  }
 
   /// Difference between two mixed fractions.
-  MixedFraction operator -(MixedFraction other) =>
-      (toFraction() - other.toFraction()).toMixedFraction();
+  MixedFraction operator -(MixedFraction other) {
+    final sum = toFraction() - other.toFraction();
+
+    return sum.toMixedFraction();
+  }
 
   /// Multiplication between two mixed fractions.
-  MixedFraction operator *(MixedFraction other) =>
-      (toFraction() * other.toFraction()).toMixedFraction();
+  MixedFraction operator *(MixedFraction other) {
+    final sum = toFraction() * other.toFraction();
+
+    return sum.toMixedFraction();
+  }
 
   /// Division between two mixed fractions.
-  MixedFraction operator /(MixedFraction other) =>
-      (toFraction() / other.toFraction()).toMixedFraction();
+  MixedFraction operator /(MixedFraction other) {
+    final sum = toFraction() / other.toFraction();
+
+    return sum.toMixedFraction();
+  }
 
   /// Checks whether this mixed fraction is greater or equal than the other.
   bool operator >=(MixedFraction other) => toDouble() >= other.toDouble();
