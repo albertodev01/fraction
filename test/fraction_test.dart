@@ -156,6 +156,22 @@ void main() {
         expect(fraction.isNegative, isFalse);
       },
     );
+
+    test(
+      'Making sure that fractions are properly built from neg. mixed fractions',
+          () {
+        final fraction = Fraction.fromMixedFraction(
+          MixedFraction(
+            whole: -3,
+            numerator: 5,
+            denominator: 6,
+          ),
+        );
+
+        expect(fraction, equals(Fraction(-23, 6)));
+        expect(fraction.isNegative, isTrue);
+      },
+    );
   });
 
   group('Testing objects equality', () {

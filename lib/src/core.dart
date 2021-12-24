@@ -1,9 +1,9 @@
 import 'package:fraction/fraction.dart';
 
-/// Dart representation of a fraction having both the numerator and the denominator
-/// as integers.
+/// Dart representation of a fraction having both the numerator and the
+/// denominator as integers.
 ///
-/// You can create a new instance of [Fraction] either by using one of the
+/// You can create a new instance of [Fraction] either with one of the
 /// constructors or by using the extension methods on [num] and [String].
 ///
 /// ```dart
@@ -25,12 +25,6 @@ class Fraction implements Comparable<Fraction> {
   static final _fractionRegex = RegExp(
     '(^-?|^\\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
-
-  /// The numerator of the fraction.
-  final int numerator;
-
-  /// The denominator of the fraction.
-  final int denominator;
 
   /// Maps fraction glyphs to fraction values.
   static final _glyphsToValues = {
@@ -76,8 +70,14 @@ class Fraction implements Comparable<Fraction> {
     Fraction(1, 10): '⅒',
   };
 
+  /// The numerator of the fraction.
+  final int numerator;
+
+  /// The denominator of the fraction.
+  final int denominator;
+
   /// Creates a new representation of a fraction. If the denominator is negative,
-  /// the fraction is normalized so that the minus sign can only appear in front
+  /// the fraction is 'normalized' so that the minus sign only appears in front
   /// of the denominator.
   ///
   /// ```dart
@@ -90,10 +90,6 @@ class Fraction implements Comparable<Fraction> {
     if (denominator == 0) {
       throw const FractionException('Denominator cannot be zero.');
     }
-
-    // Making sure that both numerator and denominator valid
-    _checkValue(numerator);
-    _checkValue(denominator);
 
     // Fixing the sign of numerator and denominator
     if (denominator < 0) {
@@ -129,7 +125,7 @@ class Fraction implements Comparable<Fraction> {
       throw FractionException('The string $value is not a valid fraction');
     }
 
-    // Remove the leading + if present
+    // Remove the leading + (if any)
     final fraction = value.replaceAll('+', '');
 
     // Look for the / separator
@@ -188,11 +184,11 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction.fromDouble(math.pi)
   /// ```
   ///
-  /// The above returns a fraction because it considers only the first 10 decimal
-  /// places since `precision` is set to 1.0E-10.
+  /// The above returns a fraction because the algorithm considers only the
+  /// first 10 decimal digits (since `precision` is set to 1.0e-10).
   ///
   /// ```dart
-  /// Fraction.fromDouble(math.pi, 1.0E-20)
+  /// Fraction.fromDouble(math.pi, precision: 1.0e-20)
   /// ```
   ///
   /// This example will return another different value because it considers the
@@ -200,7 +196,7 @@ class Fraction implements Comparable<Fraction> {
   /// irrational numbers cannot be expressed as fractions.
   ///
   /// This method is good with rational numbers.
-  factory Fraction.fromDouble(double value, {double precision = 1.0E-12}) {
+  factory Fraction.fromDouble(double value, {double precision = 1.0e-12}) {
     _checkValue(value);
     _checkValue(precision);
 
@@ -232,7 +228,7 @@ class Fraction implements Comparable<Fraction> {
     var num = mixed.whole * mixed.denominator + mixed.numerator;
 
     if (mixed.isNegative) {
-      num = (mixed.whole * mixed.denominator + mixed.numerator) * -1;
+      num = mixed.whole * mixed.denominator + (mixed.numerator * -1);
     }
 
     return Fraction(num, mixed.denominator);

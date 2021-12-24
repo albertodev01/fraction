@@ -1,12 +1,11 @@
 import 'package:fraction/fraction.dart';
 
-/// Dart representation of a mixed fraction which is composed by the whole part
+/// Dart representation of a 'mixed fraction', which is made up by the whole part
 /// and a proper fraction. A proper fraction is a fraction in which the relation
 /// `numerator <= denominator` is true.
 ///
 /// There's the possibility to create an instance of [MixedFraction] either by
-/// using one of the constructors or by using the extension methods on [num] and
-/// [String].
+/// using one of the constructors or the extension methods on [num] and [String].
 ///
 /// ```dart
 /// final f = MixedFraction.fromDouble(1.5);
@@ -58,9 +57,9 @@ class MixedFraction implements Comparable<MixedFraction> {
     final absNumerator = numerator.abs();
     final absDenominator = denominator.abs();
 
-    // In case the numerator were greater than the denominator, there's the need
-    // to transform the fraction and make it proper. The sign whole part may
-    // change depending on the sign of the fractional part.
+    // In case the numerator was greater than the denominator, there'd the need
+    // to transform the fraction and make it proper. The sign of the whole part
+    // may change depending on the sign of the fractional part.
     if (absNumerator > absDenominator) {
       return MixedFraction._(
         whole: (absNumerator ~/ absDenominator + whole) * sign,
@@ -127,7 +126,7 @@ class MixedFraction implements Comparable<MixedFraction> {
      * exception can occur only if the second part is a malformed string (not a
      * fraction)
      * */
-    late final Fraction fraction;
+    Fraction fraction;
 
     // The string must be either a fraction with numbers and a slash or a glyph.
     // If that's not the case, then a 'FractionException' is thrown.
@@ -198,9 +197,9 @@ class MixedFraction implements Comparable<MixedFraction> {
   String toString() {
     if (whole == 0) {
       return '$numerator/$denominator';
-    } else {
-      return '$whole $numerator/$denominator';
     }
+
+    return '$whole $numerator/$denominator';
   }
 
   /// If possible, this method converts this [MixedFraction] instance into an
@@ -293,7 +292,7 @@ class MixedFraction implements Comparable<MixedFraction> {
     return sum.toMixedFraction();
   }
 
-  /// Multiplication between two mixed fractions.
+  /// Product between two mixed fractions.
   MixedFraction operator *(MixedFraction other) {
     final sum = toFraction() * other.toFraction();
 
@@ -338,8 +337,7 @@ class MixedFraction implements Comparable<MixedFraction> {
         return denominator;
       default:
         throw MixedFractionException(
-          'The index you gave ($index) is not valid: '
-          'it must be either 0, 1 or 2.',
+          'The index ($index) is not valid: it must either be 0, 1 or 2.',
         );
     }
   }

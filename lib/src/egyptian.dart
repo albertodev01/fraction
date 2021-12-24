@@ -36,22 +36,25 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
   /// The fraction to be converted into an egyptian fraction.
   final Fraction fraction;
 
-  /// Both proper and improper fractions are accepted. The given [fraction] will
-  /// be converted into an egyptian fraction by calling the [compute] method.
-  EgyptianFraction({
+  /// Creates an [EgyptianFraction] instance from a [Fraction] object.
+  const EgyptianFraction({
     required this.fraction,
-  }) : assert(!fraction.isNegative, 'The fraction must be positive!');
+  });
 
-  /// Creates an instance of [EgyptianFraction] starting from a [MixedFraction].
-  /// The given [fraction] will be converted into an egyptian fraction by
-  /// calling the [compute] method.
+  /// Creates an [EgyptianFraction] instance from a [MixedFraction] object.
   EgyptianFraction.fromMixedFraction({
     required MixedFraction mixedFraction,
   }) : this(fraction: mixedFraction.toFraction());
 
   /// Returns a series of [Fraction] representing the egyptian fraction of the
   /// current [fraction] object.
+  ///
+  /// Throws a [FractionException] if [fraction] is negative.
   List<Fraction> compute() {
+    if (fraction.isNegative) {
+      throw const FractionException('The fraction must be positive!');
+    }
+
     // If the result is in the cache, then return it immediately.
     if (cachingEnabled && _cache.containsKey(fraction)) {
       return _cache[fraction]!;

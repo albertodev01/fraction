@@ -1,3 +1,7 @@
+## [3.1.2]
+ - Added a small Dart CLI app in as example in the `example/` folder
+ - Dependencies updates
+
 ## [3.1.1]
  - Added some more `dart_code_metrics` rules and minor README fixes
  - Code polish
