@@ -241,7 +241,7 @@ void main() {
         expect(frac1, equals('-2 ½'));
         expect(frac2, equals('½'));
         expect(
-          () => frac3.toStringAsGlyph(),
+          frac3.toStringAsGlyph,
           throwsA(isA<FractionException>()),
         );
       },
@@ -346,7 +346,7 @@ void main() {
       );
       expect(
         mixed1 - mixed2,
-        equals(MixedFraction(whole: -1, numerator: 11, denominator: 20)),
+        equals(MixedFraction(whole: 0, numerator: -11, denominator: 20)),
       );
       expect(
         mixed1 * mixed2,

@@ -1,5 +1,6 @@
-## [3.1.2]
+## [3.2.0]
  - Added a small Dart CLI app in as example in the `example/` folder
+ - Minor fixes on the `Fraction` type
  - Dependencies updates
 
 ## [3.1.1]

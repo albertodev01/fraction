@@ -8,15 +8,21 @@ import 'package:fraction/fraction.dart';
 /// using one of the constructors or the extension methods on [num] and [String].
 ///
 /// ```dart
-/// final f = MixedFraction.fromDouble(1.5);
-/// final f = MixedFraction.fromString("1 1/2");
+/// MixedFraction(
+///   whole: 5,
+///   numerator: 2,
+///   denominator: 3,
+/// );
+/// MixedFraction.fromDouble(1.5);
+/// MixedFraction.fromString("1 1/2");
 /// ```
 ///
-/// is equivalent to
+/// There also are extension methods to quickly build [Fraction] objects from
+/// primitive types:
 ///
 /// ```dart
-/// final f = 1.5.toMixedFraction();
-/// final f = "1 1/2".toMixedFraction();
+/// 1.5.toMixedFraction();
+/// "1 1/2".toMixedFraction();
 /// ```
 ///
 /// If the string doesn't represent a valid fraction, a [MixedFractionException]
@@ -31,16 +37,16 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// Denominator of the fraction.
   final int denominator;
 
-  /// Creates an instance of a mixed fraction. If the numerator isn't greater than
-  /// the denominator, the values are automatically transformed so that a valid
-  /// mixed fraction is created. For example:
+  /// Creates an instance of a mixed fraction.
+  ///
+  /// If the numerator isn't greater than the denominator, values are
+  /// transformed so that a valid mixed fraction is created. For example, in...
   ///
   /// ```dart
-  /// final m = MixedFraction(1, 7, 3);
+  /// MixedFraction(1, 7, 3);
   /// ```
   ///
-  /// In this case, the object `m` is built as '3 1/3' rather than '1 7/3' since
-  /// the latter format is invalid.
+  /// ... the object is built as '3 1/3' since '1 7/3' would be invalid.
   factory MixedFraction({
     required int whole,
     required int numerator,
@@ -87,7 +93,9 @@ class MixedFraction implements Comparable<MixedFraction> {
       fraction.toMixedFraction();
 
   /// Creates an instance of a mixed fraction. The input string must be in the
-  /// form 'a b/c' with exactly one space between the whole part and the fraction.
+  /// form 'a b/c' with exactly one space between the whole part and the
+  /// fraction.
+  ///
   /// The fraction can also be a glyph.
   ///
   /// The negative sign can only stay in front of 'a' or 'b'. Some valid examples
@@ -206,8 +214,11 @@ class MixedFraction implements Comparable<MixedFraction> {
   /// unicode glyph string. For example:
   ///
   /// ```dart
-  /// final fraction = MixedFraction(whole: 3, numerator: 1, denominator: 7)
-  /// final str = fraction.toStringAsGlyph() // "⅐"
+  /// MixedFraction(
+  ///   whole: 3,
+  ///   numerator: 1,
+  ///   denominator: 7,
+  /// ).toStringAsGlyph() // "⅐"
   /// ```
   ///
   /// If the conversion is not possible, a [FractionException] is thrown.
@@ -280,30 +291,30 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   /// Sum between two mixed fractions.
   MixedFraction operator +(MixedFraction other) {
-    final sum = toFraction() + other.toFraction();
+    final result = toFraction() + other.toFraction();
 
-    return sum.toMixedFraction();
+    return result.toMixedFraction();
   }
 
   /// Difference between two mixed fractions.
   MixedFraction operator -(MixedFraction other) {
-    final sum = toFraction() - other.toFraction();
+    final result = other.toFraction() - toFraction();
 
-    return sum.toMixedFraction();
+    return result.toMixedFraction();
   }
 
   /// Product between two mixed fractions.
   MixedFraction operator *(MixedFraction other) {
-    final sum = toFraction() * other.toFraction();
+    final result = toFraction() * other.toFraction();
 
-    return sum.toMixedFraction();
+    return result.toMixedFraction();
   }
 
   /// Division between two mixed fractions.
   MixedFraction operator /(MixedFraction other) {
-    final sum = toFraction() / other.toFraction();
+    final result = toFraction() / other.toFraction();
 
-    return sum.toMixedFraction();
+    return result.toMixedFraction();
   }
 
   /// Checks whether this mixed fraction is greater or equal than the other.

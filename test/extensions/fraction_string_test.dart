@@ -14,11 +14,11 @@ void main() {
     test(
       'Making sure that invalid strings conversions throw and exception',
       () {
-        expect(() => '1/'.toFraction(), throwsA(isA<FormatException>()));
-        expect(() => '1/0'.toFraction(), throwsA(isA<FractionException>()));
-        expect(() => 'x'.toFraction(), throwsA(isA<FractionException>()));
-        expect(() => '3/-6'.toFraction(), throwsA(isA<FractionException>()));
-        expect(() => ''.toFraction(), throwsA(isA<FractionException>()));
+        expect('1/'.toFraction, throwsA(isA<FormatException>()));
+        expect('1/0'.toFraction, throwsA(isA<FractionException>()));
+        expect('x'.toFraction, throwsA(isA<FractionException>()));
+        expect('3/-6'.toFraction, throwsA(isA<FractionException>()));
+        expect(''.toFraction, throwsA(isA<FractionException>()));
       },
     );
 
@@ -26,8 +26,12 @@ void main() {
       'Making sure that the boolean check is safe to be used before converting',
       () {
         expect('3/5'.isFraction, isTrue);
+        expect('-3/5'.isFraction, isTrue);
+        expect('6'.isFraction, isTrue);
+        expect('-2'.isFraction, isTrue);
         expect('⅜'.isFraction, isTrue);
         expect(''.isFraction, isFalse);
+        expect('/2'.isFraction, isFalse);
       },
     );
   });

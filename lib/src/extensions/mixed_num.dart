@@ -2,9 +2,9 @@ import 'package:fraction/fraction.dart';
 
 /// Adds [MixedFraction] functionalities to [num].
 extension MixedFractionNum on num {
-  /// Returns a mixed fraction representation the given value.
+  /// Builds a [MixedFraction] from an [int] or a [double].
   ///
-  /// If the number cannot be expressed as a mixed fraction, an exception of
-  /// type [MixedFractionException] is thrown.
+  /// If the value cannot be expressed as a mixed fraction, a
+  /// [MixedFractionException] is thrown.
   MixedFraction toMixedFraction() => MixedFraction.fromFraction(toFraction());
 }

@@ -60,7 +60,6 @@ void main() {
         expect(Fraction.fromString('-3/5'), equals(Fraction(-3, 5)));
         expect(Fraction.fromString('7'), equals(Fraction(7)));
         expect(Fraction.fromString('-6'), equals(Fraction(-6)));
-
         expect(
           () => Fraction.fromString('½'),
           throwsA(isA<FractionException>()),
@@ -92,6 +91,10 @@ void main() {
         expect(
           () => Fraction.fromString('3/a'),
           throwsA(isA<FormatException>()),
+        );
+        expect(
+          () => Fraction.fromString('1/-3'),
+          throwsA(isA<FractionException>()),
         );
       },
     );
@@ -138,6 +141,10 @@ void main() {
           () => Fraction.fromDouble(double.infinity),
           throwsA(isA<FractionException>()),
         );
+        expect(
+          () => Fraction.fromDouble(double.negativeInfinity),
+          throwsA(isA<FractionException>()),
+        );
       },
     );
 
@@ -159,7 +166,7 @@ void main() {
 
     test(
       'Making sure that fractions are properly built from neg. mixed fractions',
-          () {
+      () {
         final fraction = Fraction.fromMixedFraction(
           MixedFraction(
             whole: -3,
@@ -296,11 +303,12 @@ void main() {
 
     test('Making sure that negation is properly detected', () {
       expect(Fraction(-1, 2).isNegative, isTrue);
+      expect(Fraction(1, 2).isNegative, isFalse);
     });
 
     test('Making sure that whole fraction detection works', () {
       expect(Fraction(15).isWhole, isTrue);
-      expect(Fraction(15).isWhole, isTrue);
+      expect(Fraction(16, 2).isWhole, isFalse);
       expect(Fraction(1, 15).isWhole, isFalse);
     });
 
