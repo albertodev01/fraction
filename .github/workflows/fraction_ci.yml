@@ -1,9 +1,17 @@
 name: fractions_ci
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    types:
+      - opened
 
 jobs:
-  build:
+  verify_fraction_package:
+    name: fraction pub package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,3 +38,26 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  verify_fraction_example:
+    name: fraction package - Dart example app
+    needs: [verify_fraction_package]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: example
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Install Dependencies
+        run: dart pub get
+        
+      - name: Format
+        run: dart format --set-exit-if-changed .
+        
+      - name: Analyze
+        run: dart analyze --fatal-infos --fatal-warnings && dart run dart_code_metrics:metrics analyze lib test
+        
+      - name: Run tests
+        run: dart test 

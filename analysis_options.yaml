@@ -1,6 +1,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  exclude:
+    - example/**
   plugins:
     - dart_code_metrics
 
@@ -12,6 +14,7 @@ dart_code_metrics:
     number-of-parameters: 6
     maximum-nesting: 5
   metrics-exclude:
+    - example/**
     - test/**
   rules:
     - avoid-missing-enum-constant-in-map
