@@ -1,3 +1,8 @@
+## [3.2.0]
+ - Added a small Dart CLI application in the `example/` folder
+ - Minor fixes on the `MixedFraction` type
+ - Dependencies updates
+
 ## [3.1.1]
  - Added some more `dart_code_metrics` rules and minor README fixes
  - Code polish

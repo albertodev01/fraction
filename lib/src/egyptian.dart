@@ -3,9 +3,9 @@ import 'package:fraction/fraction.dart';
 /// This class converts a [Fraction] or a [MixedFraction] type into its egyptian
 /// fraction representation. Only positive number are allowed.
 ///
-/// An Egyptian fraction is a finite sum of distinct fractions where the numerator
-/// is always 1 and, the denominator is a positive number and all the denominators
-/// differ from each other. For example:
+/// An Egyptian fraction is a finite sum of distinct fractions where the
+/// numerator is always 1, the denominator is a positive number and all the
+/// denominators differ from each other. For example:
 ///
 ///  - 5/8 = 1/2 + 1/8 (where "1/2 + 1/8" is the egyptian fraction)
 ///
@@ -17,8 +17,8 @@ import 'package:fraction/fraction.dart';
 ///  - 43/48 = 1/2 + 1/3 + 1/16
 ///  - 2014/59 = 34 + 1/8 + 1/95 + 1/14947 + 1/670223480
 ///
-/// In various cases, the value of the denominator can be so big that an overflow
-/// error happens.
+/// In various cases, the value of the denominator can be so big that an
+/// overflow error happens.
 class EgyptianFraction implements Comparable<EgyptianFraction> {
   /// This variable caches the result of the `compute()` method.
   static final _cache = <Fraction, List<Fraction>>{};
@@ -36,22 +36,25 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
   /// The fraction to be converted into an egyptian fraction.
   final Fraction fraction;
 
-  /// Both proper and improper fractions are accepted. The given [fraction] will
-  /// be converted into an egyptian fraction by calling the [compute] method.
-  EgyptianFraction({
+  /// Creates an [EgyptianFraction] instance from a [Fraction] object.
+  const EgyptianFraction({
     required this.fraction,
-  }) : assert(!fraction.isNegative, 'The fraction must be positive!');
+  });
 
-  /// Creates an instance of [EgyptianFraction] starting from a [MixedFraction].
-  /// The given [fraction] will be converted into an egyptian fraction by
-  /// calling the [compute] method.
+  /// Creates an [EgyptianFraction] instance from a [MixedFraction] object.
   EgyptianFraction.fromMixedFraction({
     required MixedFraction mixedFraction,
   }) : this(fraction: mixedFraction.toFraction());
 
-  /// Returns a series of [Fraction] representing the egyptian fraction of the
+  /// Returns a series of [Fraction]s representing the egyptian fraction of the
   /// current [fraction] object.
+  ///
+  /// Throws a [FractionException] if [fraction] is negative.
   List<Fraction> compute() {
+    if (fraction.isNegative) {
+      throw const FractionException('The fraction must be positive!');
+    }
+
     // If the result is in the cache, then return it immediately.
     if (cachingEnabled && _cache.containsKey(fraction)) {
       return _cache[fraction]!;

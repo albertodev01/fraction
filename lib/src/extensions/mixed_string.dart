@@ -18,9 +18,9 @@ extension MixedFractionString on String {
     }
   }
 
-  /// Converts the given string into a [MixedFraction] object.
+  /// Converts the string into a [Fraction].
   ///
-  /// If you want to be sure that this method doesn't throw a [MixedFractionException],
-  /// use `isFraction()` before.
+  /// If you want to be sure that this method doesn't throw a
+  /// [MixedFractionException], use `isFraction` before.
   MixedFraction toMixedFraction() => MixedFraction.fromString(this);
 }

@@ -12,6 +12,12 @@ void main() {
     test('Making sure that doubles are properly converted into fractions', () {
       expect(8.46.toFraction(), equals(Fraction(423, 50)));
       expect((-3.9).toFraction(), equals(Fraction(-39, 10)));
+      expect(double.nan.toFraction, throwsA(isA<FractionException>()));
+      expect(double.infinity.toFraction, throwsA(isA<FractionException>()));
+      expect(
+        double.negativeInfinity.toFraction,
+        throwsA(isA<FractionException>()),
+      );
     });
   });
 }

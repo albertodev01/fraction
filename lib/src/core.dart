@@ -1,21 +1,20 @@
 import 'package:fraction/fraction.dart';
 
-/// Dart representation of a fraction having both the numerator and the denominator
-/// as integers.
-///
-/// You can create a new instance of [Fraction] either by using one of the
-/// constructors or by using the extension methods on [num] and [String].
+/// Dart representation of a fraction having both the numerator and the
+/// denominator as integers.
 ///
 /// ```dart
-/// final f = Fraction.fromDouble(1.5);
-/// final f = Fraction.fromString("4/5");
+/// Fraction(-2, 5);
+/// Fraction.fromDouble(1.5);
+/// Fraction.fromString("4/5");
 /// ```
 ///
-/// is equivalent to
+/// There also are extension methods to quickly build [Fraction] objects from
+/// primitive types:
 ///
 /// ```dart
-/// final f = 1.5.toFraction();
-/// final f = "4/5".toFraction();
+/// 1.5.toFraction();
+/// "4/5".toFraction();
 /// ```
 ///
 /// If the string doesn't represent a valid fraction, a [FractionException] is
@@ -25,12 +24,6 @@ class Fraction implements Comparable<Fraction> {
   static final _fractionRegex = RegExp(
     '(^-?|^\\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
-
-  /// The numerator of the fraction.
-  final int numerator;
-
-  /// The denominator of the fraction.
-  final int denominator;
 
   /// Maps fraction glyphs to fraction values.
   static final _glyphsToValues = {
@@ -76,8 +69,14 @@ class Fraction implements Comparable<Fraction> {
     Fraction(1, 10): '⅒',
   };
 
+  /// The numerator of the fraction.
+  final int numerator;
+
+  /// The denominator of the fraction.
+  final int denominator;
+
   /// Creates a new representation of a fraction. If the denominator is negative,
-  /// the fraction is normalized so that the minus sign can only appear in front
+  /// the fraction is 'normalized' so that the minus sign only appears in front
   /// of the denominator.
   ///
   /// ```dart
@@ -91,10 +90,6 @@ class Fraction implements Comparable<Fraction> {
       throw const FractionException('Denominator cannot be zero.');
     }
 
-    // Making sure that both numerator and denominator valid
-    _checkValue(numerator);
-    _checkValue(denominator);
-
     // Fixing the sign of numerator and denominator
     if (denominator < 0) {
       return Fraction._(numerator * -1, denominator * -1);
@@ -106,8 +101,8 @@ class Fraction implements Comparable<Fraction> {
   /// The default constructor.
   const Fraction._(this.numerator, this.denominator);
 
-  /// Returns an instance of [Fraction] if the source string is a valid representation
-  /// of a fraction. Some valid examples are:
+  /// Returns an instance of [Fraction] if the source string is a valid
+  /// representation of a fraction. Some valid examples are:
   ///
   /// ```dart
   /// Fraction.fromString("5/2")
@@ -121,18 +116,18 @@ class Fraction implements Comparable<Fraction> {
   /// Fraction.fromString("5/-2") // throws FractionException
   /// ```
   ///
-  /// If the given string [value] doesn't represent a fraction, then an instance
-  /// of [FractionException] is thrown.
+  /// If the given string [value] doesn't represent a fraction, an instance of
+  /// [FractionException] is thrown.
   factory Fraction.fromString(String value) {
     // Check the format of the string
     if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
       throw FractionException('The string $value is not a valid fraction');
     }
 
-    // Remove the leading + if present
+    // Remove the leading + (if any)
     final fraction = value.replaceAll('+', '');
 
-    // Look for the / separator
+    // Look for the '/' separator
     final barPos = fraction.indexOf('/');
 
     if (barPos == -1) {
@@ -149,10 +144,12 @@ class Fraction implements Comparable<Fraction> {
     }
   }
 
-  /// Returns an instance of [Fraction] if the source string is a glyph representing
-  /// a fraction.  A 'glyph' (or 'number form') is an unicode character that
-  /// represents a fraction. For example, the glyph for "1/7" is ⅐. Only a very
-  /// small subset of fractions have a glyph representation.
+  /// Returns an instance of [Fraction] if the source string is a glyph
+  /// representing a fraction.
+  ///
+  /// A 'glyph' (or 'number form') is an unicode character that represents a
+  /// fraction. For example, the glyph for "1/7" is ⅐. Only a very small subset
+  /// of fractions have a glyph representation.
   ///
   /// ```dart
   /// Fraction.fromString("⅐") // 1/7
@@ -182,17 +179,18 @@ class Fraction implements Comparable<Fraction> {
   /// ```
   ///
   /// Note that irrational numbers can **not** be represented as fractions, so
-  /// if you try to use this method on π (3.1415...) you won't get a valid result.
+  /// if you try to use this method on π (3.1415...) you won't get a valid
+  /// result.
   ///
   /// ```dart
   /// Fraction.fromDouble(math.pi)
   /// ```
   ///
-  /// The above returns a fraction because it considers only the first 10 decimal
-  /// places since `precision` is set to 1.0E-10.
+  /// The above returns a fraction because the algorithm considers only the
+  /// first 10 decimal digits (since `precision` is set to 1.0e-10).
   ///
   /// ```dart
-  /// Fraction.fromDouble(math.pi, 1.0E-20)
+  /// Fraction.fromDouble(math.pi, precision: 1.0e-20)
   /// ```
   ///
   /// This example will return another different value because it considers the
@@ -200,10 +198,11 @@ class Fraction implements Comparable<Fraction> {
   /// irrational numbers cannot be expressed as fractions.
   ///
   /// This method is good with rational numbers.
-  factory Fraction.fromDouble(double value, {double precision = 1.0E-12}) {
+  factory Fraction.fromDouble(double value, {double precision = 1.0e-12}) {
     _checkValue(value);
     _checkValue(precision);
 
+    // Storing the sign
     final mul = (value >= 0) ? 1 : -1;
     final x = value.abs();
 
@@ -232,7 +231,7 @@ class Fraction implements Comparable<Fraction> {
     var num = mixed.whole * mixed.denominator + mixed.numerator;
 
     if (mixed.isNegative) {
-      num = (mixed.whole * mixed.denominator + mixed.numerator) * -1;
+      num = mixed.whole * mixed.denominator + (mixed.numerator * -1);
     }
 
     return Fraction(num, mixed.denominator);
@@ -301,9 +300,11 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// If possible, this method converts this [Fraction] instance into an unicode
-  /// glyph string. A 'glyph' (or 'number form') is an unicode character that
-  /// represents a fraction. For example, the glyph for "1/7" is ⅐. Only a very
-  /// small subset of fractions have a glyph representation.
+  /// glyph string.
+  ///
+  /// A 'glyph' (or 'number form') is an unicode character that represents a
+  /// fraction. For example, the glyph for "1/7" is ⅐. Only a very small subset
+  /// of fractions have a glyph representation.
   ///
   /// ```dart
   /// final fraction = Fraction(1, 7);
@@ -381,32 +382,24 @@ class Fraction implements Comparable<Fraction> {
   /// True or false whether the fraction is positive or negative.
   bool get isNegative => numerator < 0;
 
-  /// True of false whether the fraction is whole (which is when the denominator
-  /// is 1).
+  /// True of false whether the fraction is whole.
   bool get isWhole => denominator == 1;
 
   /// Returns `true` if the numerator is smaller than the denominator.
-  ///
-  /// The `numerator < denominator` relation must be satisfied in order to return
-  /// `true`.
   bool get isProper => numerator < denominator;
 
   /// Returns `true` if the numerator is equal or greater than the denominator.
-  ///
-  /// The `numerator >= denominator` relation must be satisfied in order to return
-  /// `true`.
   bool get isImproper => numerator >= denominator;
 
   /// Returns `true` if this [Fraction] instance has an unicode glyph associated.
   /// For example:
   ///
   /// ```dart
-  /// final fraction = Fraction(1, 2).hasUnicodeGlyph; // true
+  /// Fraction(1, 2).hasUnicodeGlyph; // true
   /// ```
   ///
   /// The above returns `true` because "1/2" can be represented as ½, which is
-  /// an 'unicode glyph' or 'number form'. Only a very small subset of fractions
-  /// have a glyph representing them.
+  /// an 'unicode glyph'.
   bool get isFractionGlyph => _valuesToGlyphs.containsKey(this);
 
   /// Reduces the current object to the lowest terms and returns the result in a
@@ -471,6 +464,8 @@ class Fraction implements Comparable<Fraction> {
 
   /// Access numerator or denominator via index. In particular, ´0´ refers to
   /// the numerator while ´1´ to the denominator.
+  ///
+  /// Throws if [index] is not `0` or `1`.
   int operator [](int index) {
     if (index == 0) {
       return numerator;

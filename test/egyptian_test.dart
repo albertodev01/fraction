@@ -30,13 +30,6 @@ void main() {
       },
     );
 
-    test('Making sure that the constructor throws with negative fractions', () {
-      expect(
-        () => EgyptianFraction(fraction: Fraction(-2, 3)),
-        throwsA(isA<AssertionError>()),
-      );
-    });
-
     test('Making sure that static methods can be accessed', () {
       expect(
         () {
@@ -107,6 +100,17 @@ void main() {
         expect(egyptian.compute(), unorderedEquals(entry.value));
       }
     });
+
+    test(
+      "Making sure that the 'compute()' throws is the fraction is negative'",
+      () {
+        final egyptian = EgyptianFraction(
+          fraction: Fraction(-2, 5),
+        );
+
+        expect(egyptian.compute, throwsA(isA<FractionException>()));
+      },
+    );
 
     test("Making sure that 'toString' works properly", () {
       final egyptian = EgyptianFraction(fraction: Fraction(5, 8));
