@@ -1,3 +1,3 @@
 ## 1.0.0
 
-- Initial version of the example.
+- First version of the app.

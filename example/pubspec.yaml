@@ -13,9 +13,6 @@ dependencies:
     path: ../
 
 dev_dependencies:
-  # https://pub.dev/packages/coverage
-  coverage: ^1.0.4
-
   # https://pub.dev/packages/dart_code_metrics
   dart_code_metrics: ^4.8.1
 
@@ -24,6 +21,3 @@ dev_dependencies:
 
   # https://pub.dev/packages/test
   test: ^1.20.1
-
-  # https://pub.dev/packages/test_process
-  test_process: ^2.0.2

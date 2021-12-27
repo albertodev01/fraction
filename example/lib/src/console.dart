@@ -4,15 +4,13 @@ import 'dart:io';
 import 'package:fraction_example/src/analyzer/fraction_analyzer.dart';
 import 'package:fraction_example/src/analyzer/mixed_fraction_analyzer.dart';
 
-/// This class uses standard I/O to process user inputs and print results to
+/// This class uses standard I/O to process user inputs and prints results to
 /// the console.
 class Console {
   /// Creates a new [Console] instance.
   const Console();
 
-  /// Initializes the [Console] app and always waits for an input.
-  ///
-  /// Exits when the user enters 'quit'.
+  /// Reads the input and analyzes a fraction or a mixed fraction.
   void run() {
     stdout.encoding = utf8;
 
@@ -23,7 +21,6 @@ class Console {
       ..writeln(' 2) Mixed fractions\n')
       ..write('Enter your choice (1 or 2): ');
 
-    // The choice between fraction and mixed fraction
     final input = stdin.readLineSync() ?? '';
 
     if (input == '1') {
@@ -44,7 +41,7 @@ class Console {
       stdout.writeln("\n - You've entered a wrong input!\n");
     }
 
-    // To keep the console 'awake'. This is very useful on Windows
+    // To keep the console 'awake'. This is very useful on Windows!
     stdout.write('Press return to exit...');
     stdin.readLineSync();
   }

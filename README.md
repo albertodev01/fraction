@@ -54,7 +54,7 @@ Note that a `Fraction` object is **immutable** so methods that require changing 
 
 ```dart
 final fraction = Fraction.fromString("12/20"); // 12/20
-final reduced = fraction.reduce(); // now it's simplified to  3/5
+final reduced = fraction.reduce(); // 3/5
 ```
 
 Fraction strings can be converted from and to unicode glyphs when possible.
