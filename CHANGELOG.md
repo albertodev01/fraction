@@ -1,6 +1,6 @@
 ## [3.2.0]
- - Added a small Dart CLI app in as example in the `example/` folder
- - Minor fixes on the `Fraction` type
+ - Added a small Dart CLI application in the `example/` folder
+ - Minor fixes on the `MixedFraction` type
  - Dependencies updates
 
 ## [3.1.1]
