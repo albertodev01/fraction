@@ -1,3 +1,7 @@
+## [3.2.1]
+ - Added some more rules in `analysis_options.yaml`
+ - Dependencies updates
+
 ## [3.2.0]
  - Added a small Dart CLI application in the `example/` folder
  - Minor fixes on the `MixedFraction` type

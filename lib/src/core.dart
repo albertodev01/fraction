@@ -22,7 +22,7 @@ import 'package:fraction/fraction.dart';
 class Fraction implements Comparable<Fraction> {
   /// This regular expression makes sure that a string represents a fraction.
   static final _fractionRegex = RegExp(
-    '(^-?|^\\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
+    r'(^-?|^\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
 
   /// Maps fraction glyphs to fraction values.
@@ -208,7 +208,10 @@ class Fraction implements Comparable<Fraction> {
 
     // How many digits is the algorithm going to consider
     final limit = precision;
-    var h1 = 1, h2 = 0, k1 = 0, k2 = 1;
+    var h1 = 1;
+    var h2 = 0;
+    var k1 = 0;
+    var k2 = 1;
     var y = value.abs();
 
     do {

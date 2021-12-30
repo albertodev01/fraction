@@ -1,7 +1,7 @@
 name: fraction_example
 description: A simple Dart CLI application for the 'fraction' package
 version: 1.0.0
-repository: https://github.com/albertodev01/fraction
+repository: https://github.com/albertodev01/fraction/tree/master/example
 homepage: https://fluttercompletereference.com/
 publish_to: none
 
