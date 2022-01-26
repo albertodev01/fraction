@@ -1,18 +1,18 @@
 name: fraction
 description: A package that helps you working with mathematical fractions.
-version: 3.2.1
+version: 3.2.2
 repository: https://github.com/albertodev01/fraction
 homepage: https://fluttercompletereference.com/
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
 
 dev_dependencies:
   # https://pub.dev/packages/coverage
-  coverage: ^1.0.4
+  coverage: ^1.1.0
 
   # https://pub.dev/packages/dart_code_metrics
-  dart_code_metrics: ^4.8.1
+  dart_code_metrics: ^4.9.1
 
   # https://pub.dev/packages/lints
   lints: ^1.0.1

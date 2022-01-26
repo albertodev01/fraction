@@ -6,7 +6,7 @@ homepage: https://fluttercompletereference.com/
 publish_to: none
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
 
 dependencies:
   fraction:
@@ -14,7 +14,7 @@ dependencies:
 
 dev_dependencies:
   # https://pub.dev/packages/dart_code_metrics
-  dart_code_metrics: ^4.8.1
+  dart_code_metrics: ^4.9.1
 
   # https://pub.dev/packages/lints
   lints: ^1.0.1

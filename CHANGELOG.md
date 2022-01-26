@@ -1,3 +1,9 @@
+## [3.2.2]
+ - **BREAKING**: removed `EgyptianFraction.clearCache()` and `EgyptianFraction.cachingEnabled`. Caching is now always enabled by default and the cache cannot be purged.
+ - Increased Dart SDK constraints (`>=2.14.0 <3.0.0`)
+ - Minor fixes in the `example/` folder
+ - Dependencies updates
+
 ## [3.2.1]
  - Added some more rules in `analysis_options.yaml`
  - Dependencies updates
