@@ -23,16 +23,6 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
   /// This variable caches the result of the `compute()` method.
   static final _cache = <Fraction, List<Fraction>>{};
 
-  /// Clears the internal cache.
-  static void clearCache() => _cache.clear();
-
-  /// Determines whether in-memory caching is enabled or not. This caching
-  /// strategy does **NOT** persist data on disk.
-  ///
-  /// This is `true` by default. If you want to purge and disable the cache, set
-  /// this param to `false` and then call [EgyptianFraction.clearCache].
-  static bool cachingEnabled = true;
-
   /// The fraction to be converted into an egyptian fraction.
   final Fraction fraction;
 
@@ -56,7 +46,7 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
     }
 
     // If the result is in the cache, then return it immediately.
-    if (cachingEnabled && _cache.containsKey(fraction)) {
+    if (_cache.containsKey(fraction)) {
       return _cache[fraction]!;
     }
 
@@ -74,10 +64,8 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
       denominator *= egyptianDen;
     }
 
-    // If the result isn't in the cache, add it.
-    if (cachingEnabled && !_cache.containsKey(fraction)) {
-      _cache[fraction] = List<Fraction>.from(results);
-    }
+    // The value isn't in the cache at this point to we must add it
+    _cache[fraction] = List<Fraction>.from(results);
 
     return results;
   }
@@ -105,18 +93,16 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
 
   @override
   String toString() {
-    var results = <Fraction>[];
+    List<Fraction> results;
 
     // Trying to not compute the fraction (if possible).
-    if (cachingEnabled && _cache.containsKey(fraction)) {
+    if (_cache.containsKey(fraction)) {
       results = _cache[fraction]!;
     } else {
       results = compute();
 
       // We can cache it if caching is enabled.
-      if (cachingEnabled) {
-        _cache[fraction] = List<Fraction>.from(results);
-      }
+      _cache[fraction] = List<Fraction>.from(results);
     }
 
     final buffer = StringBuffer()..writeAll(results, ' + ');

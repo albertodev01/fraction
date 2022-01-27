@@ -30,17 +30,6 @@ void main() {
       },
     );
 
-    test('Making sure that static methods can be accessed', () {
-      expect(
-        () {
-          EgyptianFraction.clearCache();
-
-          return EgyptianFraction.cachingEnabled;
-        }(),
-        isTrue,
-      );
-    });
-
     test('Making sure that caching properly works', () {
       final egyptian = EgyptianFraction(fraction: Fraction(2, 5));
 
@@ -113,13 +102,17 @@ void main() {
     );
 
     test("Making sure that 'toString' works properly", () {
-      final egyptian = EgyptianFraction(fraction: Fraction(5, 8));
+      final egyptian = EgyptianFraction(
+        fraction: Fraction(5, 8),
+      );
       expect('$egyptian', equals('1/2 + 1/8'));
 
       // Calling 'toString' twice to make sure that CI coverage also covers the
       // case where the instance is cached
-      EgyptianFraction.clearCache();
-      expect('$egyptian', equals('1/2 + 1/8'));
+      final egyptian2 = EgyptianFraction(
+        fraction: Fraction(3, 17),
+      );
+      expect('$egyptian2', equals('1/6 + 1/102'));
     });
 
     test("Making sure that 'compareTo' works correctly", () {
