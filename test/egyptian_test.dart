@@ -110,9 +110,9 @@ void main() {
       // Calling 'toString' twice to make sure that CI coverage also covers the
       // case where the instance is cached
       final egyptian2 = EgyptianFraction(
-        fraction: Fraction(5, 8),
+        fraction: Fraction(3, 17),
       );
-      expect('$egyptian2', equals('1/2 + 1/8'));
+      expect('$egyptian2', equals('1/6 + 1/102'));
     });
 
     test("Making sure that 'compareTo' works correctly", () {
