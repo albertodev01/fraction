@@ -13,7 +13,7 @@ extension MixedFractionString on String {
       MixedFraction.fromString(this);
 
       return true;
-    } on MixedFractionException {
+    } on Exception {
       return false;
     }
   }

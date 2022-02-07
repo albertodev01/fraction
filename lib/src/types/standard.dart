@@ -1,4 +1,5 @@
 import 'package:fraction/fraction.dart';
+import 'package:fraction/src/types/egyptian_converter.dart';
 
 /// Dart representation of a fraction having both the numerator and the
 /// denominator as integers.
@@ -19,7 +20,7 @@ import 'package:fraction/fraction.dart';
 ///
 /// If the string doesn't represent a valid fraction, a [FractionException] is
 /// thrown.
-class Fraction implements Comparable<Fraction> {
+class Fraction extends Rational {
   /// This regular expression makes sure that a string represents a fraction.
   static final _fractionRegex = RegExp(
     r'(^-?|^\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
@@ -70,10 +71,10 @@ class Fraction implements Comparable<Fraction> {
   };
 
   /// The numerator of the fraction.
-  final int numerator;
+  final int _numerator;
 
   /// The denominator of the fraction.
-  final int denominator;
+  final int _denominator;
 
   /// Creates a new representation of a fraction. If the denominator is negative,
   /// the fraction is 'normalized' so that the minus sign only appears in front
@@ -99,7 +100,7 @@ class Fraction implements Comparable<Fraction> {
   }
 
   /// The default constructor.
-  const Fraction._(this.numerator, this.denominator);
+  const Fraction._(this._numerator, this._denominator);
 
   /// Returns an instance of [Fraction] if the source string is a valid
   /// representation of a fraction. Some valid examples are:
@@ -241,6 +242,18 @@ class Fraction implements Comparable<Fraction> {
   }
 
   @override
+  int get numerator => _numerator;
+
+  @override
+  int get denominator => _denominator;
+
+  @override
+  bool get isNegative => numerator < 0;
+
+  @override
+  bool get isWhole => denominator == 1;
+
+  @override
   bool operator ==(Object other) {
     // Two fractions are equal if their "cross product" is equal.
     //
@@ -278,28 +291,40 @@ class Fraction implements Comparable<Fraction> {
   }
 
   @override
-  int compareTo(Fraction other) {
-    // I don't perform == on floating point values because it's not reliable.
-    // Instead, '>' and '<' are more reliable in terms of machine precision so
-    // 0 is just a fallback.
-    if (toDouble() < other.toDouble()) {
-      return -1;
-    }
-
-    if (toDouble() > other.toDouble()) {
-      return 1;
-    }
-
-    return 0;
-  }
-
-  @override
   String toString() {
     if (denominator == 1) {
       return '$numerator';
     }
 
     return '$numerator/$denominator';
+  }
+
+  @override
+  double toDouble() => numerator / denominator;
+
+  @override
+  Fraction negate() => Fraction(numerator * -1, denominator);
+
+  @override
+  Fraction reduce() {
+    // Storing the sign for later use
+    final sign = (numerator < 0) ? -1 : 1;
+
+    // Calculating the gcd for reduction
+    final lgcd = numerator.gcd(denominator);
+
+    final num = (numerator * sign) ~/ lgcd;
+    final den = (denominator * sign) ~/ lgcd;
+
+    // Building the reduced fraction
+    return Fraction(num, den);
+  }
+
+  @override
+  List<Fraction> toEgyptianFraction() {
+    return EgyptianFractionConverter(
+      fraction: this,
+    ).compute();
   }
 
   /// If possible, this method converts this [Fraction] instance into an unicode
@@ -327,9 +352,6 @@ class Fraction implements Comparable<Fraction> {
     );
   }
 
-  /// A floating point representation of the fraction.
-  double toDouble() => numerator / denominator;
-
   /// Converts the current object into a [MixedFraction].
   MixedFraction toMixedFraction() {
     return MixedFraction(
@@ -337,15 +359,6 @@ class Fraction implements Comparable<Fraction> {
       numerator: numerator % denominator,
       denominator: denominator,
     );
-  }
-
-  /// Represents the current fraction as an egyptian fraction.
-  ///
-  /// For more info, see [EgyptianFraction].
-  List<Fraction> toEgyptianFraction() {
-    return EgyptianFraction(
-      fraction: this,
-    ).compute();
   }
 
   /// Creates a **deep** copy of this object with the given fields replaced
@@ -367,26 +380,9 @@ class Fraction implements Comparable<Fraction> {
     }
   }
 
-  /// Typical GCD recursive calculation.
-  int _gcd(int a, int b) {
-    final rem = a % b;
-
-    return (rem == 0) ? b : _gcd(b, rem);
-  }
-
   /// The numerator and the denominator of the current object are swapped and
   /// returned in a new [Fraction] instance.
   Fraction inverse() => Fraction(denominator, numerator);
-
-  /// The sign of the current object is changed and the result is returned in a
-  /// new [Fraction] instance.
-  Fraction negate() => Fraction(numerator * -1, denominator);
-
-  /// True or false whether the fraction is positive or negative.
-  bool get isNegative => numerator < 0;
-
-  /// True of false whether the fraction is whole.
-  bool get isWhole => denominator == 1;
 
   /// Returns `true` if the numerator is smaller than the denominator.
   bool get isProper => numerator < denominator;
@@ -404,22 +400,6 @@ class Fraction implements Comparable<Fraction> {
   /// The above returns `true` because "1/2" can be represented as ½, which is
   /// an 'unicode glyph'.
   bool get isFractionGlyph => _valuesToGlyphs.containsKey(this);
-
-  /// Reduces the current object to the lowest terms and returns the result in a
-  /// new [Fraction] instance.
-  Fraction reduce() {
-    // Storing the sign for later use
-    final sign = (numerator < 0) ? -1 : 1;
-
-    // Calculating the gcd for reduction
-    final lgcd = _gcd(numerator, denominator);
-
-    final num = (numerator * sign) ~/ lgcd;
-    final den = (denominator * sign) ~/ lgcd;
-
-    // Building the reduced fraction
-    return Fraction(num, den);
-  }
 
   /// Sum between two fractions.
   Fraction operator +(Fraction other) {
@@ -452,18 +432,6 @@ class Fraction implements Comparable<Fraction> {
       denominator * other.numerator,
     );
   }
-
-  /// Checks whether this fraction is greater or equal than the other.
-  bool operator >=(Fraction other) => toDouble() >= other.toDouble();
-
-  /// Checks whether this fraction is greater than the other.
-  bool operator >(Fraction other) => toDouble() > other.toDouble();
-
-  /// Checks whether this fraction is smaller or equal than the other.
-  bool operator <=(Fraction other) => toDouble() <= other.toDouble();
-
-  /// Checks whether this fraction is smaller than the other.
-  bool operator <(Fraction other) => toDouble() < other.toDouble();
 
   /// Access numerator or denominator via index. In particular, ´0´ refers to
   /// the numerator while ´1´ to the denominator.

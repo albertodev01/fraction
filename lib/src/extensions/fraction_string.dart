@@ -11,12 +11,12 @@ extension FractionString on String {
       Fraction.fromString(this);
 
       return true;
-    } on FractionException {
+    } on Exception {
       try {
         Fraction.fromGlyph(this);
 
         return true;
-      } on FractionException {
+      } on Exception {
         return false;
       }
     }

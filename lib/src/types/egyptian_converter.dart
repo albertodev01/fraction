@@ -19,22 +19,26 @@ import 'package:fraction/fraction.dart';
 ///
 /// In various cases, the value of the denominator can be so big that an
 /// overflow error happens.
-class EgyptianFraction implements Comparable<EgyptianFraction> {
+class EgyptianFractionConverter {
   /// This variable caches the result of the `compute()` method.
   static final _cache = <Fraction, List<Fraction>>{};
 
   /// The fraction to be converted into an egyptian fraction.
   final Fraction fraction;
 
-  /// Creates an [EgyptianFraction] instance from a [Fraction] object.
-  const EgyptianFraction({
+  /// Creates an [EgyptianFractionConverter] instance from a [Fraction] object.
+  const EgyptianFractionConverter({
     required this.fraction,
   });
 
   /// Creates an [EgyptianFraction] instance from a [MixedFraction] object.
-  EgyptianFraction.fromMixedFraction({
+  factory EgyptianFractionConverter.fromMixedFraction({
     required MixedFraction mixedFraction,
-  }) : this(fraction: mixedFraction.toFraction());
+  }) {
+    return EgyptianFractionConverter(
+      fraction: mixedFraction.toFraction(),
+    );
+  }
 
   /// Returns a series of [Fraction]s representing the egyptian fraction of the
   /// current [fraction] object.
@@ -70,15 +74,13 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
     return results;
   }
 
-  int _modulo(int a, int b) => ((a % b) + b) % b;
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
 
-    if (other is EgyptianFraction) {
+    if (other is EgyptianFractionConverter) {
       return fraction == other.fraction;
     } else {
       return false;
@@ -87,9 +89,6 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
 
   @override
   int get hashCode => 31 * 83 + fraction.hashCode;
-
-  @override
-  int compareTo(EgyptianFraction other) => fraction.compareTo(other.fraction);
 
   @override
   String toString() {
@@ -109,4 +108,6 @@ class EgyptianFraction implements Comparable<EgyptianFraction> {
 
     return buffer.toString();
   }
+
+  int _modulo(int a, int b) => ((a % b) + b) % b;
 }
