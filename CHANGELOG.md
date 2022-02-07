@@ -1,3 +1,6 @@
+## [4.0.0]
+ - TODO
+
 ## [3.2.2]
  - **BREAKING**: removed `EgyptianFraction.clearCache()` and `EgyptianFraction.cachingEnabled`. Caching is now always enabled by default and the cache cannot be purged.
  - Increased Dart SDK constraints (`>=2.14.0 <3.0.0`)

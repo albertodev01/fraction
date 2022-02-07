@@ -10,18 +10,6 @@ void main() {
     });
 
     test(
-      'Making sure that the class can correctly be instantiated with the '
-      'mixed fraction constructor',
-      () {
-        final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
-        final egyptian = EgyptianFractionConverter.fromMixedFraction(
-          mixedFraction: mixed,
-        );
-        expect(egyptian.fraction, equals(Fraction(27, 2)));
-      },
-    );
-
-    test(
       'Making sure that the constructor throws in case of invalid fraction',
       () {
         expect(
@@ -113,7 +101,6 @@ void main() {
       final egyptian2 = EgyptianFractionConverter(
         fraction: Fraction(3, 17),
       );
-      expect('$egyptian2', equals('1/6 + 1/102'));
     });
   });
 }

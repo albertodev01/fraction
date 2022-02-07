@@ -128,15 +128,14 @@ An Egyptian fraction is a finite sum of distinct fractions where the numerator i
 
   - 5/8 = 1/2 + 1/8 (where "1/2 + 1/8" is the egyptian fraction)
 
-Basically, egyptian fractions are a sum of fractions in the form 1/x that represent a proper or an improper fraction. Here's how they can be computed:
+In other words, egyptian fractions are a sum of fractions in the form 1/x that represent a proper or an improper fraction. Here's how they can be computed:
 
 ```dart
-final egyptianObject = EgyptianFraction(
-  fraction: Fraction(5, 8),
-);
+final egyptianFraction1 = Fraction(5, 8).toEgyptianFraction();
+print("$egyptianFraction"); // prints "1/2 + 1/8"
 
-final egyptianFraction = egyptianObject.compute();
+final egyptianFraction1 = MixedFraction(2, 1, 3).toEgyptianFraction();
 print("$egyptianFraction"); // prints "1/2 + 1/8"
 ```
 
-The `compute()` method returns an iterable of type `List<Fraction>`.
+The `compute()` method returns an iterable.

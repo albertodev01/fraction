@@ -44,6 +44,14 @@ abstract class Rational implements Comparable<Rational> {
   /// Checks whether this rational number is smaller than the other.
   bool operator <(Rational other) => toDouble() < other.toDouble();
 
+  /// The dividend `a` of the `a/b` division, which also is the numerator of the
+  /// associated fraction.
+  int get numerator;
+
+  /// The divisor `b` of the `a/b` division, which also is the denominator of
+  /// the associated fraction.
+  int get denominator;
+
   /// A floating point representation of the rational number.
   double toDouble();
 
@@ -54,7 +62,7 @@ abstract class Rational implements Comparable<Rational> {
   /// a new instance.
   Rational reduce();
 
-  /// Represents the current fraction as an egyptian fraction.
+  /// Represents the current rational number as an egyptian fraction.
   List<Fraction> toEgyptianFraction();
 
   /// Parses a string containing a fraction or a mixed fraction into a number.
@@ -75,7 +83,7 @@ abstract class Rational implements Comparable<Rational> {
     // fraction.
     try {
       return MixedFraction.fromString(value);
-    } on MixedFractionException {
+    } on Exception {
       return null;
     }
   }

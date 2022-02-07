@@ -33,10 +33,10 @@ class MixedFraction extends Rational {
   final int whole;
 
   /// Numerator of the fraction.
-  final int numerator;
+  final int _numerator;
 
   /// Denominator of the fraction.
-  final int denominator;
+  final int _denominator;
 
   /// Creates an instance of a mixed fraction.
   ///
@@ -69,25 +69,21 @@ class MixedFraction extends Rational {
     // may change depending on the sign of the fractional part.
     if (absNumerator > absDenominator) {
       return MixedFraction._(
-        whole: (absNumerator ~/ absDenominator + whole) * sign,
-        numerator: absNumerator % absDenominator,
-        denominator: absDenominator,
+        (absNumerator ~/ absDenominator + whole) * sign,
+        absNumerator % absDenominator,
+        absDenominator,
       );
     } else {
       return MixedFraction._(
-        whole: whole * sign,
-        numerator: absNumerator,
-        denominator: absDenominator,
+        whole * sign,
+        absNumerator,
+        absDenominator,
       );
     }
   }
 
   /// The default constructor.
-  const MixedFraction._({
-    required this.whole,
-    required this.numerator,
-    required this.denominator,
-  });
+  const MixedFraction._(this.whole, this._numerator, this._denominator);
 
   /// Creates an instance of a mixed fraction.
   factory MixedFraction.fromFraction(Fraction fraction) =>
@@ -152,6 +148,12 @@ class MixedFraction extends Rational {
       denominator: fraction.denominator,
     );
   }
+
+  @override
+  int get numerator => _numerator;
+
+  @override
+  int get denominator => _denominator;
 
   @override
   bool operator ==(Object other) {
@@ -223,8 +225,8 @@ class MixedFraction extends Rational {
 
   @override
   List<Fraction> toEgyptianFraction() {
-    return EgyptianFractionConverter(
-      fraction: toFraction(),
+    return EgyptianFractionConverter.fromMixedFraction(
+      mixedFraction: this,
     ).compute();
   }
 

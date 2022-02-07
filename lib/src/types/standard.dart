@@ -71,10 +71,10 @@ class Fraction extends Rational {
   };
 
   /// The numerator of the fraction.
-  final int numerator;
+  final int _numerator;
 
   /// The denominator of the fraction.
-  final int denominator;
+  final int _denominator;
 
   /// Creates a new representation of a fraction. If the denominator is negative,
   /// the fraction is 'normalized' so that the minus sign only appears in front
@@ -100,7 +100,7 @@ class Fraction extends Rational {
   }
 
   /// The default constructor.
-  const Fraction._(this.numerator, this.denominator);
+  const Fraction._(this._numerator, this._denominator);
 
   /// Returns an instance of [Fraction] if the source string is a valid
   /// representation of a fraction. Some valid examples are:
@@ -240,6 +240,12 @@ class Fraction extends Rational {
 
     return Fraction(num, mixed.denominator);
   }
+
+  @override
+  int get numerator => _numerator;
+
+  @override
+  int get denominator => _denominator;
 
   @override
   bool operator ==(Object other) {
