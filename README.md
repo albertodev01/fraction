@@ -152,7 +152,7 @@ Rational.tryParse('1/5'); // 1/5
 // This is a 'MixedFraction' object
 Rational.tryParse('2 4/7'); // 2 4/7
 
-// This is 'null' because the given string doesn't represent a fraction or a mixed fraction
+// This is 'null' because the string doesn't represent a fraction or a mixed fraction
 Rational.tryParse(''); // null
 ```
 

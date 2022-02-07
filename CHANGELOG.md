@@ -1,3 +1,6 @@
+## [4.0.1]
+ - Fixed a typo in the CHANGELOG.md file
+
 ## [4.0.0]
  - **BREAKING**: the `EgyptianFraction` class is not public anymore, it's been hidden in the internals of the package. The reason is that an egyptian fraction is not a **kind** of fraction but it's a **way of representing** a fraction: the `EgyptianFraction` type may be misleading (and it should have been called `EgyptianFractionConverter` since the beginning). The migration is very easy:
 ```dart
@@ -12,7 +15,7 @@ EgyptianFraction.fromMixedFraction(
 
 // New code
 Fraction(5, 8).toEgyptianFraction(); // [1/2 + 1/8]
-MixedFraction(2, 3, 7).toEgyptianFraction(); // [1 + 1 + 1/2 + 1/4 + 1/20]
+MixedFraction(2, 4, 5).toEgyptianFraction(); // [1 + 1 + 1/2 + 1/4 + 1/20]
 ```
  - Added the `Rational` abstract supertype of `Fraction` and `MixedFraction`, which also adds the `tryParse` method:
 ```dart
@@ -24,7 +27,7 @@ Rational.tryParse('2 4/5'); // 2 4/5;
 Rational.tryParse('/5');    // null
 Rational.tryParse('');      // null
 ```
- - Changelog updates
+ - CHANGELOG.md updates
  - Dependencies updates
 
 ## [3.2.2]
