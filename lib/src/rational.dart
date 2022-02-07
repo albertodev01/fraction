@@ -52,6 +52,12 @@ abstract class Rational implements Comparable<Rational> {
   /// the associated fraction.
   int get denominator;
 
+  /// True or false whether the fraction is positive or negative.
+  bool get isNegative;
+
+  /// True or false whether the fraction is whole or not.
+  bool get isWhole;
+
   /// A floating point representation of the rational number.
   double toDouble();
 

@@ -1,5 +1,5 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/types/egyptian.dart';
+import 'package:fraction/src/types/egyptian_converter.dart';
 
 /// Dart representation of a 'mixed fraction', which is made up by the whole part
 /// and a proper fraction. A proper fraction is a fraction in which the relation
@@ -156,6 +156,12 @@ class MixedFraction extends Rational {
   int get denominator => _denominator;
 
   @override
+  bool get isNegative => whole < 0;
+
+  @override
+  bool get isWhole => fractionalPart == Fraction(1);
+
+  @override
   bool operator ==(Object other) {
     // Two mixed fractions are equal if the whole part and the "cross product"
     // of the fractional part is equal.
@@ -268,9 +274,6 @@ class MixedFraction extends Rational {
       denominator: denominator ?? this.denominator,
     );
   }
-
-  /// True or false whether the mixed fraction is positive or negative.
-  bool get isNegative => whole < 0;
 
   /// Returns the fractional part of the mixed fraction as [Fraction] object.
   Fraction get fractionalPart => Fraction(numerator, denominator);

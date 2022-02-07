@@ -1,5 +1,5 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/types/egyptian.dart';
+import 'package:fraction/src/types/egyptian_converter.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -8,6 +8,18 @@ void main() {
       final egyptian = EgyptianFractionConverter(fraction: Fraction(2, 5));
       expect(egyptian.fraction, equals(Fraction(2, 5)));
     });
+
+    test(
+      'Making sure that the class can correctly be instantiated with the '
+      'mixed fraction constructor',
+      () {
+        final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
+        final egyptian = EgyptianFractionConverter.fromMixedFraction(
+          mixedFraction: mixed,
+        );
+        expect(egyptian.fraction, equals(Fraction(27, 2)));
+      },
+    );
 
     test(
       'Making sure that the constructor throws in case of invalid fraction',
@@ -99,8 +111,18 @@ void main() {
       // Calling 'toString' twice to make sure that CI coverage also covers the
       // case where the instance is cached
       final egyptian2 = EgyptianFractionConverter(
-        fraction: Fraction(3, 17),
+        fraction: Fraction(5, 8),
       );
+      expect('$egyptian2', equals('1/2 + 1/8'));
+
+      final egyptian3 = EgyptianFractionConverter.fromMixedFraction(
+        mixedFraction: MixedFraction(
+          whole: 2,
+          numerator: 4,
+          denominator: 5,
+        ),
+      );
+      expect('$egyptian3', equals('1 + 1 + 1/2 + 1/4 + 1/20'));
     });
   });
 }

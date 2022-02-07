@@ -333,6 +333,17 @@ void main() {
 
       expect(fraction.fractionalPart, equals(Fraction(4, 7)));
     });
+
+    test('Making sure that the "isWhole" method correctly works', () {
+      expect(
+        MixedFraction(whole: 5, numerator: 4, denominator: 7).isWhole,
+        isFalse,
+      );
+      expect(
+        MixedFraction(whole: 5, numerator: 1, denominator: 1).isWhole,
+        isTrue,
+      );
+    });
   });
 
   group('Testing operators overloads', () {

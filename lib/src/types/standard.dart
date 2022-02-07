@@ -1,5 +1,5 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/types/egyptian.dart';
+import 'package:fraction/src/types/egyptian_converter.dart';
 
 /// Dart representation of a fraction having both the numerator and the
 /// denominator as integers.
@@ -248,6 +248,12 @@ class Fraction extends Rational {
   int get denominator => _denominator;
 
   @override
+  bool get isNegative => numerator < 0;
+
+  @override
+  bool get isWhole => denominator == 1;
+
+  @override
   bool operator ==(Object other) {
     // Two fractions are equal if their "cross product" is equal.
     //
@@ -305,7 +311,7 @@ class Fraction extends Rational {
     final sign = (numerator < 0) ? -1 : 1;
 
     // Calculating the gcd for reduction
-    final lgcd = _gcd(numerator, denominator);
+    final lgcd = numerator.gcd(denominator);
 
     final num = (numerator * sign) ~/ lgcd;
     final den = (denominator * sign) ~/ lgcd;
@@ -374,22 +380,9 @@ class Fraction extends Rational {
     }
   }
 
-  /// Typical GCD recursive calculation.
-  int _gcd(int a, int b) {
-    final rem = a % b;
-
-    return (rem == 0) ? b : _gcd(b, rem);
-  }
-
   /// The numerator and the denominator of the current object are swapped and
   /// returned in a new [Fraction] instance.
   Fraction inverse() => Fraction(denominator, numerator);
-
-  /// True or false whether the fraction is positive or negative.
-  bool get isNegative => numerator < 0;
-
-  /// True of false whether the fraction is whole.
-  bool get isWhole => denominator == 1;
 
   /// Returns `true` if the numerator is smaller than the denominator.
   bool get isProper => numerator < denominator;
