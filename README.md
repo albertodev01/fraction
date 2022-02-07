@@ -132,10 +132,29 @@ In other words, egyptian fractions are a sum of fractions in the form 1/x that r
 
 ```dart
 final egyptianFraction1 = Fraction(5, 8).toEgyptianFraction();
-print("$egyptianFraction"); // prints "1/2 + 1/8"
+print("$egyptianFraction1"); // prints "1/2 + 1/8"
 
-final egyptianFraction1 = MixedFraction(2, 4, 5).toEgyptianFraction();
-print("$egyptianFraction"); // prints "1 + 1 + 1/2 + 1/4 + 1/20"
+final egyptianFraction2 = MixedFraction(2, 4, 5).toEgyptianFraction();
+print("$egyptianFraction2"); // prints "1 + 1 + 1/2 + 1/4 + 1/20"
 ```
 
 The `compute()` method returns an iterable.
+
+## Notes
+
+Both `Fraction` and `MixedFraction` descend from the `Rational` type which allows parsing both kind
+of fractions with a single method call:
+
+```dart
+// This is a 'Fraction' object
+Rational.tryParse('1/5'); // 1/5
+
+// This is a 'MixedFraction' object
+Rational.tryParse('2 4/7'); // 2 4/7
+
+// This is 'null' because the given string doesn't represent a fraction or a mixed fraction
+Rational.tryParse('1/5'); // null
+```
+
+Note that parsing integer values like `Rational.tryParse('3')` always returns a `Fraction` type but
+it can easily be converted into a mixed fraction using the `Fraction.toMixedFraction` method.

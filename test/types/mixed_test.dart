@@ -5,7 +5,11 @@ void main() {
   // Tests on constructors
   group('Testing the behaviors of the constructors', () {
     test('Making sure that whole, numerator and denominator are correct', () {
-      final fraction = MixedFraction(whole: 1, numerator: 5, denominator: 7);
+      final fraction = MixedFraction(
+        whole: 1,
+        numerator: 5,
+        denominator: 7,
+      );
 
       expect(fraction.whole, equals(1));
       expect(fraction.numerator, equals(5));
@@ -15,7 +19,11 @@ void main() {
     });
 
     test('Making sure that whole, numerator and denominator are correct', () {
-      final fraction = MixedFraction(whole: 0, numerator: -1, denominator: -2);
+      final fraction = MixedFraction(
+        whole: 0,
+        numerator: -1,
+        denominator: -2,
+      );
 
       expect(fraction.whole, equals(0));
       expect(fraction.numerator, equals(1));
@@ -147,6 +155,16 @@ void main() {
         );
 
         expect(
+          MixedFraction.fromString('2 5/1'),
+          equals(MixedFraction(whole: 2, numerator: 5, denominator: 1)),
+        );
+
+        expect(
+          MixedFraction.fromString('2 5'),
+          equals(MixedFraction(whole: 2, numerator: 5, denominator: 1)),
+        );
+
+        expect(
           MixedFraction.fromString('3 ⅕'),
           equals(MixedFraction(whole: 3, numerator: 1, denominator: 5)),
         );
@@ -209,7 +227,7 @@ void main() {
     });
 
     test(
-      "Making sure that 'compareTo' returns 1, -1 or 0 according with the natural sorting",
+      "Making sure that 'compareTo' works according with the natural sorting",
       () {
         final mixed1 = MixedFraction(whole: 0, numerator: -2, denominator: 4);
         final mixed2 = MixedFraction(whole: 1, numerator: 6, denominator: 4);
