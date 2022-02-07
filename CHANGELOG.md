@@ -1,5 +1,5 @@
 ## [4.0.0]
- - **BREAKING**: the `EgyptianFraction` class is not public anymore, it's been hidden in the internals of the package. The reason is that an egyptian fraction is not a **kind** of fraction but it's a **way of representing** a fraction: the `EgyptianFraction` type may be misleading (it should have been called `EgyptianFractionConverter` since the beginning). The migration is very easy:
+ - **BREAKING**: the `EgyptianFraction` class is not public anymore, it's been hidden in the internals of the package. The reason is that an egyptian fraction is not a **kind** of fraction but it's a **way of representing** a fraction: the `EgyptianFraction` type may be misleading (and it should have been called `EgyptianFractionConverter` since the beginning). The migration is very easy:
 ```dart
 // Old code
 EgyptianFraction(

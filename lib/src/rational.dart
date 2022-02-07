@@ -52,23 +52,23 @@ abstract class Rational implements Comparable<Rational> {
   /// the associated fraction.
   int get denominator;
 
-  /// True or false whether the fraction is positive or negative.
+  /// True or false whether this rational number is positive or negative.
   bool get isNegative;
 
-  /// True or false whether the fraction is whole or not.
+  /// True or false whether this rational number is whole or not.
   bool get isWhole;
 
-  /// A floating point representation of the rational number.
+  /// A floating point representation of this rational number.
   double toDouble();
 
   /// The sign is changed and the result is returned in new instance.
   Rational negate();
 
-  /// Reduces the rational number to the lowest terms and returns the result in
+  /// Reduces this rational number to the lowest terms and returns the result in
   /// a new instance.
   Rational reduce();
 
-  /// Represents the current rational number as an egyptian fraction.
+  /// Represents this rational number as an egyptian fraction.
   List<Fraction> toEgyptianFraction();
 
   /// Parses a string containing a fraction or a mixed fraction into a number.
