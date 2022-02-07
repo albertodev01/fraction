@@ -1,5 +1,30 @@
 ## [4.0.0]
- - TODO
+ - **BREAKING**: the `EgyptianFraction` class is not public anymore, it's been hidden in the internals of the package. The reason is that an egyptian fraction is not a **kind** of fraction but it's a **way of representing** a fraction: the `EgyptianFraction` type may be misleading (it should have been called `EgyptianFractionConverter` since the beginning). The migration is very easy:
+```dart
+// Old code
+EgyptianFraction(
+  fraction: Fraction(5, 8),
+).compute(); // [1/2 + 1/8]
+
+EgyptianFraction.fromMixedFraction(
+  mixedFraction: MixedFraction(2, 4, 5),
+).compute(); // [1 + 1 + 1/2 + 1/4 + 1/20]
+
+// New code
+Fraction(5, 8).toEgyptianFraction(); // [1/2 + 1/8]
+MixedFraction(2, 3, 7).toEgyptianFraction(); // [1 + 1 + 1/2 + 1/4 + 1/20]
+```
+ - Added the `Rational` abstract supertype of `Fraction` and `MixedFraction`, which also adds the `tryParse` method:
+```dart
+// If the string is valid, it either returns a 'Fraction' or a 'MixedFraction'
+Rational.tryParse('2/5');   // 2/5;
+Rational.tryParse('2 4/5'); // 2 4/5;
+
+// If the string is invalid, it returns 'null'
+Rational.tryParse('/5');    // null
+Rational.tryParse('');      // null
+```
+ - Dependencies updates
 
 ## [3.2.2]
  - **BREAKING**: removed `EgyptianFraction.clearCache()` and `EgyptianFraction.cachingEnabled`. Caching is now always enabled by default and the cache cannot be purged.

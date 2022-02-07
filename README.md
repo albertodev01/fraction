@@ -134,8 +134,8 @@ In other words, egyptian fractions are a sum of fractions in the form 1/x that r
 final egyptianFraction1 = Fraction(5, 8).toEgyptianFraction();
 print("$egyptianFraction"); // prints "1/2 + 1/8"
 
-final egyptianFraction1 = MixedFraction(2, 1, 3).toEgyptianFraction();
-print("$egyptianFraction"); // prints "1/2 + 1/8"
+final egyptianFraction1 = MixedFraction(2, 4, 5).toEgyptianFraction();
+print("$egyptianFraction"); // prints "1 + 1 + 1/2 + 1/4 + 1/20"
 ```
 
 The `compute()` method returns an iterable.

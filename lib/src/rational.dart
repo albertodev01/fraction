@@ -85,12 +85,10 @@ abstract class Rational implements Comparable<Rational> {
       return Fraction.fromString(value);
     }
 
-    // At this point, the string can either contain an invalid value or a mixed
-    // fraction.
-    try {
+    if (value.isMixedFraction) {
       return MixedFraction.fromString(value);
-    } on Exception {
-      return null;
     }
+
+    return null;
   }
 }
