@@ -1,4 +1,5 @@
 import 'package:fraction/fraction.dart';
+import 'package:fraction/src/types/egyptian.dart';
 
 /// Dart representation of a 'mixed fraction', which is made up by the whole part
 /// and a proper fraction. A proper fraction is a fraction in which the relation
@@ -27,7 +28,7 @@ import 'package:fraction/fraction.dart';
 ///
 /// If the string doesn't represent a valid fraction, a [MixedFractionException]
 /// is thrown.
-class MixedFraction implements Comparable<MixedFraction> {
+class MixedFraction extends Rational {
   /// Whole part of the mixed fraction.
   final int whole;
 
@@ -189,25 +190,42 @@ class MixedFraction implements Comparable<MixedFraction> {
   }
 
   @override
-  int compareTo(MixedFraction other) {
-    if (toDouble() < other.toDouble()) {
-      return -1;
-    }
-
-    if (toDouble() > other.toDouble()) {
-      return 1;
-    }
-
-    return 0;
-  }
-
-  @override
   String toString() {
     if (whole == 0) {
       return '$numerator/$denominator';
     }
 
     return '$whole $numerator/$denominator';
+  }
+
+  @override
+  double toDouble() => whole + numerator / denominator;
+
+  @override
+  MixedFraction negate() {
+    return MixedFraction(
+      whole: whole * -1,
+      numerator: numerator,
+      denominator: denominator,
+    );
+  }
+
+  @override
+  MixedFraction reduce() {
+    final fractionalPart = Fraction(numerator, denominator).reduce();
+
+    return MixedFraction(
+      whole: whole,
+      numerator: fractionalPart.numerator,
+      denominator: fractionalPart.denominator,
+    );
+  }
+
+  @override
+  List<Fraction> toEgyptianFraction() {
+    return EgyptianFractionConverter(
+      fraction: toFraction(),
+    ).compute();
   }
 
   /// If possible, this method converts this [MixedFraction] instance into an
@@ -232,18 +250,6 @@ class MixedFraction implements Comparable<MixedFraction> {
     }
   }
 
-  /// Floating point representation of the mixed fraction.
-  double toDouble() => whole + numerator / denominator;
-
-  /// Represents the current mixed fraction as an egyptian fraction.
-  ///
-  /// For more info, see [EgyptianFraction].
-  List<Fraction> toEgyptianFraction() {
-    return EgyptianFraction(
-      fraction: toFraction(),
-    ).compute();
-  }
-
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 
@@ -266,28 +272,6 @@ class MixedFraction implements Comparable<MixedFraction> {
 
   /// Returns the fractional part of the mixed fraction as [Fraction] object.
   Fraction get fractionalPart => Fraction(numerator, denominator);
-
-  /// Reduces this mixed fraction to the lowest terms and returns the results in
-  /// a new [MixedFraction] instance.
-  MixedFraction reduce() {
-    final fractionalPart = Fraction(numerator, denominator).reduce();
-
-    return MixedFraction(
-      whole: whole,
-      numerator: fractionalPart.numerator,
-      denominator: fractionalPart.denominator,
-    );
-  }
-
-  /// Changes the sign of this mixed fraction and returns the results in a new
-  /// [MixedFraction] instance.
-  MixedFraction negate() {
-    return MixedFraction(
-      whole: whole * -1,
-      numerator: numerator,
-      denominator: denominator,
-    );
-  }
 
   /// Sum between two mixed fractions.
   MixedFraction operator +(MixedFraction other) {
@@ -316,18 +300,6 @@ class MixedFraction implements Comparable<MixedFraction> {
 
     return result.toMixedFraction();
   }
-
-  /// Checks whether this mixed fraction is greater or equal than the other.
-  bool operator >=(MixedFraction other) => toDouble() >= other.toDouble();
-
-  /// Checks whether this mixed fraction is greater than the other.
-  bool operator >(MixedFraction other) => toDouble() > other.toDouble();
-
-  /// Checks whether this mixed fraction is smaller or equal than the other.
-  bool operator <=(MixedFraction other) => toDouble() <= other.toDouble();
-
-  /// Checks whether this mixed fraction is smaller than the other.
-  bool operator <(MixedFraction other) => toDouble() < other.toDouble();
 
   /// Access the whole part, the numerator or the denominator of the fraction
   /// via index. In particular:
