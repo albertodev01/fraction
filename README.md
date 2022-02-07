@@ -153,7 +153,7 @@ Rational.tryParse('1/5'); // 1/5
 Rational.tryParse('2 4/7'); // 2 4/7
 
 // This is 'null' because the given string doesn't represent a fraction or a mixed fraction
-Rational.tryParse('1/5'); // null
+Rational.tryParse(''); // null
 ```
 
 Note that parsing integer values like `Rational.tryParse('3')` always returns a `Fraction` type but

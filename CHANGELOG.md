@@ -24,7 +24,7 @@ Rational.tryParse('2 4/5'); // 2 4/5;
 Rational.tryParse('/5');    // null
 Rational.tryParse('');      // null
 ```
- - Changelog update
+ - Changelog updates
  - Dependencies updates
 
 ## [3.2.2]
