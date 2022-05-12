@@ -88,7 +88,7 @@ class EgyptianFractionConverter {
   }
 
   @override
-  int get hashCode => 31 * 83 + fraction.hashCode;
+  int get hashCode => Object.hashAll([fraction]);
 
   @override
   String toString() {

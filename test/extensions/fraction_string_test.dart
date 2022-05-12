@@ -8,6 +8,7 @@ void main() {
       expect('-4/5'.toFraction(), equals(Fraction(-4, 5)));
       expect('5'.toFraction(), equals(Fraction(5)));
       expect('-5'.toFraction(), equals(Fraction(-5)));
+      expect('0'.toFraction(), equals(Fraction(0, 1)));
       expect('⅘'.toFraction(), equals(Fraction(4, 5)));
     });
 

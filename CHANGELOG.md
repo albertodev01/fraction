@@ -1,3 +1,8 @@
+## [4.1.0]
+ - Updated Dart SDK constraints to `">=2.17.0 <3.0.0"`
+ - CHANGELOG.md updates
+ - Dependencies updates
+ 
 ## [4.0.1]
  - Fixed a typo in the CHANGELOG.md file
 

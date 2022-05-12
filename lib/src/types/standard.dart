@@ -204,8 +204,9 @@ class Fraction extends Rational {
     _checkValue(precision);
 
     // Storing the sign
+    final abs = value.abs();
     final mul = (value >= 0) ? 1 : -1;
-    final x = value.abs();
+    final x = abs;
 
     // How many digits is the algorithm going to consider
     final limit = precision;
@@ -213,7 +214,7 @@ class Fraction extends Rational {
     var h2 = 0;
     var k1 = 0;
     var k2 = 1;
-    var y = value.abs();
+    var y = abs;
 
     do {
       final a = y.floor();
@@ -282,13 +283,7 @@ class Fraction extends Rational {
   }
 
   @override
-  int get hashCode {
-    var result = 83;
-    result = result * 31 + numerator.hashCode;
-    result = result * 31 + denominator.hashCode;
-
-    return result;
-  }
+  int get hashCode => Object.hash(numerator, denominator);
 
   @override
   String toString() {

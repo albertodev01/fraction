@@ -17,6 +17,7 @@ dart_code_metrics:
     - example/**
     - test/**
   rules:
+    - avoid-dynamic
     - avoid-global-state
     - avoid-missing-enum-constant-in-map
     - avoid-nested-conditional-expressions
@@ -34,6 +35,8 @@ dart_code_metrics:
     - prefer-correct-type-name
     - prefer-first
     - prefer-last
+    - prefer-immediate-return
+    - prefer-moving-to-variable
     - prefer-trailing-comma
 
 linter:
@@ -76,8 +79,6 @@ linter:
     literal_only_boolean_expressions: true
     missing_whitespace_between_adjacent_strings: true
     no_adjacent_strings_in_list: true
-    no_leading_underscores_for_library_prefixes: true
-    no_leading_underscores_for_local_identifiers: true
     no_runtimeType_toString: true
     one_member_abstracts: true
     only_throw_errors: true
@@ -91,7 +92,6 @@ linter:
     prefer_foreach: true
     prefer_if_elements_to_conditional_expressions: true
     prefer_int_literals: true
-    prefer_interpolation_to_compose_strings: true
     prefer_single_quotes: true
     public_member_api_docs: true
     secure_pubspec_urls: true
@@ -104,8 +104,6 @@ linter:
     type_annotate_public_apis: true
     unnecessary_await_in_return: true
     unnecessary_lambdas: true
-    unnecessary_null_aware_assignments: true
-    unnecessary_nullable_for_final_variable_declarations: true
     unnecessary_parenthesis: true
     unnecessary_raw_strings: true
     unnecessary_statements: true
