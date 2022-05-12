@@ -36,7 +36,6 @@ dart_code_metrics:
     - prefer-first
     - prefer-last
     - prefer-immediate-return
-    - prefer-moving-to-variable
     - prefer-trailing-comma
 
 linter:
