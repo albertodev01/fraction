@@ -187,15 +187,7 @@ class MixedFraction extends Rational {
   }
 
   @override
-  int get hashCode {
-    var result = 83;
-
-    result = result * 31 + whole.hashCode;
-    result = result * 31 + numerator.hashCode;
-    result = result * 31 + denominator.hashCode;
-
-    return result;
-  }
+  int get hashCode => Object.hash(whole, _numerator, _denominator);
 
   @override
   String toString() {

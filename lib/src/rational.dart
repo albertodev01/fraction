@@ -18,14 +18,17 @@ abstract class Rational implements Comparable<Rational> {
 
   @override
   int compareTo(Rational other) {
+    final thisDouble = toDouble();
+    final otherDouble = other.toDouble();
+
     // Using operator== on floating point values isn't reliable due to potential
     // machine precision losses. Comparisons with operator> and operator< are
     // safer.
-    if (toDouble() < other.toDouble()) {
+    if (thisDouble < otherDouble) {
       return -1;
     }
 
-    if (toDouble() > other.toDouble()) {
+    if (thisDouble > otherDouble) {
       return 1;
     }
 

@@ -1,6 +1,6 @@
 import 'package:fraction/fraction.dart';
 
-/// Adds [Fraction] functionalities to [num].
+/// Extension method that adds [Fraction] functionalities to [num].
 extension FractionNum on num {
   /// Builds a [Fraction] from an [int] or a [double].
   Fraction toFraction() {

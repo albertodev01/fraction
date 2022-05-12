@@ -28,7 +28,7 @@ class FractionException implements Exception {
   }
 
   @override
-  int get hashCode => 31 * 83 + message.hashCode;
+  int get hashCode => Object.hashAll([message]);
 }
 
 /// Exception thrown by a [MixedFraction] object.
@@ -59,5 +59,5 @@ class MixedFractionException implements Exception {
   }
 
   @override
-  int get hashCode => 31 * 83 + message.hashCode;
+  int get hashCode => Object.hashAll([message]);
 }

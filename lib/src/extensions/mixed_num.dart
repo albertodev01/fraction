@@ -1,6 +1,6 @@
 import 'package:fraction/fraction.dart';
 
-/// Adds [MixedFraction] functionalities to [num].
+/// Extension method that adds [MixedFraction] functionalities to [num].
 extension MixedFractionNum on num {
   /// Builds a [MixedFraction] from an [int] or a [double].
   ///

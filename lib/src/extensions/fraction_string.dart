@@ -1,6 +1,6 @@
 import 'package:fraction/fraction.dart';
 
-/// Adds [Fraction] functionalities to [String].
+/// Extension method that adds [Fraction] functionalities to [String].
 extension FractionString on String {
   /// Checks whether the string contains a valid representation of a fraction in
   /// the format 'a/b'.

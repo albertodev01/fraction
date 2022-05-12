@@ -1,6 +1,6 @@
 import 'package:fraction/fraction.dart';
 
-/// Adds [MixedFraction] functionalities to [String].
+/// Extension method that adds [MixedFraction] functionalities to [String].
 extension MixedFractionString on String {
   /// Checks whether a string contains a valid representation of a mixed fraction
   /// in the format 'a b/c'.
