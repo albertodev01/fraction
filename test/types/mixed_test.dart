@@ -43,8 +43,8 @@ void main() {
     );
 
     test(
-      "Making sure that when numerator > denominator, the fraction is 'normalized' "
-      'so that the numerator <= denominator relation becomes true',
+      'Making sure that when numerator > denominator, the fraction is '
+      "'normalized' so that the numerator <= denominator relation becomes true",
       () {
         final fraction1 = MixedFraction(
           whole: 1,
@@ -128,7 +128,8 @@ void main() {
     });
 
     test(
-      'Making sure that mixed fractions are properly constructed from fractions',
+      'Making sure that mixed fractions are properly constructed from '
+      'fractions',
       () {
         final fraction = MixedFraction.fromFraction(
           Fraction(19, 3),

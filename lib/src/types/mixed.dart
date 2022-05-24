@@ -1,12 +1,13 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction/src/types/egyptian_converter.dart';
 
-/// Dart representation of a 'mixed fraction', which is made up by the whole part
-/// and a proper fraction. A proper fraction is a fraction in which the relation
-/// `numerator <= denominator` is true.
+/// Dart representation of a 'mixed fraction', which is made up by the whole
+/// part and a proper fraction. A proper fraction is a fraction in which the
+/// relation `numerator <= denominator` is true.
 ///
 /// There's the possibility to create an instance of [MixedFraction] either by
-/// using one of the constructors or the extension methods on [num] and [String].
+/// using one of the constructors or the extension methods on [num] and
+/// [String].
 ///
 /// ```dart
 /// MixedFraction(
@@ -95,8 +96,8 @@ class MixedFraction extends Rational {
   ///
   /// The fraction can also be a glyph.
   ///
-  /// The negative sign can only stay in front of 'a' or 'b'. Some valid examples
-  /// are:
+  /// The negative sign can only stay in front of 'a' or 'b'. Some valid
+  /// examples are:
   ///
   /// ```dart
   /// MixedFraction.fromString('-2 2/5');
@@ -187,7 +188,15 @@ class MixedFraction extends Rational {
   }
 
   @override
-  int get hashCode => Object.hash(whole, _numerator, _denominator);
+  int get hashCode {
+    var result = 17;
+
+    result = result * 37 + whole.hashCode;
+    result = result * 37 + _numerator.hashCode;
+    result = result * 37 + _denominator.hashCode;
+
+    return result;
+  }
 
   @override
   String toString() {
@@ -202,13 +211,11 @@ class MixedFraction extends Rational {
   double toDouble() => whole + numerator / denominator;
 
   @override
-  MixedFraction negate() {
-    return MixedFraction(
-      whole: whole * -1,
-      numerator: numerator,
-      denominator: denominator,
-    );
-  }
+  MixedFraction negate() => MixedFraction(
+        whole: whole * -1,
+        numerator: numerator,
+        denominator: denominator,
+      );
 
   @override
   MixedFraction reduce() {
@@ -222,11 +229,10 @@ class MixedFraction extends Rational {
   }
 
   @override
-  List<Fraction> toEgyptianFraction() {
-    return EgyptianFractionConverter.fromMixedFraction(
-      mixedFraction: this,
-    ).compute();
-  }
+  List<Fraction> toEgyptianFraction() =>
+      EgyptianFractionConverter.fromMixedFraction(
+        mixedFraction: this,
+      ).compute();
 
   /// If possible, this method converts this [MixedFraction] instance into an
   /// unicode glyph string. For example:
@@ -259,13 +265,12 @@ class MixedFraction extends Rational {
     int? whole,
     int? numerator,
     int? denominator,
-  }) {
-    return MixedFraction(
-      whole: whole ?? this.whole,
-      numerator: numerator ?? this.numerator,
-      denominator: denominator ?? this.denominator,
-    );
-  }
+  }) =>
+      MixedFraction(
+        whole: whole ?? this.whole,
+        numerator: numerator ?? this.numerator,
+        denominator: denominator ?? this.denominator,
+      );
 
   /// Returns the fractional part of the mixed fraction as [Fraction] object.
   Fraction get fractionalPart => Fraction(numerator, denominator);

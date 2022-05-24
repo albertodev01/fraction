@@ -76,9 +76,9 @@ class Fraction extends Rational {
   /// The denominator of the fraction.
   final int _denominator;
 
-  /// Creates a new representation of a fraction. If the denominator is negative,
-  /// the fraction is 'normalized' so that the minus sign only appears in front
-  /// of the denominator.
+  /// Creates a new representation of a fraction. If the denominator is
+  /// negative, the fraction is 'normalized' so that the minus sign only appears
+  /// in front of the denominator.
   ///
   /// ```dart
   /// Fraction(3, 4)  // is interpreted as 3/4
@@ -228,7 +228,7 @@ class Fraction extends Rational {
     } while ((x - h1 / k1).abs() > x * limit);
 
     // Assigning the computed values
-    return Fraction(mul * h1.toInt(), k1.toInt());
+    return Fraction(mul * h1, k1);
   }
 
   /// Converts a [MixedFraction] into a [Fraction].
@@ -283,7 +283,14 @@ class Fraction extends Rational {
   }
 
   @override
-  int get hashCode => Object.hash(numerator, denominator);
+  int get hashCode {
+    var result = 17;
+
+    result = result * 37 + numerator.hashCode;
+    result = result * 37 + denominator.hashCode;
+
+    return result;
+  }
 
   @override
   String toString() {
@@ -316,11 +323,9 @@ class Fraction extends Rational {
   }
 
   @override
-  List<Fraction> toEgyptianFraction() {
-    return EgyptianFractionConverter(
-      fraction: this,
-    ).compute();
-  }
+  List<Fraction> toEgyptianFraction() => EgyptianFractionConverter(
+        fraction: this,
+      ).compute();
 
   /// If possible, this method converts this [Fraction] instance into an unicode
   /// glyph string.
@@ -348,25 +353,22 @@ class Fraction extends Rational {
   }
 
   /// Converts the current object into a [MixedFraction].
-  MixedFraction toMixedFraction() {
-    return MixedFraction(
-      whole: numerator ~/ denominator,
-      numerator: numerator % denominator,
-      denominator: denominator,
-    );
-  }
+  MixedFraction toMixedFraction() => MixedFraction(
+        whole: numerator ~/ denominator,
+        numerator: numerator % denominator,
+        denominator: denominator,
+      );
 
   /// Creates a **deep** copy of this object with the given fields replaced
   /// with the new values.
   Fraction copyWith({
     int? numerator,
     int? denominator,
-  }) {
-    return Fraction(
-      numerator ?? this.numerator,
-      denominator ?? this.denominator,
-    );
-  }
+  }) =>
+      Fraction(
+        numerator ?? this.numerator,
+        denominator ?? this.denominator,
+      );
 
   /// Throws a [FractionException] whether [value] is infinite or [double.nan].
   static void _checkValue(num value) {
@@ -385,8 +387,8 @@ class Fraction extends Rational {
   /// Returns `true` if the numerator is equal or greater than the denominator.
   bool get isImproper => numerator >= denominator;
 
-  /// Returns `true` if this [Fraction] instance has an unicode glyph associated.
-  /// For example:
+  /// Returns `true` if this [Fraction] instance has an unicode glyph
+  /// associated. For example:
   ///
   /// ```dart
   /// Fraction(1, 2).hasUnicodeGlyph; // true
@@ -397,36 +399,28 @@ class Fraction extends Rational {
   bool get isFractionGlyph => _valuesToGlyphs.containsKey(this);
 
   /// Sum between two fractions.
-  Fraction operator +(Fraction other) {
-    return Fraction(
-      numerator * other.denominator + denominator * other.numerator,
-      denominator * other.denominator,
-    );
-  }
+  Fraction operator +(Fraction other) => Fraction(
+        numerator * other.denominator + denominator * other.numerator,
+        denominator * other.denominator,
+      );
 
   /// Difference between two fractions.
-  Fraction operator -(Fraction other) {
-    return Fraction(
-      numerator * other.denominator - denominator * other.numerator,
-      denominator * other.denominator,
-    );
-  }
+  Fraction operator -(Fraction other) => Fraction(
+        numerator * other.denominator - denominator * other.numerator,
+        denominator * other.denominator,
+      );
 
   /// Multiplication between two fractions.
-  Fraction operator *(Fraction other) {
-    return Fraction(
-      numerator * other.numerator,
-      denominator * other.denominator,
-    );
-  }
+  Fraction operator *(Fraction other) => Fraction(
+        numerator * other.numerator,
+        denominator * other.denominator,
+      );
 
   /// Division between two fractions.
-  Fraction operator /(Fraction other) {
-    return Fraction(
-      numerator * other.denominator,
-      denominator * other.numerator,
-    );
-  }
+  Fraction operator /(Fraction other) => Fraction(
+        numerator * other.denominator,
+        denominator * other.numerator,
+      );
 
   /// Access numerator or denominator via index. In particular, ´0´ refers to
   /// the numerator while ´1´ to the denominator.

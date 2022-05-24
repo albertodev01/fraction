@@ -24,7 +24,8 @@ extension FractionString on String {
 
   /// Converts the string into a [Fraction].
   ///
-  /// If you want to be sure that this method doesn't throw a [FractionException],
+  /// If you want to be sure that this method doesn't throw a
+  /// [FractionException],
   /// use `isFraction` before.
   Fraction toFraction() {
     try {

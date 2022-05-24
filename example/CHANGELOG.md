@@ -1,4 +1,8 @@
 ## 1.0.2
+ - Updated `analysis_options.yaml` file
+ - Updated dependencies
+
+## 1.0.2
  - Updated Dart SDK constraints to `">=2.17.0 <3.0.0"`
  - Updated dependencies
 
@@ -6,4 +10,4 @@
  - Updated dependencies
 
 ## 1.0.0
-- First version of the app.
+ - First version of the app.

@@ -53,7 +53,8 @@ void main() {
     );
 
     test(
-      "Making sure that the 'fromString()' constructor handles strings properly",
+      "Making sure that the 'fromString()' constructor handles strings"
+      ' properly',
       () {
         // Valid conversions
         expect(Fraction.fromString('3/5'), equals(Fraction(3, 5)));
@@ -124,7 +125,8 @@ void main() {
     );
 
     test(
-      "Making sure that the 'fromDouble()' constructor handles strings properly",
+      "Making sure that the 'fromDouble()' constructor handles strings "
+      'properly',
       () {
         // Valid conversions
         expect(Fraction.fromDouble(5.6), equals(Fraction(28, 5)));
@@ -191,7 +193,8 @@ void main() {
     });
 
     test(
-      "Making sure that 'compareTo' returns 1, -1 or 0 according with the natural sorting",
+      "Making sure that 'compareTo' returns 1, -1 or 0 according with the "
+      'natural sorting',
       () {
         expect(Fraction(2).compareTo(Fraction(8)), equals(-1));
         expect(Fraction(2).compareTo(Fraction(-4)), equals(1));
@@ -345,7 +348,8 @@ void main() {
     });
 
     test(
-      'Making sure that the index operator returns value only when called with 0 and 1',
+      'Making sure that the index operator returns value only when called with '
+      '0 and 1',
       () {
         final fraction = Fraction(9, 20);
 

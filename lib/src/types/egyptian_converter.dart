@@ -31,14 +31,14 @@ class EgyptianFractionConverter {
     required this.fraction,
   });
 
-  /// Creates an [EgyptianFraction] instance from a [MixedFraction] object.
+  /// Creates an [EgyptianFractionConverter] instance from a [MixedFraction]
+  /// object.
   factory EgyptianFractionConverter.fromMixedFraction({
     required MixedFraction mixedFraction,
-  }) {
-    return EgyptianFractionConverter(
-      fraction: mixedFraction.toFraction(),
-    );
-  }
+  }) =>
+      EgyptianFractionConverter(
+        fraction: mixedFraction.toFraction(),
+      );
 
   /// Returns a series of [Fraction]s representing the egyptian fraction of the
   /// current [fraction] object.
@@ -88,7 +88,7 @@ class EgyptianFractionConverter {
   }
 
   @override
-  int get hashCode => Object.hashAll([fraction]);
+  int get hashCode => fraction.hashCode;
 
   @override
   String toString() {

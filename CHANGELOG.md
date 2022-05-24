@@ -1,3 +1,7 @@
+## [4.1.1]
+ - Added more linter rules
+ - Dependencies updates
+
 ## [4.1.0]
  - Updated Dart SDK constraints to `">=2.17.0 <3.0.0"`
  - CHANGELOG.md updates

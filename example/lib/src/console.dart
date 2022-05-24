@@ -29,20 +29,21 @@ class Console {
       final fraction = stdin.readLineSync() ?? '';
       final analyzer = FractionAnalyzer(input: fraction);
 
-      print(analyzer.analyze());
+      stdout.writeln(analyzer.analyze());
     } else if (input == '2') {
       stdout.write('Enter the mixed fraction: ');
 
       final fraction = stdin.readLineSync() ?? '';
       final analyzer = MixedFractionAnalyzer(input: fraction);
 
-      print(analyzer.analyze());
+      stdout.writeln(analyzer.analyze());
     } else {
       stdout.writeln("\n - You've entered a wrong input!\n");
     }
 
     // To keep the console 'awake'. This is very useful on Windows!
     stdout.write('Press return to exit...');
+    // ignore: avoid-ignoring-return-values
     stdin.readLineSync();
   }
 }
