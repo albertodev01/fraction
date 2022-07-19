@@ -189,6 +189,31 @@ void main() {
         );
       },
     );
+
+    test(
+      'Making sure that mixed fractions are properly constructed from '
+      'decimal values',
+      () {
+        expect(
+          MixedFraction.fromDouble(5.46),
+          equals(
+            MixedFraction(whole: 5, numerator: 23, denominator: 50),
+          ),
+        );
+        expect(
+          MixedFraction.fromDouble(1.06),
+          equals(
+            MixedFraction(whole: 1, numerator: 3, denominator: 50),
+          ),
+        );
+        expect(
+          MixedFraction.fromDouble(0),
+          equals(
+            MixedFraction(whole: 0, numerator: 0, denominator: 1),
+          ),
+        );
+      },
+    );
   });
 
   group('Testing objects equality', () {
