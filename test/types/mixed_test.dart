@@ -125,6 +125,15 @@ void main() {
       expect(fraction3.numerator, equals(2));
       expect(fraction3.denominator, equals(7));
       expect(fraction3.toString(), equals('-6 2/7'));
+
+      expect(
+        MixedFraction(whole: -3, numerator: 2, denominator: 5).toFraction(),
+        equals(Fraction(-17, 5)),
+      );
+      expect(
+        MixedFraction(whole: -4, numerator: 5, denominator: 6).toFraction(),
+        equals(Fraction(-29, 6)),
+      );
     });
 
     test(
