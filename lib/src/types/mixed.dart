@@ -150,6 +150,42 @@ class MixedFraction extends Rational {
     );
   }
 
+  /// Tries to give a fractional representation of a double according with the
+  /// given precision. This implementation takes inspiration from the
+  /// (continued fraction)[https://en.wikipedia.org/wiki/Continued_fraction]
+  /// algorithm.
+  ///
+  /// ```dart
+  /// MixedFraction.fromDouble(5.46) // represented as 5 + 23/50
+  /// ```
+  ///
+  /// Note that irrational numbers can **not** be represented as fractions, so
+  /// if you try to use this method on π (3.1415...) you won't get a valid
+  /// result.
+  ///
+  /// ```dart
+  /// MixedFraction.fromDouble(math.pi)
+  /// ```
+  ///
+  /// The above returns a mixed fraction because the algorithm considers only
+  /// the first 10 decimal digits (since `precision` is set to 1.0e-10).
+  ///
+  /// ```dart
+  /// MixedFraction.fromDouble(math.pi, precision: 1.0e-20)
+  /// ```
+  ///
+  /// This example will return another different value because it considers the
+  /// first 20 digits. It's still not a fractional representation of pi because
+  /// irrational numbers cannot be expressed as fractions.
+  ///
+  /// This method is good with rational numbers.
+  factory MixedFraction.fromDouble(double value, {double precision = 1.0e-12}) {
+    // Use 'Fraction' to reuse the continued fraction algorithm.
+    final fraction = Fraction.fromDouble(value, precision: precision);
+
+    return fraction.toMixedFraction();
+  }
+
   @override
   int get numerator => _numerator;
 

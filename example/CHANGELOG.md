@@ -1,4 +1,7 @@
-## 1.0.2
+## 1.0.4
+ - Updated dependencies
+
+## 1.0.3
  - Updated `analysis_options.yaml` file
  - Updated dependencies
 

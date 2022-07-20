@@ -1,3 +1,7 @@
+## [4.1.2]
+ - Added the `MixedFraction.fromDouble` method
+ - Dependencies update
+
 ## [4.1.1]
  - Added more linter rules
  - Dependencies updates
