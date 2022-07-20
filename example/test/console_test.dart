@@ -4,14 +4,12 @@ import 'dart:io';
 import 'package:test/test.dart';
 
 void main() {
-  Future<Process> createProcess() => Process.start('dart', [
-        'run',
-        './bin/fraction_example.dart',
-      ]);
-
   group("Testing the 'Console' class", () {
     test('Making sure that the console prints the welcome message', () async {
-      final process = await createProcess();
+      final process = await Process.start(
+        'dart',
+        ['run', './bin/fraction_example.dart'],
+      );
 
       // Converting into a stream
       final stream = process.stdout.transform(const Utf8Decoder());
@@ -25,8 +23,8 @@ void main() {
 
       await expectLater(
         stream,
-        emitsInOrder([
-          expectedOutput.toString(),
+        emitsAnyOf([
+          '$expectedOutput',
         ]),
       );
     });
