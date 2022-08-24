@@ -1,3 +1,5 @@
+/// A package that helps you working with fractions, mixed fractions and
+/// egyptian fractions.
 library fraction;
 
 export 'src/extensions/fraction_num.dart';

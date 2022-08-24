@@ -76,7 +76,7 @@ final mul = f1 * f2; // -> 5/7 * 1/5
 final div = f1 / f2; // -> 5/7 / 1/5
 ```
 
-There are a lot of methods you can use to get info about a fraction instance:
+The `Fraction` type has a wide API with the most common operations you'd expect to make on a fraction:
 
 ```dart
 Fraction(10, 2).toDouble();  // 5.0
@@ -156,5 +156,5 @@ Rational.tryParse('2 4/7'); // 2 4/7
 Rational.tryParse(''); // null
 ```
 
-Note that parsing integer values like `Rational.tryParse('3')` always returns a `Fraction` type but
+Parsing integer values like `Rational.tryParse('3')` always returns a `Fraction` type but
 it can easily be converted into a mixed fraction using the `Fraction.toMixedFraction` method.

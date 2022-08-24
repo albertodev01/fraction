@@ -1,6 +1,6 @@
 name: fraction_example
 description: A simple Dart CLI application for the 'fraction' package
-version: 1.0.4
+version: 1.0.5
 repository: https://github.com/albertodev01/fraction/tree/master/example
 homepage: https://fluttercompletereference.com/
 publish_to: none
@@ -14,7 +14,7 @@ dependencies:
 
 dev_dependencies:
   # https://pub.dev/packages/dart_code_metrics
-  dart_code_metrics: ^4.16.0
+  dart_code_metrics: ^4.17.1
 
   # https://pub.dev/packages/test
   test: ^1.21.4
