@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1.3
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: dart pub get
         
       - name: Format
@@ -48,9 +48,9 @@ jobs:
         working-directory: example
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: dart-lang/setup-dart@v1.3
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: dart pub get
         
       - name: Format
