@@ -14,7 +14,7 @@ jobs:
     name: fraction pub package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.0.2
       - uses: dart-lang/setup-dart@v1.3
 
       - name: Install dependencies
@@ -47,7 +47,7 @@ jobs:
       run:
         working-directory: example
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.0.2
       - uses: dart-lang/setup-dart@v1.3
 
       - name: Install dependencies

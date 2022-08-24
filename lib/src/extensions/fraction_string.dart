@@ -3,7 +3,7 @@ import 'package:fraction/fraction.dart';
 /// Extension method that adds [Fraction] functionalities to [String].
 extension FractionString on String {
   /// Checks whether the string contains a valid representation of a fraction in
-  /// the format 'a/b'.
+  /// the 'a/b' format.
   ///
   /// Note that 'a' and 'b' must be integers.
   bool get isFraction {
@@ -25,8 +25,7 @@ extension FractionString on String {
   /// Converts the string into a [Fraction].
   ///
   /// If you want to be sure that this method doesn't throw a
-  /// [FractionException],
-  /// use `isFraction` before.
+  /// [FractionException], use `isFraction` before.
   Fraction toFraction() {
     try {
       return Fraction.fromString(this);

@@ -33,10 +33,10 @@ class MixedFraction extends Rational {
   /// Whole part of the mixed fraction.
   final int whole;
 
-  /// Numerator of the fraction.
+  /// The numerator of the fractional part.
   final int _numerator;
 
-  /// Denominator of the fraction.
+  /// The denominator of the fractional part.
   final int _denominator;
 
   /// Creates an instance of a mixed fraction.
@@ -151,9 +151,8 @@ class MixedFraction extends Rational {
   }
 
   /// Tries to give a fractional representation of a double according with the
-  /// given precision. This implementation takes inspiration from the
-  /// (continued fraction)[https://en.wikipedia.org/wiki/Continued_fraction]
-  /// algorithm.
+  /// given precision. This implementation takes inspiration from the continued
+  /// fraction algorithm.
   ///
   /// ```dart
   /// MixedFraction.fromDouble(5.46) // represented as 5 + 23/50
@@ -281,7 +280,7 @@ class MixedFraction extends Rational {
   /// ).toStringAsGlyph() // "⅐"
   /// ```
   ///
-  /// If the conversion is not possible, a [FractionException] is thrown.
+  /// If the conversion is not possible, a [FractionException] object is thrown.
   String toStringAsGlyph() {
     final glyph = Fraction(numerator, denominator).toStringAsGlyph();
 
@@ -311,28 +310,28 @@ class MixedFraction extends Rational {
   /// Returns the fractional part of the mixed fraction as [Fraction] object.
   Fraction get fractionalPart => Fraction(numerator, denominator);
 
-  /// Sum between two mixed fractions.
+  /// The sum between two mixed fractions.
   MixedFraction operator +(MixedFraction other) {
     final result = toFraction() + other.toFraction();
 
     return result.toMixedFraction();
   }
 
-  /// Difference between two mixed fractions.
+  /// The difference between two mixed fractions.
   MixedFraction operator -(MixedFraction other) {
     final result = other.toFraction() - toFraction();
 
     return result.toMixedFraction();
   }
 
-  /// Product between two mixed fractions.
+  /// The product of two mixed fractions.
   MixedFraction operator *(MixedFraction other) {
     final result = toFraction() * other.toFraction();
 
     return result.toMixedFraction();
   }
 
-  /// Division between two mixed fractions.
+  /// The division of two mixed fractions.
   MixedFraction operator /(MixedFraction other) {
     final result = toFraction() / other.toFraction();
 
@@ -342,9 +341,9 @@ class MixedFraction extends Rational {
   /// Access the whole part, the numerator or the denominator of the fraction
   /// via index. In particular:
   ///
-  ///  - `0` refers to the whole part
-  ///  - `1` refers to the numerator
-  ///  - `2` refers to the denominator
+  ///  - `0` refers to the whole part;
+  ///  - `1` refers to the numerator;
+  ///  - `2` refers to the denominator.
   ///
   /// Any other value which is not `0`, `1` or `2` will throw an exception of
   /// type [MixedFractionException].
