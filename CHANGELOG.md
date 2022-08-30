@@ -1,4 +1,5 @@
 ## 4.1.3
+ - Updated Dart SDK constraints to `">=2.18.0 <3.0.0"`
  - Added more inline documentation
  - Dependencies update
 
