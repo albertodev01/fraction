@@ -1,6 +1,6 @@
 name: fraction
-description: A package that helps you working with fractions.
-version: 4.1.3
+description: A package that helps you working with fractions and mixed fractions.
+version: 4.1.4
 repository: https://github.com/albertodev01/fraction
 homepage: https://fluttercompletereference.com/
 
