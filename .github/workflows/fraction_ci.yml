@@ -30,7 +30,7 @@ jobs:
         run: dart pub global activate coverage && dart pub global run coverage:test_with_coverage
         
       - name: Check Code Coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
+        uses: VeryGoodOpenSource/very_good_coverage@v1.2.1
         with:
           min_coverage: 100
           
