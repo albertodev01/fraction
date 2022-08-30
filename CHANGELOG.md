@@ -1,3 +1,6 @@
+## 4.1.4
+ - Increased pubspec description length to raise the score at `pub.dev`
+
 ## 4.1.3
  - Updated Dart SDK constraints to `">=2.18.0 <3.0.0"`
  - Added more inline documentation
