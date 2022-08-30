@@ -14,10 +14,10 @@ jobs:
     name: fraction pub package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v3.0.2
+      - uses: dart-lang/setup-dart@v1.3
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: dart pub get
         
       - name: Format
@@ -27,10 +27,10 @@ jobs:
         run: dart analyze --fatal-infos --fatal-warnings && dart run dart_code_metrics:metrics analyze lib test
         
       - name: Run tests
-        run: dart test --coverage=coverage && dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
+        run: dart pub global activate coverage && dart pub global run coverage:test_with_coverage
         
       - name: Check Code Coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
+        uses: VeryGoodOpenSource/very_good_coverage@v1.2.1
         with:
           min_coverage: 100
           
@@ -47,10 +47,10 @@ jobs:
       run:
         working-directory: example
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v3.0.2
+      - uses: dart-lang/setup-dart@v1.3
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: dart pub get
         
       - name: Format

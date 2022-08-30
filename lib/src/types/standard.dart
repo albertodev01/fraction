@@ -18,10 +18,11 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// "4/5".toFraction();
 /// ```
 ///
-/// If the string doesn't represent a valid fraction, a [FractionException] is
-/// thrown.
+/// If the string doesn't represent a valid fraction, a [FractionException]
+/// object is thrown.
 class Fraction extends Rational {
-  /// This regular expression makes sure that a string represents a fraction.
+  /// This regular expression matches the structure of fraction in the `a/b`
+  /// format with the optional minus (-) sign at the front.
   static final _fractionRegex = RegExp(
     r'(^-?|^\+?)(?:[1-9][0-9]*|0)(?:/[1-9][0-9]*)?',
   );
@@ -86,6 +87,8 @@ class Fraction extends Rational {
   /// Fraction(3, -4) // is interpreted as -3/4
   /// Fraction(3)     // is interpreted as 3/1
   /// ```
+  ///
+  /// A [FractionException] object is thrown when [denominator] is zero.
   factory Fraction(int numerator, [int denominator = 1]) {
     if (denominator == 0) {
       throw const FractionException('Denominator cannot be zero.');
@@ -117,8 +120,8 @@ class Fraction extends Rational {
   /// Fraction.fromString("5/-2") // throws FractionException
   /// ```
   ///
-  /// If the given string [value] doesn't represent a fraction, an instance of
-  /// [FractionException] is thrown.
+  /// If the given string [value] doesn't represent a fraction, then a
+  /// [FractionException] object is thrown.
   factory Fraction.fromString(String value) {
     // Check the format of the string
     if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
@@ -158,8 +161,8 @@ class Fraction extends Rational {
   /// Fraction.fromString("⅞") // 7/8
   /// ```
   ///
-  /// If the given string [value] doesn't represent a fraction glyph, then an
-  /// instance of [FractionException] is thrown.
+  /// If the given string [value] doesn't represent a fraction glyph, then a
+  /// [FractionException] object is thrown.
   factory Fraction.fromGlyph(String value) {
     if (_glyphsToValues.containsKey(value)) {
       return _glyphsToValues[value]!;
@@ -170,10 +173,9 @@ class Fraction extends Rational {
     );
   }
 
-  /// Tries to give a fractional representation of a double according with the
-  /// given precision. This implementation takes inspiration from the
-  /// (continued fraction)[https://en.wikipedia.org/wiki/Continued_fraction]
-  /// algorithm.
+  /// Tries to give a fractional representation of a [double] according with the
+  /// given precision. This implementation takes inspiration from the continued
+  /// fraction algorithm.
   ///
   /// ```dart
   /// Fraction.fromDouble(3.8) // represented as 19/5
@@ -309,23 +311,21 @@ class Fraction extends Rational {
 
   @override
   Fraction reduce() {
-    // Storing the sign for later use
+    // Storing the sign for later use.
     final sign = (numerator < 0) ? -1 : 1;
 
-    // Calculating the gcd for reduction
+    // Calculating the gcd for reduction.
     final lgcd = numerator.gcd(denominator);
 
     final num = (numerator * sign) ~/ lgcd;
     final den = (denominator * sign) ~/ lgcd;
 
-    // Building the reduced fraction
     return Fraction(num, den);
   }
 
   @override
-  List<Fraction> toEgyptianFraction() => EgyptianFractionConverter(
-        fraction: this,
-      ).compute();
+  List<Fraction> toEgyptianFraction() =>
+      EgyptianFractionConverter(fraction: this).compute();
 
   /// If possible, this method converts this [Fraction] instance into an unicode
   /// glyph string.
@@ -339,9 +339,9 @@ class Fraction extends Rational {
   /// final str = fraction.toStringAsGlyph() // "⅐"
   /// ```
   ///
-  /// If the conversion is not possible, a [FractionException] is thrown. You
-  /// can use the [isFractionGlyph] getter to determine whether this fraction
-  /// can be converted into an unicode glyph or not.
+  /// If the conversion is not possible, a [FractionException] object is thrown.
+  /// You can use the [isFractionGlyph] getter to determine whether this
+  /// fraction can be converted into an unicode glyph or not.
   String toStringAsGlyph() {
     if (_valuesToGlyphs.containsKey(this)) {
       return _valuesToGlyphs[this]!;
@@ -352,7 +352,7 @@ class Fraction extends Rational {
     );
   }
 
-  /// Converts the current object into a [MixedFraction].
+  /// Converts this object into a [MixedFraction].
   MixedFraction toMixedFraction() => MixedFraction(
         whole: numerator ~/ denominator,
         numerator: numerator % denominator,
@@ -377,8 +377,8 @@ class Fraction extends Rational {
     }
   }
 
-  /// The numerator and the denominator of the current object are swapped and
-  /// returned in a new [Fraction] instance.
+  /// The numerator and the denominator of this object are swapped and returned
+  /// in a new [Fraction] object.
   Fraction inverse() => Fraction(denominator, numerator);
 
   /// Returns `true` if the numerator is smaller than the denominator.
@@ -387,45 +387,45 @@ class Fraction extends Rational {
   /// Returns `true` if the numerator is equal or greater than the denominator.
   bool get isImproper => numerator >= denominator;
 
-  /// Returns `true` if this [Fraction] instance has an unicode glyph
-  /// associated. For example:
+  /// Returns `true` if this [Fraction] object has an associated unicode glyph.
+  /// For example:
   ///
   /// ```dart
   /// Fraction(1, 2).hasUnicodeGlyph; // true
   /// ```
   ///
   /// The above returns `true` because "1/2" can be represented as ½, which is
-  /// an 'unicode glyph'.
+  /// a valid 'unicode glyph'.
   bool get isFractionGlyph => _valuesToGlyphs.containsKey(this);
 
-  /// Sum between two fractions.
+  /// The sum between two fractions.
   Fraction operator +(Fraction other) => Fraction(
         numerator * other.denominator + denominator * other.numerator,
         denominator * other.denominator,
       );
 
-  /// Difference between two fractions.
+  /// The difference between two fractions.
   Fraction operator -(Fraction other) => Fraction(
         numerator * other.denominator - denominator * other.numerator,
         denominator * other.denominator,
       );
 
-  /// Multiplication between two fractions.
+  /// The product of two fractions.
   Fraction operator *(Fraction other) => Fraction(
         numerator * other.numerator,
         denominator * other.denominator,
       );
 
-  /// Division between two fractions.
+  /// The division of two fractions.
   Fraction operator /(Fraction other) => Fraction(
         numerator * other.denominator,
         denominator * other.numerator,
       );
 
-  /// Access numerator or denominator via index. In particular, ´0´ refers to
-  /// the numerator while ´1´ to the denominator.
+  /// Allows retrieving numerator or denominator by index. In particular, ´0´
+  /// refers to the numerator and ´1´ to the denominator.
   ///
-  /// Throws if [index] is not `0` or `1`.
+  /// Throws a [FractionException] object if [index] is not `0` or `1`.
   int operator [](int index) {
     if (index == 0) {
       return numerator;

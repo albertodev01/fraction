@@ -23,5 +23,5 @@
 
 - [ ] I have provided a description of the proposed changes.
 - [ ] I added unit tests for all relevant code.
-- [ ] I added golden tests for all UI changes.
+- [ ] I made sure that code coverage is at 100%.
 - [ ] I added documentation for all relevant code.

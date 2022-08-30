@@ -33,12 +33,9 @@ class EgyptianFractionConverter {
 
   /// Creates an [EgyptianFractionConverter] instance from a [MixedFraction]
   /// object.
-  factory EgyptianFractionConverter.fromMixedFraction({
+  EgyptianFractionConverter.fromMixedFraction({
     required MixedFraction mixedFraction,
-  }) =>
-      EgyptianFractionConverter(
-        fraction: mixedFraction.toFraction(),
-      );
+  }) : this(fraction: mixedFraction.toFraction());
 
   /// Returns a series of [Fraction]s representing the egyptian fraction of the
   /// current [fraction] object.
@@ -54,7 +51,7 @@ class EgyptianFractionConverter {
       return _cache[fraction]!;
     }
 
-    // Computing the fraction
+    // Computing the fraction series
     final results = <Fraction>[];
 
     var numerator = fraction.numerator;

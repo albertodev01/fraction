@@ -3,8 +3,7 @@ import 'package:fraction/fraction.dart';
 /// Extension method that adds [MixedFraction] functionalities to [String].
 extension MixedFractionString on String {
   /// Checks whether a string contains a valid representation of a mixed
-  /// fraction
-  /// in the format 'a b/c'.
+  /// fraction in the 'a b/c' format:
   ///
   ///  * 'a', 'b' and 'c' must be integers;
   ///  * there can be the minus sign only in front of a;
@@ -23,6 +22,6 @@ extension MixedFractionString on String {
   /// Converts the string into a [Fraction].
   ///
   /// If you want to be sure that this method doesn't throw a
-  /// [MixedFractionException], use `isFraction` before.
+  /// [MixedFractionException] object, use `isFraction` before.
   MixedFraction toMixedFraction() => MixedFraction.fromString(this);
 }
