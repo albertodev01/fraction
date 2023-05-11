@@ -33,8 +33,8 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// ```
 ///
 /// Operators always return new objects. There are extension methods on [num]
-/// and [String] that allow you to build [Fraction] objects "on the fly". For
-/// example:
+/// and [String] that allow you to build [MixedFraction] objects "on the fly". 
+/// For example:
 ///
 /// ```dart
 ///  1.5.toMixedFraction();
@@ -69,7 +69,7 @@ base class MixedFraction extends Rational {
   }) {
     // Denominator cannot be zero
     if (denominator == 0) {
-      throw const MixedFractionException('The denominator cannot be zero');
+      throw const MixedFractionException('The denominator cannot be zero.');
     }
 
     // The sign of the fractional part doesn't persist on the fraction itself;
@@ -360,7 +360,7 @@ base class MixedFraction extends Rational {
   ///  - `2` refers to the denominator.
   ///
   /// Any other value which is not `0`, `1` or `2` will throw an exception of
-  /// type [MixedFractionException].
+  /// [MixedFractionException] type.
   int operator [](int index) {
     switch (index) {
       case 0:
