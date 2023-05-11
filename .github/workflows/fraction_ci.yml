@@ -12,7 +12,7 @@ on:
 jobs:
   verify_fraction_package:
     name: fraction pub package
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3.0.2
       - uses: dart-lang/setup-dart@v1.3

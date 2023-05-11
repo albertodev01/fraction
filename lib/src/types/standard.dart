@@ -1,26 +1,46 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction/src/types/egyptian_converter.dart';
 
-/// Dart representation of a fraction having both the numerator and the
-/// denominator as integers.
+/// Dart representation of a fraction having both [numerator] and [denominator]
+/// as integers. If the [denominator] is zero, a [FractionException] object is
+/// thrown.
+///
+/// To create a [Fraction] object, use one of its constructors:
 ///
 /// ```dart
-/// Fraction(-2, 5);
-/// Fraction.fromDouble(1.5);
-/// Fraction.fromString("4/5");
+///  Fraction(-2, 5); // 2/5
+///  Fraction.fromDouble(1.5); //
+///  Fraction.fromString("4/5"); // 3/2
+///  Fraction.fromGlyph("⅐"); // 1/7
 /// ```
 ///
-/// There also are extension methods to quickly build [Fraction] objects from
-/// primitive types:
+/// The [Fraction] type is **immutable**, so methods that require changing the
+/// object's internal state return a new instance. For example, the [reduce]
+/// method returns a new [Fraction] object that does not depend on the original
+/// one. Another example:
 ///
 /// ```dart
-/// 1.5.toFraction();
-/// "4/5".toFraction();
+///  final f1 = Fraction(5, 7); // 5/7
+///  final f2 = Fraction(1, 5); // 1/5
+///
+///  final sum = f1 + f2; // 32/35
+///  final sub = f1 - f2; // 18/35
+///  final mul = f1 * f2; // 1/7
+///  final div = f1 / f2; // 25/7
+/// ```
+///
+/// Operators always return new objects. There are extension methods on [num]
+/// and [String] that allow you to build [Fraction] objects "on the fly". For
+/// example:
+///
+/// ```dart
+///  1.5.toFraction(); // 3/2
+///  "4/5".toFraction(); // 4/5
 /// ```
 ///
 /// If the string doesn't represent a valid fraction, a [FractionException]
 /// object is thrown.
-class Fraction extends Rational {
+base class Fraction extends Rational {
   /// This regular expression matches the structure of fraction in the `a/b`
   /// format with the optional minus (-) sign at the front.
   static final _fractionRegex = RegExp(
@@ -71,24 +91,23 @@ class Fraction extends Rational {
     Fraction(1, 10): '⅒',
   };
 
-  /// The numerator of the fraction.
+  /// The numerator.
   final int _numerator;
 
-  /// The denominator of the fraction.
+  /// The denominator.
   final int _denominator;
 
-  /// Creates a new representation of a fraction. If the denominator is
-  /// negative, the fraction is 'normalized' so that the minus sign only appears
-  /// in front of the denominator.
+  /// If the denominator is negative, the fraction is 'normalized' so that the
+  /// minus sign only appears in front of the denominator. For example:
   ///
   /// ```dart
-  /// Fraction(3, 4)  // is interpreted as 3/4
-  /// Fraction(-3, 4) // is interpreted as -3/4
-  /// Fraction(3, -4) // is interpreted as -3/4
-  /// Fraction(3)     // is interpreted as 3/1
+  ///  Fraction(3, 4)  // is interpreted as 3/4
+  ///  Fraction(-3, 4) // is interpreted as -3/4
+  ///  Fraction(3, -4) // is interpreted as -3/4
+  ///  Fraction(3)     // is interpreted as 3/1
   /// ```
   ///
-  /// A [FractionException] object is thrown when [denominator] is zero.
+  /// A [FractionException] object is thrown when the denominator is `0`.
   factory Fraction(int numerator, [int denominator = 1]) {
     if (denominator == 0) {
       throw const FractionException('Denominator cannot be zero.');
@@ -105,23 +124,24 @@ class Fraction extends Rational {
   /// The default constructor.
   const Fraction._(this._numerator, this._denominator);
 
-  /// Returns an instance of [Fraction] if the source string is a valid
-  /// representation of a fraction. Some valid examples are:
+  /// Returns an instance of [Fraction] if [value] represents a valid fraction.
+  /// Some correct examples are:
   ///
   /// ```dart
-  /// Fraction.fromString("5/2")
-  /// Fraction.fromString("-5/2")
-  /// Fraction.fromString("5")
+  ///  Fraction.fromString("5/2")
+  ///  Fraction.fromString("-5/2")
+  ///  Fraction.fromString("5")
   /// ```
   ///
-  /// The denominator cannot be negative.
+  /// The denominator cannot be negative or zero:
   ///
   /// ```dart
-  /// Fraction.fromString("5/-2") // throws FractionException
+  ///  Fraction.fromString("5/-2") // throws
+  ///  Fraction.fromString("5/0") // throws
   /// ```
   ///
-  /// If the given string [value] doesn't represent a fraction, then a
-  /// [FractionException] object is thrown.
+  /// If the given [value] doesn't represent a fraction, a [FractionException]
+  /// object is thrown.
   factory Fraction.fromString(String value) {
     // Check the format of the string
     if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
@@ -148,21 +168,21 @@ class Fraction extends Rational {
     }
   }
 
-  /// Returns an instance of [Fraction] if the source string is a glyph
-  /// representing a fraction.
+  /// Returns an instance of [Fraction] if [value] has a glyph that represents a
+  /// fraction.
   ///
   /// A 'glyph' (or 'number form') is an unicode character that represents a
   /// fraction. For example, the glyph for "1/7" is ⅐. Only a very small subset
-  /// of fractions have a glyph representation.
+  /// of fractions have a glyph representation. Some correct examples are:
   ///
   /// ```dart
-  /// Fraction.fromString("⅐") // 1/7
-  /// Fraction.fromString("⅔") // 2/3
-  /// Fraction.fromString("⅞") // 7/8
+  ///  Fraction.fromString("⅐") // 1/7
+  ///  Fraction.fromString("⅔") // 2/3
+  ///  Fraction.fromString("⅞") // 7/8
   /// ```
   ///
-  /// If the given string [value] doesn't represent a fraction glyph, then a
-  /// [FractionException] object is thrown.
+  /// If [value] doesn't represent a fraction glyph, a [FractionException]
+  /// object is thrown.
   factory Fraction.fromGlyph(String value) {
     if (_glyphsToValues.containsKey(value)) {
       return _glyphsToValues[value]!;
@@ -178,29 +198,30 @@ class Fraction extends Rational {
   /// fraction algorithm.
   ///
   /// ```dart
-  /// Fraction.fromDouble(3.8) // represented as 19/5
+  ///  Fraction.fromDouble(3.8) // represented as 19/5
   /// ```
   ///
-  /// Note that irrational numbers can **not** be represented as fractions, so
-  /// if you try to use this method on π (3.1415...) you won't get a valid
-  /// result.
+  /// Note that irrational numbers can **not** be represented as fractions. If
+  /// you try to use this method on π (3.1415...) for example, you won't get a
+  /// valid result:
   ///
   /// ```dart
-  /// Fraction.fromDouble(math.pi)
+  ///  Fraction.fromDouble(math.pi)
   /// ```
   ///
-  /// The above returns a fraction because the algorithm considers only the
-  /// first 10 decimal digits (since `precision` is set to 1.0e-10).
+  /// The above code doesn't throw. It returns a [Fraction] object because the
+  /// algorithm only considers the first 10 decimal digits (since [precision]
+  /// is set to 1.0e-10).
   ///
   /// ```dart
-  /// Fraction.fromDouble(math.pi, precision: 1.0e-20)
+  ///  Fraction.fromDouble(math.pi, precision: 1.0e-20)
   /// ```
   ///
   /// This example will return another different value because it considers the
-  /// first 20 digits. It's still not a fractional representation of pi because
+  /// first 20 digits. It's still not a fractional representation of π because
   /// irrational numbers cannot be expressed as fractions.
   ///
-  /// This method is good with rational numbers.
+  /// You should only use this method with rational numbers.
   factory Fraction.fromDouble(double value, {double precision = 1.0e-12}) {
     _checkValue(value);
     _checkValue(precision);

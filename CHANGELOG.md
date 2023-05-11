@@ -1,3 +1,10 @@
+## 5.0.0 
+ - **BREAKING**: `Rational`, `Fraction` and `MixedFraction` types have the `base` modifier.
+ - Updated Dart SDK constraints to `^3.0.0`
+ - Added the `static bool isValid(String)` method to the `Fraction` class to test whether a `String` represents a fraction or not.
+ - Improved documentation and added more linter rules
+ - Dependencies update
+
 ## 4.1.4
  - Increased pubspec description length to raise the score at `pub.dev`
 

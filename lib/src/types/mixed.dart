@@ -5,9 +5,7 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// part and a proper fraction. A proper fraction is a fraction in which the
 /// relation `numerator <= denominator` is true.
 ///
-/// There's the possibility to create an instance of [MixedFraction] either by
-/// using one of the constructors or the extension methods on [num] and
-/// [String].
+/// To create a [MixedFraction] object, use one of its constructors:
 ///
 /// ```dart
 /// MixedFraction(
@@ -19,17 +17,33 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// MixedFraction.fromString("1 1/2");
 /// ```
 ///
-/// There also are extension methods to quickly build [Fraction] objects from
-/// primitive types:
+/// The [MixedFraction] type is **immutable**, so methods that require changing
+/// the object's internal state return a new instance. For example, the [reduce]
+/// method returns a new [MixedFraction] object that does not depend on the
+/// original one. Another example:
 ///
 /// ```dart
-/// 1.5.toMixedFraction();
-/// "1 1/2".toMixedFraction();
+///  final f1 = MixedFraction(whole: 5, numerator: 7, denominator: 8); // 5 7/8
+///  final f2 = MixedFraction(whole: 3, numerator: 1, denominator: 9); // 3 1/9
+///
+///  final sum = f1 + f2; // 8 71/72
+///  final sub = f1 - f2; // -2 17/72
+///  final mul = f1 * f2; // 18 20/72
+///  final div = f1 / f2; // 1 199/224
+/// ```
+///
+/// Operators always return new objects. There are extension methods on [num]
+/// and [String] that allow you to build [Fraction] objects "on the fly". For
+/// example:
+///
+/// ```dart
+///  1.5.toMixedFraction();
+///  "1 1/2".toMixedFraction();
 /// ```
 ///
 /// If the string doesn't represent a valid fraction, a [MixedFractionException]
-/// is thrown.
-class MixedFraction extends Rational {
+/// object is thrown.
+base class MixedFraction extends Rational {
   /// Whole part of the mixed fraction.
   final int whole;
 
@@ -39,16 +53,15 @@ class MixedFraction extends Rational {
   /// The denominator of the fractional part.
   final int _denominator;
 
-  /// Creates an instance of a mixed fraction.
-  ///
   /// If the numerator isn't greater than the denominator, values are
-  /// transformed so that a valid mixed fraction is created. For example, in...
+  /// transformed so that a valid mixed fraction is created. For example:
   ///
   /// ```dart
-  /// MixedFraction(1, 7, 3);
+  ///  MixedFraction(1, 7, 3);
   /// ```
   ///
-  /// ... the object is built as '3 1/3' since '1 7/3' would be invalid.
+  /// This constructor builds the string as '3 1/3' because '1 7/3' is not a
+  /// valid input ('7/3' is not a proper fraction).
   factory MixedFraction({
     required int whole,
     required int numerator,
@@ -90,19 +103,19 @@ class MixedFraction extends Rational {
   factory MixedFraction.fromFraction(Fraction fraction) =>
       fraction.toMixedFraction();
 
-  /// Creates an instance of a mixed fraction. The input string must be in the
-  /// form 'a b/c' with exactly one space between the whole part and the
+  /// Creates a [MixedFraction] object from [value]. The input string must be in
+  /// the form 'a b/c' with exactly one space between the whole part and the
   /// fraction.
   ///
-  /// The fraction can also be a glyph.
+  /// The fractional part can also be a glyph.
   ///
   /// The negative sign can only stay in front of 'a' or 'b'. Some valid
   /// examples are:
   ///
   /// ```dart
-  /// MixedFraction.fromString('-2 2/5');
-  /// MixedFraction.fromString('1 1/3');
-  /// MixedFraction.fromString('3 ⅐');
+  ///  MixedFraction.fromString('-2 2/5');
+  ///  MixedFraction.fromString('1 1/3');
+  ///  MixedFraction.fromString('3 ⅐');
   /// ```
   factory MixedFraction.fromString(String value) {
     const errorObj = MixedFractionException(
@@ -155,31 +168,32 @@ class MixedFraction extends Rational {
   /// fraction algorithm.
   ///
   /// ```dart
-  /// MixedFraction.fromDouble(5.46) // represented as 5 + 23/50
+  ///  MixedFraction.fromDouble(5.46) // represented as 5 + 23/50
   /// ```
   ///
-  /// Note that irrational numbers can **not** be represented as fractions, so
-  /// if you try to use this method on π (3.1415...) you won't get a valid
-  /// result.
+  /// Note that irrational numbers can **not** be represented as fractions. If
+  /// you try to use this method on π (3.1415...) for example, you won't get a
+  /// valid result:
   ///
   /// ```dart
-  /// MixedFraction.fromDouble(math.pi)
+  ///  MixedFraction.fromDouble(math.pi)
   /// ```
   ///
-  /// The above returns a mixed fraction because the algorithm considers only
-  /// the first 10 decimal digits (since `precision` is set to 1.0e-10).
+  /// The above code doesn't throw. It returns a [MixedFraction] object because
+  /// the algorithm only considers the first 10 decimal digits (since
+  /// [precision] is set to 1.0e-10).
   ///
   /// ```dart
-  /// MixedFraction.fromDouble(math.pi, precision: 1.0e-20)
+  ///  MixedFraction.fromDouble(math.pi, precision: 1.0e-20)
   /// ```
   ///
   /// This example will return another different value because it considers the
-  /// first 20 digits. It's still not a fractional representation of pi because
+  /// first 20 digits. It's still not a fractional representation of π because
   /// irrational numbers cannot be expressed as fractions.
   ///
-  /// This method is good with rational numbers.
+  /// You should only use this method with rational numbers.
   factory MixedFraction.fromDouble(double value, {double precision = 1.0e-12}) {
-    // Use 'Fraction' to reuse the continued fraction algorithm.
+    // In this way we can reuse the continued fraction algorithm.
     final fraction = Fraction.fromDouble(value, precision: precision);
 
     return fraction.toMixedFraction();

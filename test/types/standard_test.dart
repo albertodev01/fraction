@@ -265,7 +265,7 @@ void main() {
       expect(Fraction(1, 10).toStringAsGlyph(), equals('⅒'));
     });
 
-    test('Making sure that gliphs are recognized', () {
+    test('Making sure that glyphs are recognized', () {
       expect(Fraction(1, 2).isFractionGlyph, isTrue);
       expect(Fraction(-1, 2).isFractionGlyph, isFalse);
       expect(Fraction(-1, -2).isFractionGlyph, isTrue);

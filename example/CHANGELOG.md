@@ -1,3 +1,8 @@
+## 1.0.6
+ - Updated Dart SDK constraints to `^3.0.0`
+ - Updated `analysis_options.yaml` file
+ - Updated dependencies
+
 ## 1.0.5
  - Updated Dart SDK constraints to `">=2.18.0 <3.0.0"`
  - Updated `analysis_options.yaml` file
