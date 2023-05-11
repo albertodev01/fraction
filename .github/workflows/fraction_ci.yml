@@ -5,17 +5,14 @@ on:
     branches:
       - master
       - develop
-  pull_request:
-    types:
-      - opened
-
+      
 jobs:
   verify_fraction_package:
     name: fraction pub package
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3.0.2
-      - uses: dart-lang/setup-dart@v1.3
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
         run: dart pub get
@@ -30,25 +27,25 @@ jobs:
         run: dart pub global activate coverage && dart pub global run coverage:test_with_coverage
         
       - name: Check Code Coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v1.2.1
+        uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
           min_coverage: 100
           
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   verify_fraction_example:
     name: fraction package - Dart example app
     needs: [verify_fraction_package]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     defaults:
       run:
         working-directory: example
     steps:
-      - uses: actions/checkout@v3.0.2
-      - uses: dart-lang/setup-dart@v1.3
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
         run: dart pub get

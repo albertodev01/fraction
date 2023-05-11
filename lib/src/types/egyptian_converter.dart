@@ -33,14 +33,15 @@ class EgyptianFractionConverter {
 
   /// Creates an [EgyptianFractionConverter] instance from a [MixedFraction]
   /// object.
-  EgyptianFractionConverter.fromMixedFraction({
+  factory EgyptianFractionConverter.fromMixedFraction({
     required MixedFraction mixedFraction,
-  }) : this(fraction: mixedFraction.toFraction());
+  }) =>
+      EgyptianFractionConverter(fraction: mixedFraction.toFraction());
 
-  /// Returns a series of [Fraction]s representing the egyptian fraction of the
-  /// current [fraction] object.
+  /// Returns a series of [Fraction]s that represent the egyptian fraction of
+  /// the [fraction] object.
   ///
-  /// Throws a [FractionException] if [fraction] is negative.
+  /// This method throws a [FractionException] if [fraction] is negative.
   List<Fraction> compute() {
     if (fraction.isNegative) {
       throw const FractionException('The fraction must be positive!');
@@ -66,7 +67,7 @@ class EgyptianFractionConverter {
     }
 
     // The value isn't in the cache at this point to we must add it
-    _cache[fraction] = List<Fraction>.from(results);
+    _cache[fraction] = List<Fraction>.of(results);
 
     return results;
   }

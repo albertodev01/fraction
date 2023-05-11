@@ -6,13 +6,14 @@ import 'package:fraction/fraction.dart';
 /// `x/y` of two integers, a numerator `x` and a non-zero denominator `y`. Any
 /// rational number is also a real number.
 ///
-/// [Rational] and all of its sub-types are **immutable**.
+/// [Rational] and all of its sub-types are **immutable**. This type can only
+/// be subclassed.
 ///
 /// See also:
 ///
 ///  - [Fraction], to work with fractions in the form `a/b`
 ///  - [MixedFraction], to work with mixed fractions in the form `a b/c`
-abstract class Rational implements Comparable<Rational> {
+abstract base class Rational implements Comparable<Rational> {
   /// Creates a [Rational] object.
   const Rational();
 
@@ -64,24 +65,24 @@ abstract class Rational implements Comparable<Rational> {
   /// A floating point representation of this rational number.
   double toDouble();
 
-  /// The sign is changed and the result is returned in new instance.
+  /// The sign is changed and the result is returned in new [Rational] object.
   Rational negate();
 
   /// Reduces this rational number to the lowest terms and returns the result in
-  /// a new instance.
+  /// a new [Rational] object.
   Rational reduce();
 
   /// Represents this rational number as an egyptian fraction.
   List<Fraction> toEgyptianFraction();
 
-  /// Parses a string containing a fraction or a mixed fraction into a number.
-  ///
-  /// If the parsing fails, this method returns `null`. For example:
+  /// This function tries to convert a String into a [Fraction] or
+  /// [MixedFraction] object. If the conversion fails, `null` is returned. For
+  /// example:
   ///
   /// ```dart
-  /// Rational.tryParse('1/2') // Fraction(1, 2);
-  /// Rational.tryParse('2 5/3') // MixedFraction(2, 5, 3);
-  /// Rational.tryParse('') // null
+  ///  Rational.tryParse('1/2') // Fraction(1, 2);
+  ///  Rational.tryParse('2 5/3') // MixedFraction(2, 5, 3);
+  ///  Rational.tryParse('') // null
   /// ```
   static Rational? tryParse(String value) {
     if (value.isFraction) {

@@ -1,4 +1,6 @@
-/// A demo Dart CLI application of the 'fraction' package.
+/// A Dart CLI application that uses the API of the 'fraction' package.
 library fraction_example;
 
-export 'src/console.dart';
+export 'src/analyzer.dart';
+export 'src/fraction_analyzer.dart';
+export 'src/mixed_fraction_analyzer.dart';
