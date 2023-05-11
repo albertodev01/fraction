@@ -189,11 +189,15 @@ void main() {
           throwsA(isA<MixedFractionException>()),
         );
         expect(
-          () => MixedFraction.fromString('2  1/1'),
-          throwsA(isA<MixedFractionException>()),
+          () => MixedFraction.fromString('2 1/-1'),
+          throwsA(isA<FractionException>()),
         );
         expect(
           () => MixedFraction.fromString('2 c/0'),
+          throwsA(isA<FractionException>()),
+        );
+        expect(
+          () => MixedFraction.fromString('1 2/0'),
           throwsA(isA<FractionException>()),
         );
       },

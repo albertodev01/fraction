@@ -3,7 +3,7 @@ import 'package:fraction/fraction.dart';
 /// This base class is used to analyze an [input] string.
 ///
 /// The [analyze] method tries to convert [input] into a [Fraction] or
-/// [MixedFraction] object. It prints various properties of the fraction.
+/// [MixedFraction] object and prints various properties to the console.
 abstract base class RationalAnalyzer {
   /// The fraction or mixed fraction input.
   final String input;

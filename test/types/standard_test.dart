@@ -94,7 +94,7 @@ void main() {
           throwsA(isA<FormatException>()),
         );
         expect(
-          () => Fraction.fromString('1/-3'),
+          () => Fraction.fromString('a/3'),
           throwsA(isA<FractionException>()),
         );
       },

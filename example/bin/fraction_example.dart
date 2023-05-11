@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:fraction_example/fraction_example.dart';
 
-/// The app's main entrypoint.
+/// The application's main entrypoint.
 void main() {
   stdout.encoding = utf8;
 
@@ -38,7 +38,7 @@ void main() {
   }
 
   // To keep the console 'awake'. This is very useful on Windows!
-  stdout.write('Press return to exit...');
+  stdout.write('Press any key to exit...');
 
   // ignore: avoid-ignoring-return-values
   stdin.readLineSync();

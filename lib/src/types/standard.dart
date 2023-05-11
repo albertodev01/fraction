@@ -306,14 +306,7 @@ base class Fraction extends Rational {
   }
 
   @override
-  int get hashCode {
-    var result = 17;
-
-    result = result * 37 + numerator.hashCode;
-    result = result * 37 + denominator.hashCode;
-
-    return result;
-  }
+  int get hashCode => Object.hash(numerator, denominator);
 
   @override
   String toString() {

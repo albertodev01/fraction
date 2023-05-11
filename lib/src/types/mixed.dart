@@ -33,7 +33,7 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// ```
 ///
 /// Operators always return new objects. There are extension methods on [num]
-/// and [String] that allow you to build [MixedFraction] objects "on the fly". 
+/// and [String] that allow you to build [MixedFraction] objects "on the fly".
 /// For example:
 ///
 /// ```dart
@@ -237,15 +237,7 @@ base class MixedFraction extends Rational {
   }
 
   @override
-  int get hashCode {
-    var result = 17;
-
-    result = result * 37 + whole.hashCode;
-    result = result * 37 + _numerator.hashCode;
-    result = result * 37 + _denominator.hashCode;
-
-    return result;
-  }
+  int get hashCode => Object.hash(whole, numerator, denominator);
 
   @override
   String toString() {

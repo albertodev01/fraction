@@ -1,7 +1,7 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction_example/src/analyzer.dart';
 
-/// Tries to convert a [String] into a [MixedFraction]
+/// Tries to convert a [String] into a [MixedFraction].
 final class MixedFractionAnalyzer extends RationalAnalyzer {
   /// Creates a [MixedFractionAnalyzer] object.
   const MixedFractionAnalyzer({required String input}) : super(input);
