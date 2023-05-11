@@ -1,5 +1,5 @@
 name: fraction
-description: A package that helps you work with fractions and mixed fractions.
+description: A package that helps you work with fractions, mixed fractions, and Egyptian fractions.
 version: 5.0.0
 repository: https://github.com/albertodev01/fraction
 homepage: https://fluttercompletereference.com/
