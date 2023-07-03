@@ -1,3 +1,6 @@
+## 5.0.1
+ - Dependencies update
+
 ## 5.0.0 
  - **BREAKING**: `Rational`, `Fraction` and `MixedFraction` types have the `base` modifier.
  - Updated Dart SDK constraints to `^3.0.0`
