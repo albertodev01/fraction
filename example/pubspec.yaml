@@ -6,7 +6,7 @@ homepage: https://pub.dev/packages/fraction
 publish_to: none
 
 environment:
-  sdk: ^3.0.1
+  sdk: ^3.1.0
 
 dependencies:
   fraction:

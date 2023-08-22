@@ -1,5 +1,5 @@
 ## 1.0.8
- - Updated Dart SDK constraints to `^3.0.1`
+ - Updated Dart SDK constraints to `^3.1.0`
  - Updated dependencies and pubspec file
 
 ## 1.0.7

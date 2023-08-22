@@ -5,7 +5,7 @@ repository: https://github.com/albertodev01/fraction
 homepage: https://pub.dev/packages/fraction
 
 environment:
-  sdk: ^3.0.1
+  sdk: ^3.1.0
 
 dev_dependencies:
   test: ^1.24.6
