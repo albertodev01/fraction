@@ -244,7 +244,7 @@ void main() {
       expect(inverse.isImproper, equals(true));
     });
 
-    test('Making sure that the gliph conversion is correct', () {
+    test('Making sure that the glyph conversion is correct', () {
       expect(Fraction(1, 2).toStringAsGlyph(), equals('½'));
       expect(Fraction(1, 3).toStringAsGlyph(), equals('⅓'));
       expect(Fraction(2, 3).toStringAsGlyph(), equals('⅔'));
@@ -273,7 +273,7 @@ void main() {
     });
 
     test(
-      'Making sure that a non-gliph encodeable fraction throws when trying '
+      'Making sure that a non-glyph encodeable fraction throws when trying '
       'to convert it into a glyph',
       () {
         expect(
@@ -307,6 +307,12 @@ void main() {
     test('Making sure that negation is properly detected', () {
       expect(Fraction(-1, 2).isNegative, isTrue);
       expect(Fraction(1, 2).isNegative, isFalse);
+    });
+
+    test('Making sure that whole fraction detection works', () {
+      expect(Fraction(15).isWhole, isTrue);
+      expect(Fraction(16, 2).isWhole, isFalse);
+      expect(Fraction(1, 15).isWhole, isFalse);
     });
 
     test('Making sure that whole fraction detection works', () {
