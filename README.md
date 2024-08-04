@@ -138,7 +138,7 @@ final egyptianFraction2 = MixedFraction(2, 4, 5).toEgyptianFraction();
 print("$egyptianFraction2"); // prints "1 + 1 + 1/2 + 1/4 + 1/20"
 ```
 
-The `toEgyptianFraction()` method returns an `Iterable`.
+The `toEgyptianFraction()` method returns a `List<Fraction>` object.
 
 ## Notes
 
