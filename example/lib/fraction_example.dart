@@ -1,5 +1,5 @@
 /// A Dart CLI application that uses the API of the 'fraction' package.
-library fraction_example;
+library;
 
 export 'src/analyzer.dart';
 export 'src/fraction_analyzer.dart';
