@@ -245,6 +245,10 @@ base class MixedFraction extends Rational {
       return '$numerator/$denominator';
     }
 
+    if (numerator == 0) {
+      return '$whole';
+    }
+
     return '$whole $numerator/$denominator';
   }
 

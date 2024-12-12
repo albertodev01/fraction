@@ -32,6 +32,20 @@ void main() {
       expect(fraction.toString(), equals('1/2'));
     });
 
+    test('Making sure that whole, numerator and denominator are correct', () {
+      final fraction = MixedFraction(
+        whole: 2,
+        numerator: 0,
+        denominator: 1,
+      );
+
+      expect(fraction.whole, equals(2));
+      expect(fraction.numerator, equals(0));
+      expect(fraction.denominator, equals(1));
+      expect(fraction.isNegative, isFalse);
+      expect(fraction.toString(), equals('2'));
+    });
+
     test(
       'Making sure that an exception is thrown when the denominator is zero',
       () {

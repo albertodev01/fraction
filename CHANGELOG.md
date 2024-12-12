@@ -1,3 +1,8 @@
+## 5.0.4
+ - Updated Dart SDK constraints to `^3.6.0` 
+ - Dependencies update
+ - Mixed fractions now return just the whole part when the numerator is 0
+
 ## 5.0.3
  - Updated Dart SDK constraints to `^3.4.0` 
  - Dependencies update
