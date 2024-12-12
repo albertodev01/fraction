@@ -27,11 +27,6 @@ jobs:
         uses: VeryGoodOpenSource/very_good_coverage@v3
         with:
           min_coverage: 100
-          
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
 
   verify_fraction_example:
     name: fraction package - Dart example app
