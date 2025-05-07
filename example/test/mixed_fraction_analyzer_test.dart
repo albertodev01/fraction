@@ -5,9 +5,7 @@ import 'package:test/test.dart';
 void main() {
   group("Testing the 'MixedFractionAnalyzer' class", () {
     test('Making sure that valid fractions can be analyzed', () {
-      const analyzer = MixedFractionAnalyzer(
-        input: '6 7/3',
-      );
+      const analyzer = MixedFractionAnalyzer(input: '6 7/3');
 
       // Building the expected result
       final mixedFraction = MixedFraction(
@@ -15,24 +13,20 @@ void main() {
         numerator: 7,
         denominator: 3,
       );
-      final buffer = StringBuffer()
-        ..writeln('\n > ==================== < \n')
-        ..writeln('Mixed fraction = $mixedFraction')
-        ..writeln('Decimal: ${mixedFraction.toDouble()}')
-        ..writeln('Fraction: ${mixedFraction.toFraction()}\n')
-        ..writeln('Negate: ${mixedFraction.negate()}')
-        ..writeln('Reduced: ${mixedFraction.reduce()}');
+      final buffer =
+          StringBuffer()
+            ..writeln('\n > ==================== < \n')
+            ..writeln('Mixed fraction = $mixedFraction')
+            ..writeln('Decimal: ${mixedFraction.toDouble()}')
+            ..writeln('Fraction: ${mixedFraction.toFraction()}\n')
+            ..writeln('Negate: ${mixedFraction.negate()}')
+            ..writeln('Reduced: ${mixedFraction.reduce()}');
 
-      expect(
-        analyzer.analyze(),
-        equals(buffer.toString()),
-      );
+      expect(analyzer.analyze(), equals(buffer.toString()));
     });
 
     test('Making sure that invalid fractions report an error', () {
-      const analyzer = MixedFractionAnalyzer(
-        input: '',
-      );
+      const analyzer = MixedFractionAnalyzer(input: '');
 
       expect(
         analyzer.analyze(),

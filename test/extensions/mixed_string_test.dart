@@ -29,38 +29,17 @@ void main() {
     test(
       'Making sure that invalid strings conversions throw and exception',
       () {
-        expect(
-          '1/'.toMixedFraction,
-          throwsA(isA<MixedFractionException>()),
-        );
-        expect(
-          '1/0'.toMixedFraction,
-          throwsA(isA<MixedFractionException>()),
-        );
-        expect(
-          'x'.toMixedFraction,
-          throwsA(isA<MixedFractionException>()),
-        );
-        expect(
-          '3/-6'.toMixedFraction,
-          throwsA(isA<MixedFractionException>()),
-        );
-        expect(
-          ''.toMixedFraction,
-          throwsA(isA<MixedFractionException>()),
-        );
-        expect(
-          '2 2/'.toMixedFraction,
-          throwsA(isA<FormatException>()),
-        );
+        expect('1/'.toMixedFraction, throwsA(isA<MixedFractionException>()));
+        expect('1/0'.toMixedFraction, throwsA(isA<MixedFractionException>()));
+        expect('x'.toMixedFraction, throwsA(isA<MixedFractionException>()));
+        expect('3/-6'.toMixedFraction, throwsA(isA<MixedFractionException>()));
+        expect(''.toMixedFraction, throwsA(isA<MixedFractionException>()));
+        expect('2 2/'.toMixedFraction, throwsA(isA<FormatException>()));
         expect(
           '1  1/2'.toMixedFraction,
           throwsA(isA<MixedFractionException>()),
         );
-        expect(
-          '-1 1/-2'.toMixedFraction,
-          throwsA(isA<FractionException>()),
-        );
+        expect('-1 1/-2'.toMixedFraction, throwsA(isA<FractionException>()));
       },
     );
 

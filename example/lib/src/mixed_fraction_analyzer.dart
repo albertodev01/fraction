@@ -1,9 +1,11 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction_example/src/analyzer.dart';
 
+/// {@template FractionAnalyzer}
 /// Tries to convert a [String] into a [MixedFraction].
+/// {@endtemplate}
 final class MixedFractionAnalyzer extends RationalAnalyzer {
-  /// Creates a [MixedFractionAnalyzer] object.
+  /// {@macro FractionAnalyzer}
   const MixedFractionAnalyzer({required String input}) : super(input);
 
   @override
@@ -13,13 +15,14 @@ final class MixedFractionAnalyzer extends RationalAnalyzer {
       final mixedFraction = MixedFraction.fromString(input);
 
       // Used to incrementally build the results
-      final buffer = StringBuffer()
-        ..writeln('\n > ==================== < \n')
-        ..writeln('Mixed fraction = $mixedFraction')
-        ..writeln('Decimal: ${mixedFraction.toDouble()}')
-        ..writeln('Fraction: ${mixedFraction.toFraction()}\n')
-        ..writeln('Negate: ${mixedFraction.negate()}')
-        ..writeln('Reduced: ${mixedFraction.reduce()}');
+      final buffer =
+          StringBuffer()
+            ..writeln('\n > ==================== < \n')
+            ..writeln('Mixed fraction = $mixedFraction')
+            ..writeln('Decimal: ${mixedFraction.toDouble()}')
+            ..writeln('Fraction: ${mixedFraction.toFraction()}\n')
+            ..writeln('Negate: ${mixedFraction.negate()}')
+            ..writeln('Reduced: ${mixedFraction.reduce()}');
 
       return buffer.toString();
     } on Exception {
