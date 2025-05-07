@@ -1,6 +1,7 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction/src/types/egyptian_converter.dart';
 
+/// {@template MixedFraction}
 /// Dart representation of a 'mixed fraction', which is made up by the whole
 /// part and a proper fraction. A proper fraction is a fraction in which the
 /// relation `numerator <= denominator` is true.
@@ -43,6 +44,7 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 ///
 /// If the string doesn't represent a valid fraction, a [MixedFractionException]
 /// object is thrown.
+/// {@endtemplate}
 base class MixedFraction extends Rational {
   /// Whole part of the mixed fraction.
   final int whole;
@@ -53,6 +55,8 @@ base class MixedFraction extends Rational {
   /// The denominator of the fractional part.
   final int _denominator;
 
+  /// {@macro MixedFraction}
+  ///
   /// If the numerator isn't greater than the denominator, values are
   /// transformed so that a valid mixed fraction is created. For example:
   ///
@@ -88,18 +92,14 @@ base class MixedFraction extends Rational {
         absDenominator,
       );
     } else {
-      return MixedFraction._(
-        whole * sign,
-        absNumerator,
-        absDenominator,
-      );
+      return MixedFraction._(whole * sign, absNumerator, absDenominator);
     }
   }
 
   /// The default constructor.
   const MixedFraction._(this.whole, this._numerator, this._denominator);
 
-  /// Creates an instance of a mixed fraction.
+  /// Creates an instance of a mixed fraction from a [fraction] fraction.
   factory MixedFraction.fromFraction(Fraction fraction) =>
       fraction.toMixedFraction();
 
@@ -257,10 +257,10 @@ base class MixedFraction extends Rational {
 
   @override
   MixedFraction negate() => MixedFraction(
-        whole: whole * -1,
-        numerator: numerator,
-        denominator: denominator,
-      );
+    whole: whole * -1,
+    numerator: numerator,
+    denominator: denominator,
+  );
 
   @override
   MixedFraction reduce() {
@@ -304,13 +304,11 @@ base class MixedFraction extends Rational {
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 
+  /// {@template copyWith}
   /// Creates a **deep** copy of this object with the given fields replaced
   /// with the new values.
-  MixedFraction copyWith({
-    int? whole,
-    int? numerator,
-    int? denominator,
-  }) =>
+  /// {@endtemplate}
+  MixedFraction copyWith({int? whole, int? numerator, int? denominator}) =>
       MixedFraction(
         whole: whole ?? this.whole,
         numerator: numerator ?? this.numerator,

@@ -1,6 +1,7 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction/src/types/egyptian_converter.dart';
 
+/// {@template Fraction}
 /// Dart representation of a fraction having both [numerator] and [denominator]
 /// as integers. If the [denominator] is zero, a [FractionException] object is
 /// thrown.
@@ -40,6 +41,7 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 ///
 /// If the string doesn't represent a valid fraction, a [FractionException]
 /// object is thrown.
+/// {@endtemplate}
 base class Fraction extends Rational {
   /// This regular expression matches the structure of fraction in the `a/b`
   /// format with the optional minus (-) sign at the front.
@@ -97,6 +99,8 @@ base class Fraction extends Rational {
   /// The denominator.
   final int _denominator;
 
+  /// {@macro Fraction}
+  ///
   /// If the denominator is negative, the fraction is 'normalized' so that the
   /// minus sign only appears in front of the denominator. For example:
   ///
@@ -368,21 +372,14 @@ base class Fraction extends Rational {
 
   /// Converts this object into a [MixedFraction].
   MixedFraction toMixedFraction() => MixedFraction(
-        whole: numerator ~/ denominator,
-        numerator: numerator % denominator,
-        denominator: denominator,
-      );
+    whole: numerator ~/ denominator,
+    numerator: numerator % denominator,
+    denominator: denominator,
+  );
 
-  /// Creates a **deep** copy of this object with the given fields replaced
-  /// with the new values.
-  Fraction copyWith({
-    int? numerator,
-    int? denominator,
-  }) =>
-      Fraction(
-        numerator ?? this.numerator,
-        denominator ?? this.denominator,
-      );
+  /// {@macro copyWith}
+  Fraction copyWith({int? numerator, int? denominator}) =>
+      Fraction(numerator ?? this.numerator, denominator ?? this.denominator);
 
   /// Throws a [FractionException] whether [value] is infinite or [double.nan].
   static void _checkValue(num value) {
@@ -414,27 +411,23 @@ base class Fraction extends Rational {
 
   /// The sum between two fractions.
   Fraction operator +(Fraction other) => Fraction(
-        numerator * other.denominator + denominator * other.numerator,
-        denominator * other.denominator,
-      );
+    numerator * other.denominator + denominator * other.numerator,
+    denominator * other.denominator,
+  );
 
   /// The difference between two fractions.
   Fraction operator -(Fraction other) => Fraction(
-        numerator * other.denominator - denominator * other.numerator,
-        denominator * other.denominator,
-      );
+    numerator * other.denominator - denominator * other.numerator,
+    denominator * other.denominator,
+  );
 
   /// The product of two fractions.
-  Fraction operator *(Fraction other) => Fraction(
-        numerator * other.numerator,
-        denominator * other.denominator,
-      );
+  Fraction operator *(Fraction other) =>
+      Fraction(numerator * other.numerator, denominator * other.denominator);
 
   /// The division of two fractions.
-  Fraction operator /(Fraction other) => Fraction(
-        numerator * other.denominator,
-        denominator * other.numerator,
-      );
+  Fraction operator /(Fraction other) =>
+      Fraction(numerator * other.denominator, denominator * other.numerator);
 
   /// Allows retrieving numerator or denominator by index. In particular, ´0´
   /// refers to the numerator and ´1´ to the denominator.

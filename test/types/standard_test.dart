@@ -52,53 +52,41 @@ void main() {
       },
     );
 
-    test(
-      "Making sure that the 'fromString()' constructor handles strings"
-      ' properly',
-      () {
-        // Valid conversions
-        expect(Fraction.fromString('3/5'), equals(Fraction(3, 5)));
-        expect(Fraction.fromString('-3/5'), equals(Fraction(-3, 5)));
-        expect(Fraction.fromString('7'), equals(Fraction(7)));
-        expect(Fraction.fromString('-6'), equals(Fraction(-6)));
-        expect(
-          () => Fraction.fromString('½'),
-          throwsA(isA<FractionException>()),
-        );
+    test("Making sure that the 'fromString()' constructor handles strings"
+        ' properly', () {
+      // Valid conversions
+      expect(Fraction.fromString('3/5'), equals(Fraction(3, 5)));
+      expect(Fraction.fromString('-3/5'), equals(Fraction(-3, 5)));
+      expect(Fraction.fromString('7'), equals(Fraction(7)));
+      expect(Fraction.fromString('-6'), equals(Fraction(-6)));
+      expect(() => Fraction.fromString('½'), throwsA(isA<FractionException>()));
 
-        // Invalid conversions
-        expect(
-          () => Fraction.fromString('2/-5'),
-          throwsA(isA<FractionException>()),
-        );
-        expect(
-          () => Fraction.fromString('1/-0'),
-          throwsA(isA<FractionException>()),
-        );
-        expect(
-          () => Fraction.fromString('2/0'),
-          throwsA(isA<FractionException>()),
-        );
-        expect(
-          () => Fraction.fromString('0/0'),
-          throwsA(isA<FractionException>()),
-        );
+      // Invalid conversions
+      expect(
+        () => Fraction.fromString('2/-5'),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromString('1/-0'),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromString('2/0'),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromString('0/0'),
+        throwsA(isA<FractionException>()),
+      );
 
-        // Invalid formats
-        expect(
-          () => Fraction.fromString('2/'),
-          throwsA(isA<FormatException>()),
-        );
-        expect(
-          () => Fraction.fromString('3/a'),
-          throwsA(isA<FormatException>()),
-        );
-        expect(
-          () => Fraction.fromString('a/3'),
-          throwsA(isA<FractionException>()),
-        );
-      },
-    );
+      // Invalid formats
+      expect(() => Fraction.fromString('2/'), throwsA(isA<FormatException>()));
+      expect(() => Fraction.fromString('3/a'), throwsA(isA<FormatException>()));
+      expect(
+        () => Fraction.fromString('a/3'),
+        throwsA(isA<FractionException>()),
+      );
+    });
 
     test(
       "Making sure that the 'fromGlyph()' constructor handles strings properly",
@@ -124,41 +112,34 @@ void main() {
       },
     );
 
-    test(
-      "Making sure that the 'fromDouble()' constructor handles strings "
-      'properly',
-      () {
-        // Valid conversions
-        expect(Fraction.fromDouble(5.6), equals(Fraction(28, 5)));
-        expect(Fraction.fromDouble(0.0025), equals(Fraction(1, 400)));
-        expect(Fraction.fromDouble(-3.8), equals(Fraction(-19, 5)));
-        expect(Fraction.fromDouble(0), equals(Fraction(0)));
+    test("Making sure that the 'fromDouble()' constructor handles strings "
+        'properly', () {
+      // Valid conversions
+      expect(Fraction.fromDouble(5.6), equals(Fraction(28, 5)));
+      expect(Fraction.fromDouble(0.0025), equals(Fraction(1, 400)));
+      expect(Fraction.fromDouble(-3.8), equals(Fraction(-19, 5)));
+      expect(Fraction.fromDouble(0), equals(Fraction(0)));
 
-        // Invalid conversions
-        expect(
-          () => Fraction.fromDouble(double.nan),
-          throwsA(isA<FractionException>()),
-        );
-        expect(
-          () => Fraction.fromDouble(double.infinity),
-          throwsA(isA<FractionException>()),
-        );
-        expect(
-          () => Fraction.fromDouble(double.negativeInfinity),
-          throwsA(isA<FractionException>()),
-        );
-      },
-    );
+      // Invalid conversions
+      expect(
+        () => Fraction.fromDouble(double.nan),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromDouble(double.infinity),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromDouble(double.negativeInfinity),
+        throwsA(isA<FractionException>()),
+      );
+    });
 
     test(
       'Making sure that fractions are properly built from mixed fractions',
       () {
         final fraction = Fraction.fromMixedFraction(
-          MixedFraction(
-            whole: 3,
-            numerator: 5,
-            denominator: 6,
-          ),
+          MixedFraction(whole: 3, numerator: 5, denominator: 6),
         );
 
         expect(fraction, equals(Fraction(23, 6)));
@@ -170,11 +151,7 @@ void main() {
       'Making sure that fractions are properly built from neg. mixed fractions',
       () {
         final fraction = Fraction.fromMixedFraction(
-          MixedFraction(
-            whole: -3,
-            numerator: 5,
-            denominator: 6,
-          ),
+          MixedFraction(whole: -3, numerator: 5, denominator: 6),
         );
 
         expect(fraction, equals(Fraction(-23, 6)));
@@ -192,15 +169,12 @@ void main() {
       expect(Fraction(6, 13).hashCode == Fraction(6, 13).hashCode, isTrue);
     });
 
-    test(
-      "Making sure that 'compareTo' returns 1, -1 or 0 according with the "
-      'natural sorting',
-      () {
-        expect(Fraction(2).compareTo(Fraction(8)), equals(-1));
-        expect(Fraction(2).compareTo(Fraction(-4)), equals(1));
-        expect(Fraction(6).compareTo(Fraction(6)), equals(0));
-      },
-    );
+    test("Making sure that 'compareTo' returns 1, -1 or 0 according with the "
+        'natural sorting', () {
+      expect(Fraction(2).compareTo(Fraction(8)), equals(-1));
+      expect(Fraction(2).compareTo(Fraction(-4)), equals(1));
+      expect(Fraction(6).compareTo(Fraction(6)), equals(0));
+    });
   });
 
   group('Testing the API of the Fraction class', () {
@@ -272,16 +246,13 @@ void main() {
       expect(Fraction(1, -2).isFractionGlyph, isFalse);
     });
 
-    test(
-      'Making sure that a non-glyph encodeable fraction throws when trying '
-      'to convert it into a glyph',
-      () {
-        expect(
-          () => Fraction(10, 37).toStringAsGlyph(),
-          throwsA(isA<FractionException>()),
-        );
-      },
-    );
+    test('Making sure that a non-glyph encodeable fraction throws when trying '
+        'to convert it into a glyph', () {
+      expect(
+        () => Fraction(10, 37).toStringAsGlyph(),
+        throwsA(isA<FractionException>()),
+      );
+    });
 
     test('Making sure conversions to mixed fractions are correct', () {
       final mixed = Fraction(8, 7).toMixedFraction();

@@ -14,10 +14,7 @@ void main() {
         expect(fractionException, isNot(mixedException));
         expect(mixedException, isNot(fractionException));
 
-        expect(
-          fractionException == const FractionException('Message'),
-          isTrue,
-        );
+        expect(fractionException == const FractionException('Message'), isTrue);
         expect(
           mixedException == const MixedFractionException('Message'),
           isTrue,
@@ -53,10 +50,7 @@ void main() {
       "Making sure that 'MixedFractionException' prints the correct message",
       () {
         const exception = MixedFractionException('Exception message');
-        expect(
-          exception.message,
-          'Exception message',
-        );
+        expect(exception.message, 'Exception message');
         expect(
           '$exception',
           equals('MixedFractionException: Exception message'),

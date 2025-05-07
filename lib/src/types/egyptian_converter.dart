@@ -1,5 +1,6 @@
 import 'package:fraction/fraction.dart';
 
+/// {@template EgyptianFractionConverter}
 /// This class converts a [Fraction] or a [MixedFraction] type into its egyptian
 /// fraction representation. Only positive number are allowed.
 ///
@@ -19,6 +20,7 @@ import 'package:fraction/fraction.dart';
 ///
 /// In various cases, the value of the denominator can be so big that an
 /// overflow error happens.
+/// {@endtemplate}
 class EgyptianFractionConverter {
   /// This variable caches the result of the `compute()` method.
   static final _cache = <Fraction, List<Fraction>>{};
@@ -27,16 +29,17 @@ class EgyptianFractionConverter {
   final Fraction fraction;
 
   /// Creates an [EgyptianFractionConverter] instance from a [Fraction] object.
-  const EgyptianFractionConverter({
-    required this.fraction,
-  });
+  ///
+  /// {@macro EgyptianFractionConverter}
+  const EgyptianFractionConverter({required this.fraction});
 
   /// Creates an [EgyptianFractionConverter] instance from a [MixedFraction]
   /// object.
+  ///
+  /// {@macro EgyptianFractionConverter}
   factory EgyptianFractionConverter.fromMixedFraction({
     required MixedFraction mixedFraction,
-  }) =>
-      EgyptianFractionConverter(fraction: mixedFraction.toFraction());
+  }) => EgyptianFractionConverter(fraction: mixedFraction.toFraction());
 
   /// Returns a series of [Fraction]s that represent the egyptian fraction of
   /// the [fraction] object.
