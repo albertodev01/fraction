@@ -1,5 +1,5 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/types/egyptian_converter.dart';
+import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 
 /// {@template Fraction}
 /// Dart representation of a fraction having both [numerator] and [denominator]
@@ -43,6 +43,176 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// object is thrown.
 /// {@endtemplate}
 base class Fraction extends Rational {
+  /// {@macro Fraction}
+  ///
+  /// If the denominator is negative, the fraction is 'normalized' so that the
+  /// minus sign only appears in front of the denominator. For example:
+  ///
+  /// ```dart
+  ///  Fraction(3, 4)  // is interpreted as 3/4
+  ///  Fraction(-3, 4) // is interpreted as -3/4
+  ///  Fraction(3, -4) // is interpreted as -3/4
+  ///  Fraction(3)     // is interpreted as 3/1
+  /// ```
+  ///
+  /// A [FractionException] object is thrown when the denominator is `0`.
+  factory(int numerator, [int denominator = 1]) {
+    if (denominator == 0) {
+      throw const FractionException('Denominator cannot be zero.');
+    }
+
+    // Fixing the sign of numerator and denominator
+    if (denominator < 0) {
+      return Fraction._(numerator * -1, denominator * -1);
+    } else {
+      return Fraction._(numerator, denominator);
+    }
+  }
+
+  /// The default constructor.
+  const new _(this._numerator, this._denominator);
+
+  /// Returns an instance of [Fraction] if [value] represents a valid fraction.
+  /// Some correct examples are:
+  ///
+  /// ```dart
+  ///  Fraction.fromString("5/2")
+  ///  Fraction.fromString("-5/2")
+  ///  Fraction.fromString("5")
+  /// ```
+  ///
+  /// The denominator cannot be negative or zero:
+  ///
+  /// ```dart
+  ///  Fraction.fromString("5/-2") // throws
+  ///  Fraction.fromString("5/0") // throws
+  /// ```
+  ///
+  /// If the given [value] doesn't represent a fraction, a [FractionException]
+  /// object is thrown.
+  factory fromString(String value) {
+    // Check the format of the string
+    if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
+      throw FractionException('The string $value is not a valid fraction');
+    }
+
+    // Remove the leading + (if any)
+    final fraction = value.replaceAll('+', '');
+
+    // Look for the '/' separator
+    final barPos = fraction.indexOf('/');
+
+    if (barPos == -1) {
+      return Fraction(int.parse(fraction));
+    } else {
+      final den = int.parse(fraction.substring(barPos + 1));
+
+      if (den == 0) {
+        throw const FractionException('Denominator cannot be zero');
+      }
+
+      // Fixing the sign of numerator and denominator
+      return Fraction(int.parse(fraction.substring(0, barPos)), den);
+    }
+  }
+
+  /// Returns an instance of [Fraction] if [value] has a glyph that represents a
+  /// fraction.
+  ///
+  /// A 'glyph' (or 'number form') is an unicode character that represents a
+  /// fraction. For example, the glyph for "1/7" is ⅐. Only a very small subset
+  /// of fractions have a glyph representation. Some correct examples are:
+  ///
+  /// ```dart
+  ///  Fraction.fromString("⅐") // 1/7
+  ///  Fraction.fromString("⅔") // 2/3
+  ///  Fraction.fromString("⅞") // 7/8
+  /// ```
+  ///
+  /// If [value] doesn't represent a fraction glyph, a [FractionException]
+  /// object is thrown.
+  factory fromGlyph(String value) {
+    if (_glyphsToValues.containsKey(value)) {
+      return _glyphsToValues[value]!;
+    }
+
+    throw FractionException(
+      'The given string ($value) does not represent a valid fraction glyph!',
+    );
+  }
+
+  /// Tries to give a fractional representation of a [double] according with the
+  /// given precision. This implementation takes inspiration from the continued
+  /// fraction algorithm.
+  ///
+  /// ```dart
+  ///  Fraction.fromDouble(3.8) // represented as 19/5
+  /// ```
+  ///
+  /// Note that irrational numbers can **not** be represented as fractions. If
+  /// you try to use this method on π (3.1415...) for example, you won't get a
+  /// valid result:
+  ///
+  /// ```dart
+  ///  Fraction.fromDouble(math.pi)
+  /// ```
+  ///
+  /// The above code doesn't throw. It returns a [Fraction] object because the
+  /// algorithm only considers the first 10 decimal digits (since [precision]
+  /// is set to 1.0e-10).
+  ///
+  /// ```dart
+  ///  Fraction.fromDouble(math.pi, precision: 1.0e-20)
+  /// ```
+  ///
+  /// This example will return another different value because it considers the
+  /// first 20 digits. It's still not a fractional representation of π because
+  /// irrational numbers cannot be expressed as fractions.
+  ///
+  /// You should only use this method with rational numbers.
+  factory fromDouble(double value, {double precision = 1.0e-12}) {
+    _checkValue(value);
+    _checkValue(precision);
+
+    // Storing the sign
+    final abs = value.abs();
+    final mul = (value >= 0) ? 1 : -1;
+    final x = abs;
+
+    // How many digits is the algorithm going to consider
+    final limit = precision;
+    var h1 = 1;
+    var h2 = 0;
+    var k1 = 0;
+    var k2 = 1;
+    var y = abs;
+
+    do {
+      final a = y.floor();
+      var aux = h1;
+      h1 = a * h1 + h2;
+      h2 = aux;
+      aux = k1;
+      k1 = a * k1 + k2;
+      k2 = aux;
+      y = 1 / (y - a);
+    } while ((x - h1 / k1).abs() > x * limit);
+
+    // Assigning the computed values
+    return Fraction(mul * h1, k1);
+  }
+
+  /// Converts a [MixedFraction] into a [Fraction].
+  factory fromMixedFraction(MixedFraction mixed) {
+    var num = mixed.whole * mixed.denominator + mixed.numerator;
+
+    if (mixed.isNegative) {
+      num = mixed.whole * mixed.denominator + (mixed.numerator * -1);
+    }
+
+    return Fraction(num, mixed.denominator);
+  }
+
   /// This regular expression matches the structure of fraction in the `a/b`
   /// format with the optional minus (-) sign at the front.
   static final _fractionRegex = RegExp(
@@ -98,176 +268,6 @@ base class Fraction extends Rational {
 
   /// The denominator.
   final int _denominator;
-
-  /// {@macro Fraction}
-  ///
-  /// If the denominator is negative, the fraction is 'normalized' so that the
-  /// minus sign only appears in front of the denominator. For example:
-  ///
-  /// ```dart
-  ///  Fraction(3, 4)  // is interpreted as 3/4
-  ///  Fraction(-3, 4) // is interpreted as -3/4
-  ///  Fraction(3, -4) // is interpreted as -3/4
-  ///  Fraction(3)     // is interpreted as 3/1
-  /// ```
-  ///
-  /// A [FractionException] object is thrown when the denominator is `0`.
-  factory Fraction(int numerator, [int denominator = 1]) {
-    if (denominator == 0) {
-      throw const FractionException('Denominator cannot be zero.');
-    }
-
-    // Fixing the sign of numerator and denominator
-    if (denominator < 0) {
-      return Fraction._(numerator * -1, denominator * -1);
-    } else {
-      return Fraction._(numerator, denominator);
-    }
-  }
-
-  /// The default constructor.
-  const Fraction._(this._numerator, this._denominator);
-
-  /// Returns an instance of [Fraction] if [value] represents a valid fraction.
-  /// Some correct examples are:
-  ///
-  /// ```dart
-  ///  Fraction.fromString("5/2")
-  ///  Fraction.fromString("-5/2")
-  ///  Fraction.fromString("5")
-  /// ```
-  ///
-  /// The denominator cannot be negative or zero:
-  ///
-  /// ```dart
-  ///  Fraction.fromString("5/-2") // throws
-  ///  Fraction.fromString("5/0") // throws
-  /// ```
-  ///
-  /// If the given [value] doesn't represent a fraction, a [FractionException]
-  /// object is thrown.
-  factory Fraction.fromString(String value) {
-    // Check the format of the string
-    if ((!_fractionRegex.hasMatch(value)) || (value.contains('/-'))) {
-      throw FractionException('The string $value is not a valid fraction');
-    }
-
-    // Remove the leading + (if any)
-    final fraction = value.replaceAll('+', '');
-
-    // Look for the '/' separator
-    final barPos = fraction.indexOf('/');
-
-    if (barPos == -1) {
-      return Fraction(int.parse(fraction));
-    } else {
-      final den = int.parse(fraction.substring(barPos + 1));
-
-      if (den == 0) {
-        throw const FractionException('Denominator cannot be zero');
-      }
-
-      // Fixing the sign of numerator and denominator
-      return Fraction(int.parse(fraction.substring(0, barPos)), den);
-    }
-  }
-
-  /// Returns an instance of [Fraction] if [value] has a glyph that represents a
-  /// fraction.
-  ///
-  /// A 'glyph' (or 'number form') is an unicode character that represents a
-  /// fraction. For example, the glyph for "1/7" is ⅐. Only a very small subset
-  /// of fractions have a glyph representation. Some correct examples are:
-  ///
-  /// ```dart
-  ///  Fraction.fromString("⅐") // 1/7
-  ///  Fraction.fromString("⅔") // 2/3
-  ///  Fraction.fromString("⅞") // 7/8
-  /// ```
-  ///
-  /// If [value] doesn't represent a fraction glyph, a [FractionException]
-  /// object is thrown.
-  factory Fraction.fromGlyph(String value) {
-    if (_glyphsToValues.containsKey(value)) {
-      return _glyphsToValues[value]!;
-    }
-
-    throw FractionException(
-      'The given string ($value) does not represent a valid fraction glyph!',
-    );
-  }
-
-  /// Tries to give a fractional representation of a [double] according with the
-  /// given precision. This implementation takes inspiration from the continued
-  /// fraction algorithm.
-  ///
-  /// ```dart
-  ///  Fraction.fromDouble(3.8) // represented as 19/5
-  /// ```
-  ///
-  /// Note that irrational numbers can **not** be represented as fractions. If
-  /// you try to use this method on π (3.1415...) for example, you won't get a
-  /// valid result:
-  ///
-  /// ```dart
-  ///  Fraction.fromDouble(math.pi)
-  /// ```
-  ///
-  /// The above code doesn't throw. It returns a [Fraction] object because the
-  /// algorithm only considers the first 10 decimal digits (since [precision]
-  /// is set to 1.0e-10).
-  ///
-  /// ```dart
-  ///  Fraction.fromDouble(math.pi, precision: 1.0e-20)
-  /// ```
-  ///
-  /// This example will return another different value because it considers the
-  /// first 20 digits. It's still not a fractional representation of π because
-  /// irrational numbers cannot be expressed as fractions.
-  ///
-  /// You should only use this method with rational numbers.
-  factory Fraction.fromDouble(double value, {double precision = 1.0e-12}) {
-    _checkValue(value);
-    _checkValue(precision);
-
-    // Storing the sign
-    final abs = value.abs();
-    final mul = (value >= 0) ? 1 : -1;
-    final x = abs;
-
-    // How many digits is the algorithm going to consider
-    final limit = precision;
-    var h1 = 1;
-    var h2 = 0;
-    var k1 = 0;
-    var k2 = 1;
-    var y = abs;
-
-    do {
-      final a = y.floor();
-      var aux = h1;
-      h1 = a * h1 + h2;
-      h2 = aux;
-      aux = k1;
-      k1 = a * k1 + k2;
-      k2 = aux;
-      y = 1 / (y - a);
-    } while ((x - h1 / k1).abs() > x * limit);
-
-    // Assigning the computed values
-    return Fraction(mul * h1, k1);
-  }
-
-  /// Converts a [MixedFraction] into a [Fraction].
-  factory Fraction.fromMixedFraction(MixedFraction mixed) {
-    var num = mixed.whole * mixed.denominator + mixed.numerator;
-
-    if (mixed.isNegative) {
-      num = mixed.whole * mixed.denominator + (mixed.numerator * -1);
-    }
-
-    return Fraction(num, mixed.denominator);
-  }
 
   @override
   int get numerator => _numerator;

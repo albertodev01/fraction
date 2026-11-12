@@ -240,18 +240,16 @@ void main() {
   group('Testing the API of the MixedFraction class', () {
     test('Making sure conversions that, if the fraction is gliph-encodeable, '
         "the 'toStringAsGliph()' method works", () {
-      final frac1 =
-          MixedFraction(
-            whole: -2,
-            numerator: 1,
-            denominator: 2,
-          ).toStringAsGlyph();
-      final frac2 =
-          MixedFraction(
-            whole: 0,
-            numerator: 1,
-            denominator: 2,
-          ).toStringAsGlyph();
+      final frac1 = MixedFraction(
+        whole: -2,
+        numerator: 1,
+        denominator: 2,
+      ).toStringAsGlyph();
+      final frac2 = MixedFraction(
+        whole: 0,
+        numerator: 1,
+        denominator: 2,
+      ).toStringAsGlyph();
       final frac3 = Fraction(12, 15).toMixedFraction();
 
       expect(frac1, equals('-2 ½'));
@@ -313,14 +311,20 @@ void main() {
     });
 
     test('Making sure conversions to fractions are correct', () {
-      final fraction =
-          MixedFraction(whole: 10, numerator: 7, denominator: 2).toFraction();
+      final fraction = MixedFraction(
+        whole: 10,
+        numerator: 7,
+        denominator: 2,
+      ).toFraction();
       expect(fraction, equals(Fraction(27, 2)));
     });
 
     test('Making sure reduction on the fractional part properly works', () {
-      final fraction1 =
-          MixedFraction(whole: 1, numerator: 3, denominator: 6).reduce();
+      final fraction1 = MixedFraction(
+        whole: 1,
+        numerator: 3,
+        denominator: 6,
+      ).reduce();
 
       expect(fraction1.whole, equals(1));
       expect(fraction1.numerator, equals(1));

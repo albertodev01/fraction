@@ -1,5 +1,5 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/types/egyptian_converter.dart';
+import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 
 /// {@template MixedFraction}
 /// Dart representation of a 'mixed fraction', which is made up by the whole
@@ -46,15 +46,6 @@ import 'package:fraction/src/types/egyptian_converter.dart';
 /// object is thrown.
 /// {@endtemplate}
 base class MixedFraction extends Rational {
-  /// Whole part of the mixed fraction.
-  final int whole;
-
-  /// The numerator of the fractional part.
-  final int _numerator;
-
-  /// The denominator of the fractional part.
-  final int _denominator;
-
   /// {@macro MixedFraction}
   ///
   /// If the numerator isn't greater than the denominator, values are
@@ -66,7 +57,7 @@ base class MixedFraction extends Rational {
   ///
   /// This constructor builds the string as '3 1/3' because '1 7/3' is not a
   /// valid input ('7/3' is not a proper fraction).
-  factory MixedFraction({
+  factory({
     required int whole,
     required int numerator,
     required int denominator,
@@ -97,11 +88,10 @@ base class MixedFraction extends Rational {
   }
 
   /// The default constructor.
-  const MixedFraction._(this.whole, this._numerator, this._denominator);
+  const new _(this.whole, this._numerator, this._denominator);
 
   /// Creates an instance of a mixed fraction from a [fraction] fraction.
-  factory MixedFraction.fromFraction(Fraction fraction) =>
-      fraction.toMixedFraction();
+  factory fromFraction(Fraction fraction) => fraction.toMixedFraction();
 
   /// Creates a [MixedFraction] object from [value]. The input string must be in
   /// the form 'a b/c' with exactly one space between the whole part and the
@@ -117,7 +107,7 @@ base class MixedFraction extends Rational {
   ///  MixedFraction.fromString('1 1/3');
   ///  MixedFraction.fromString('3 ⅐');
   /// ```
-  factory MixedFraction.fromString(String value) {
+  factory fromString(String value) {
     const errorObj = MixedFractionException(
       "The string must be in the form 'a b/c' with exactly one space between "
       'the whole part and the fraction',
@@ -192,12 +182,21 @@ base class MixedFraction extends Rational {
   /// irrational numbers cannot be expressed as fractions.
   ///
   /// You should only use this method with rational numbers.
-  factory MixedFraction.fromDouble(double value, {double precision = 1.0e-12}) {
+  factory fromDouble(double value, {double precision = 1.0e-12}) {
     // In this way we can reuse the continued fraction algorithm.
     final fraction = Fraction.fromDouble(value, precision: precision);
 
     return fraction.toMixedFraction();
   }
+
+  /// Whole part of the mixed fraction.
+  final int whole;
+
+  /// The numerator of the fractional part.
+  final int _numerator;
+
+  /// The denominator of the fractional part.
+  final int _denominator;
 
   @override
   int get numerator => _numerator;

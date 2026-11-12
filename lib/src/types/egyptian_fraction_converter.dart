@@ -22,24 +22,24 @@ import 'package:fraction/fraction.dart';
 /// overflow error happens.
 /// {@endtemplate}
 class EgyptianFractionConverter {
-  /// This variable caches the result of the `compute()` method.
-  static final _cache = <Fraction, List<Fraction>>{};
-
-  /// The fraction to be converted into an egyptian fraction.
-  final Fraction fraction;
-
   /// Creates an [EgyptianFractionConverter] instance from a [Fraction] object.
   ///
   /// {@macro EgyptianFractionConverter}
-  const EgyptianFractionConverter({required this.fraction});
+  const new({required this.fraction});
 
   /// Creates an [EgyptianFractionConverter] instance from a [MixedFraction]
   /// object.
   ///
   /// {@macro EgyptianFractionConverter}
-  factory EgyptianFractionConverter.fromMixedFraction({
+  factory fromMixedFraction({
     required MixedFraction mixedFraction,
   }) => EgyptianFractionConverter(fraction: mixedFraction.toFraction());
+
+  /// This variable caches the result of the `compute()` method.
+  static final _cache = <Fraction, List<Fraction>>{};
+
+  /// The fraction to be converted into an egyptian fraction.
+  final Fraction fraction;
 
   /// Returns a series of [Fraction]s that represent the egyptian fraction of
   /// the [fraction] object.

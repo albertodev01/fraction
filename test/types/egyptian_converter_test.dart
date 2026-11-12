@@ -1,5 +1,5 @@
 import 'package:fraction/fraction.dart';
-import 'package:fraction/src/types/egyptian_converter.dart';
+import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 import 'package:test/test.dart';
 
 void main() {

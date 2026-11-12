@@ -1,5 +1,6 @@
 import 'package:fraction/fraction.dart';
 
+/// {@template rational}
 /// Dart representation of a rational number.
 ///
 /// A **rational number** is a number that can be expressed as the quotient
@@ -13,9 +14,10 @@ import 'package:fraction/fraction.dart';
 ///
 ///  - [Fraction], to work with fractions in the form `a/b`
 ///  - [MixedFraction], to work with mixed fractions in the form `a b/c`
+/// {@endtemplate}
 abstract base class Rational implements Comparable<Rational> {
-  /// Creates a [Rational] object.
-  const Rational();
+  /// {@macro rational}
+  const new();
 
   @override
   int compareTo(Rational other) {
@@ -88,11 +90,9 @@ abstract base class Rational implements Comparable<Rational> {
     if (value.isFraction) {
       return Fraction.fromString(value);
     }
-
     if (value.isMixedFraction) {
       return MixedFraction.fromString(value);
     }
-
     return null;
   }
 }

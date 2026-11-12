@@ -7,11 +7,11 @@ import 'package:fraction/fraction.dart';
 /// [MixedFraction] object and prints various properties to the console.
 /// {@endtemplate}
 abstract base class RationalAnalyzer {
-  /// The fraction or mixed fraction input.
-  final String input;
-
   /// {@macro RationalAnalyzer}
   const RationalAnalyzer(this.input);
+
+  /// The fraction or mixed fraction input.
+  final String input;
 
   /// Tries to convert [input] into a [Fraction] or [MixedFraction] object and
   /// returns an analysis report.
