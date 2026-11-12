@@ -1,76 +1,90 @@
 import 'package:fraction/fraction.dart';
 
-/// {@template EgyptianFractionConverter}
-/// This class converts a [Fraction] or a [MixedFraction] type into its egyptian
-/// fraction representation. Only positive number are allowed.
+/// {@template egyptian_fraction_converter}
+/// This class converts a [Fraction] or a [MixedFraction] type into its Egyptian
+/// fraction representation. Negative values are not allowed.
 ///
-/// An Egyptian fraction is a finite sum of distinct fractions where the
-/// numerator is always 1, the denominator is a positive number and all the
-/// denominators differ from each other. For example:
+/// An Egyptian fraction is a finite sum of distinct unit fractions: fractions
+/// whose numerator is 1 and whose denominator is a positive integer. For
+/// example:
 ///
-///  - 5/8 = 1/2 + 1/8 (where "1/2 + 1/8" is the egyptian fraction)
+///  - 5/8 = 1/2 + 1/8 (where "1/2 + 1/8" is the Egyptian fraction)
 ///
-/// Basically, egyptian fractions are a sum of fractions in the form 1/x that
-/// represent a proper or an improper fraction. Here we have other examples of
-/// fractions and their egyptian fraction equivalent:
+/// Unit fractions are computed with the greedy algorithm. If the value is
+/// greater than or equal to 1, its whole part is returned as the first term.
+/// Here are some other examples of fractions and their Egyptian fraction
+/// equivalent:
 ///
 ///  - 4/7 = 1/2 + 1/14
 ///  - 43/48 = 1/2 + 1/3 + 1/16
 ///  - 2014/59 = 34 + 1/8 + 1/95 + 1/14947 + 1/670223480
 ///
-/// In various cases, the value of the denominator can be so big that an
-/// overflow error happens.
+/// The denominators can grow very quickly: if one of them does not fit in an
+/// [int], a [FractionException] is thrown.
 /// {@endtemplate}
 class EgyptianFractionConverter {
   /// Creates an [EgyptianFractionConverter] instance from a [Fraction] object.
   ///
-  /// {@macro EgyptianFractionConverter}
+  /// {@macro egyptian_fraction_converter}
   const new({required this.fraction});
 
   /// Creates an [EgyptianFractionConverter] instance from a [MixedFraction]
   /// object.
   ///
-  /// {@macro EgyptianFractionConverter}
+  /// {@macro egyptian_fraction_converter}
   factory fromMixedFraction({
     required MixedFraction mixedFraction,
-  }) => EgyptianFractionConverter(fraction: mixedFraction.toFraction());
+  }) => EgyptianFractionConverter(
+    fraction: mixedFraction.toFraction(),
+  );
 
-  /// This variable caches the result of the `compute()` method.
-  static final _cache = <Fraction, List<Fraction>>{};
-
-  /// The fraction to be converted into an egyptian fraction.
+  /// The fraction to be converted into an Egyptian fraction.
   final Fraction fraction;
 
-  /// Returns a series of [Fraction]s that represent the egyptian fraction of
-  /// the [fraction] object.
+  /// Returns a series of [Fraction]s that represent the Egyptian fraction of
+  /// the [fraction] object. The first term is the whole part of [fraction]
+  /// (if it is at least 1), followed by unit fractions with strictly increasing
+  /// denominators. The result is empty if [fraction] is zero.
   ///
-  /// This method throws a [FractionException] if [fraction] is negative.
+  /// This method throws a [FractionException] if [fraction] is negative, or if
+  /// a denominator does not fit in an [int].
   List<Fraction> compute() {
     if (fraction.isNegative) {
-      throw const FractionException('The fraction must be positive!');
+      throw const FractionException('The fraction must not be negative.');
     }
 
-    // If the result is in the cache, then return it immediately.
-    if (_cache.containsKey(fraction)) {
-      return _cache[fraction]!;
-    }
-
-    // Computing the fraction series
     final results = <Fraction>[];
+    final whole = fraction.numerator ~/ fraction.denominator;
 
-    var numerator = fraction.numerator;
-    var denominator = fraction.denominator;
-
-    while (numerator > 0) {
-      final egyptianDen = (denominator + numerator - 1) ~/ numerator;
-      results.add(Fraction(1, egyptianDen));
-
-      numerator = _modulo(-denominator, numerator);
-      denominator *= egyptianDen;
+    if (whole > 0) {
+      results.add(Fraction(whole));
     }
 
-    // The value isn't in the cache at this point to we must add it
-    _cache[fraction] = List<Fraction>.of(results);
+    var numerator = BigInt.from(fraction.numerator % fraction.denominator);
+    var denominator = BigInt.from(fraction.denominator);
+
+    while (numerator > BigInt.zero) {
+      final unitDenominator =
+          (denominator + numerator - BigInt.one) ~/ numerator;
+
+      if (!unitDenominator.isValidInt) {
+        throw FractionException(
+          'The Egyptian fraction of $fraction has a denominator that is too '
+          'large to fit in an int ($unitDenominator).',
+        );
+      }
+
+      results.add(Fraction(1, unitDenominator.toInt()));
+
+      numerator = numerator * unitDenominator - denominator;
+      denominator *= unitDenominator;
+      final gcd = numerator.gcd(denominator);
+
+      if (gcd > BigInt.one) {
+        numerator ~/= gcd;
+        denominator ~/= gcd;
+      }
+    }
 
     return results;
   }
@@ -80,7 +94,6 @@ class EgyptianFractionConverter {
     if (identical(this, other)) {
       return true;
     }
-
     if (other is EgyptianFractionConverter) {
       return fraction == other.fraction;
     } else {
@@ -91,24 +104,7 @@ class EgyptianFractionConverter {
   @override
   int get hashCode => fraction.hashCode;
 
+  /// The Egyptian fraction as a sum, such as `1/2 + 1/8`.
   @override
-  String toString() {
-    List<Fraction> results;
-
-    // Trying to not compute the fraction (if possible).
-    if (_cache.containsKey(fraction)) {
-      results = _cache[fraction]!;
-    } else {
-      results = compute();
-
-      // We can cache it if caching is enabled.
-      _cache[fraction] = List<Fraction>.from(results);
-    }
-
-    final buffer = StringBuffer()..writeAll(results, ' + ');
-
-    return buffer.toString();
-  }
-
-  int _modulo(int a, int b) => ((a % b) + b) % b;
+  String toString() => compute().join(' + ');
 }

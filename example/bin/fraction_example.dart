@@ -38,7 +38,7 @@ void main() {
   }
 
   // To keep the console 'awake'. This is very useful on Windows!
-  stdout.write('Press any key to exit...');
+  stdout.write('Press Enter to exit...');
 
   // ignore: avoid-ignoring-return-values
   stdin.readLineSync();

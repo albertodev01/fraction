@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fraction/fraction.dart';
 import 'package:test/test.dart';
 
@@ -80,8 +82,14 @@ void main() {
       );
 
       // Invalid formats
-      expect(() => Fraction.fromString('2/'), throwsA(isA<FormatException>()));
-      expect(() => Fraction.fromString('3/a'), throwsA(isA<FormatException>()));
+      expect(
+        () => Fraction.fromString('2/'),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromString('3/a'),
+        throwsA(isA<FractionException>()),
+      );
       expect(
         () => Fraction.fromString('a/3'),
         throwsA(isA<FractionException>()),
@@ -161,11 +169,11 @@ void main() {
   });
 
   group('Testing objects equality', () {
-    test('Making sure that fractions comparison is made via cross product', () {
+    test('Making sure that equivalent fractions are equal', () {
       expect(Fraction(3, 12) == Fraction(1, 4), isTrue);
       expect(Fraction(6, 13) == Fraction(6, 13), isTrue);
 
-      expect(Fraction(3, 12).hashCode != Fraction(1, 4).hashCode, isTrue);
+      expect(Fraction(3, 12).hashCode == Fraction(1, 4).hashCode, isTrue);
       expect(Fraction(6, 13).hashCode == Fraction(6, 13).hashCode, isTrue);
     });
 
@@ -282,13 +290,7 @@ void main() {
 
     test('Making sure that whole fraction detection works', () {
       expect(Fraction(15).isWhole, isTrue);
-      expect(Fraction(16, 2).isWhole, isFalse);
-      expect(Fraction(1, 15).isWhole, isFalse);
-    });
-
-    test('Making sure that whole fraction detection works', () {
-      expect(Fraction(15).isWhole, isTrue);
-      expect(Fraction(16, 2).isWhole, isFalse);
+      expect(Fraction(16, 2).isWhole, isTrue);
       expect(Fraction(1, 15).isWhole, isFalse);
     });
 
@@ -335,5 +337,332 @@ void main() {
         expect(() => fraction[2], throwsA(isA<FractionException>()));
       },
     );
+  });
+
+  group('Regression: equality and hashing', () {
+    test('Making sure that equal fractions always have the same hash code', () {
+      for (var n = -6; n <= 6; n++) {
+        for (var d = 1; d <= 6; d++) {
+          for (var k = 1; k <= 4; k++) {
+            final base = Fraction(n, d);
+            final scaled = Fraction(n * k, d * k);
+            final negated = Fraction(-n * k, -d * k);
+
+            expect(scaled, equals(base), reason: '$scaled == $base');
+            expect(negated, equals(base), reason: '$negated == $base');
+            expect(scaled.hashCode, equals(base.hashCode), reason: '$scaled');
+            expect(negated.hashCode, equals(base.hashCode), reason: '$negated');
+          }
+        }
+      }
+    });
+
+    test('Making sure that zero has a single representation', () {
+      expect(Fraction(0, 5), equals(Fraction(0)));
+      expect(Fraction(0, -3), equals(Fraction(0)));
+      expect(Fraction(0, 5).hashCode, equals(Fraction(0).hashCode));
+      expect(Fraction(0, -3).hashCode, equals(Fraction(0).hashCode));
+    });
+
+    test('Making sure that equivalent fractions work in sets and maps', () {
+      expect({Fraction(1, 2), Fraction(2, 4), Fraction(-3, -6)}, hasLength(1));
+
+      final map = {Fraction(1, 3): 'one third'};
+      expect(map[Fraction(2, 6)], equals('one third'));
+      expect(map.containsKey(Fraction(-4, -12)), isTrue);
+    });
+
+    test('Making sure that equality does not overflow', () {
+      // The cross products of these pairs wrap around to the same 64-bit value
+      // even though the fractions are different.
+      expect(Fraction(4294967296) == Fraction(0, 4294967296), isFalse);
+      expect(
+        Fraction(1, 4294967296) == Fraction(4294967297, 4294967296),
+        isFalse,
+      );
+
+      // Large equivalent fractions are still equal.
+      expect(
+        Fraction(4294967296, 4294967297) ==
+            Fraction(4294967296 * 2, 4294967297 * 2),
+        isTrue,
+      );
+    });
+
+    test('Making sure that equivalent fractions map to a glyph', () {
+      expect(Fraction(2, 4).toStringAsGlyph(), equals('½'));
+      expect(Fraction(-2, -4).toStringAsGlyph(), equals('½'));
+      expect(Fraction(6, 8).toStringAsGlyph(), equals('¾'));
+      expect(Fraction(2, 4).isFractionGlyph, isTrue);
+      expect(Fraction(-1, 2).isFractionGlyph, isFalse);
+      expect(
+        Fraction(-1, 2).toStringAsGlyph,
+        throwsA(isA<FractionException>()),
+      );
+    });
+  });
+
+  group('Regression: fromString', () {
+    test('Making sure that the whole string must be a fraction', () {
+      for (final value in [
+        '1/2 ',
+        ' 1/2',
+        '1/2\n',
+        '1/2/3',
+        '1 1/2',
+        '1.5',
+        '1/2a',
+        '--1/2',
+        '+-1/2',
+        '1/+2',
+        '01/2',
+      ]) {
+        expect(
+          () => Fraction.fromString(value),
+          throwsA(isA<FractionException>()),
+          reason: '"$value"',
+        );
+      }
+    });
+
+    test('Making sure that values too large for an int throw a '
+        'FractionException', () {
+      expect(
+        () => Fraction.fromString('99999999999999999999/2'),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromString('1/99999999999999999999'),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction.fromString('-99999999999999999999'),
+        throwsA(isA<FractionException>()),
+      );
+    });
+
+    test('Making sure that valid strings are still parsed', () {
+      expect(Fraction.fromString('+1/2'), equals(Fraction(1, 2)));
+      expect(Fraction.fromString('-7/3'), equals(Fraction(-7, 3)));
+      expect(Fraction.fromString('-0'), equals(Fraction(0)));
+      expect(Fraction.fromString('0/5'), equals(Fraction(0)));
+      expect(Fraction.fromString('42'), equals(Fraction(42)));
+    });
+  });
+
+  group('Regression: fromDouble', () {
+    test(
+      'Making sure that out of range values throw instead of hanging',
+      () {
+        for (final value in [
+          1e300,
+          -1e300,
+          1e-300,
+          -1e-300,
+          1e20,
+          1e-20,
+          double.maxFinite,
+          double.minPositive,
+        ]) {
+          expect(
+            () => Fraction.fromDouble(value),
+            throwsA(isA<FractionException>()),
+            reason: '$value',
+          );
+        }
+      },
+      timeout: const Timeout(Duration(seconds: 10)),
+    );
+
+    test('Making sure that the precision must be positive and finite', () {
+      for (final precision in [0.0, -1e-12, double.nan, double.infinity]) {
+        expect(
+          () => Fraction.fromDouble(0.5, precision: precision),
+          throwsA(isA<FractionException>()),
+          reason: '$precision',
+        );
+      }
+    });
+
+    test('Making sure that known results are unchanged', () {
+      expect(Fraction.fromDouble(math.pi), equals(Fraction(1146408, 364913)));
+      expect(
+        Fraction.fromDouble(math.pi, precision: 1.0e-4),
+        equals(Fraction(333, 106)),
+      );
+      expect(Fraction.fromDouble(0.1), equals(Fraction(1, 10)));
+      expect(Fraction.fromDouble(-0.5), equals(Fraction(-1, 2)));
+      expect(
+        Fraction.fromDouble(1e-15).toDouble(),
+        closeTo(1e-15, 1e-15 * 1e-12),
+      );
+    });
+
+    test('Making sure that an unreachable precision returns the closest '
+        'approximation that fits in an int', () {
+      final fraction = Fraction.fromDouble(math.pi, precision: 1.0e-20);
+
+      expect((fraction.toDouble() - math.pi).abs(), lessThan(1e-15));
+    });
+
+    test('Making sure that the num extension does not hang', () {
+      expect(() => 1e300.toFraction(), throwsA(isA<FractionException>()));
+      expect(() => 1e-300.toMixedFraction(), throwsA(isA<FractionException>()));
+    }, timeout: const Timeout(Duration(seconds: 10)));
+  });
+
+  group('Regression: predicates', () {
+    test("Making sure that 'isWhole' works on unreduced fractions", () {
+      expect(Fraction(16, 2).isWhole, isTrue);
+      expect(Fraction(-9, 3).isWhole, isTrue);
+      expect(Fraction(0, 7).isWhole, isTrue);
+      expect(Fraction(7, 2).isWhole, isFalse);
+      expect(Fraction(-7, 2).isWhole, isFalse);
+    });
+
+    test("Making sure that 'isProper' and 'isImproper' ignore the sign", () {
+      expect(Fraction(-1, 2).isProper, isTrue);
+      expect(Fraction(-1, 2).isImproper, isFalse);
+      expect(Fraction(-5, 2).isProper, isFalse);
+      expect(Fraction(-5, 2).isImproper, isTrue);
+      expect(Fraction(-2, 2).isImproper, isTrue);
+      expect(Fraction(2, 2).isImproper, isTrue);
+      expect(Fraction(0).isProper, isTrue);
+    });
+  });
+
+  group('Regression: reduce and toMixedFraction', () {
+    test("Making sure that 'reduce' returns a canonical fraction", () {
+      final reduced = Fraction(-12, 20).reduce();
+      expect(reduced.numerator, equals(-3));
+      expect(reduced.denominator, equals(5));
+
+      final zero = Fraction(0, 5).reduce();
+      expect(zero.numerator, equals(0));
+      expect(zero.denominator, equals(1));
+
+      final flipped = Fraction(6, -4).reduce();
+      expect(flipped.numerator, equals(-3));
+      expect(flipped.denominator, equals(2));
+    });
+
+    test('Making sure that negative fractions keep their value when converted '
+        'to mixed fractions', () {
+      final cases = {
+        Fraction(-5, 4): (true, 1, 1, 4),
+        Fraction(-7, 2): (true, 3, 1, 2),
+        Fraction(-8, 4): (true, 2, 0, 4),
+        Fraction(-1, 2): (true, 0, 1, 2),
+        Fraction(7, 4): (false, 1, 3, 4),
+        Fraction(0, 3): (false, 0, 0, 3),
+      };
+
+      for (final MapEntry(key: fraction, value: (negative, whole, num, den))
+          in cases.entries) {
+        final mixed = fraction.toMixedFraction();
+
+        expect(mixed.isNegative, equals(negative), reason: '$fraction');
+        expect(mixed.whole, equals(whole), reason: '$fraction');
+        expect(mixed.numerator, equals(num), reason: '$fraction');
+        expect(mixed.denominator, equals(den), reason: '$fraction');
+        expect(mixed.toFraction(), equals(fraction), reason: '$fraction');
+      }
+    });
+  });
+
+  group('Regression: arithmetic', () {
+    test('Making sure that results are in lowest terms', () {
+      final product = Fraction(5, 7) * Fraction(1, 5);
+      expect(product.numerator, equals(1));
+      expect(product.denominator, equals(7));
+
+      final sum = Fraction(1, 6) + Fraction(1, 3);
+      expect(sum.numerator, equals(1));
+      expect(sum.denominator, equals(2));
+
+      final difference = Fraction(1, 2) - Fraction(1, 2);
+      expect(difference.numerator, equals(0));
+      expect(difference.denominator, equals(1));
+
+      final quotient = Fraction(1, 2) / Fraction(-1, 4);
+      expect(quotient.numerator, equals(-2));
+      expect(quotient.denominator, equals(1));
+    });
+
+    test('Making sure that long sums stay exact', () {
+      // Without reduction, this sum overflowed and became negative.
+      var sum = Fraction(0);
+      var expected = 0.0;
+      for (var i = 1; i <= 30; i++) {
+        sum += Fraction(1, i);
+        expected += 1 / i;
+      }
+
+      expect(sum.isNegative, isFalse);
+      expect(sum.toDouble(), closeTo(expected, 1e-12));
+      expect(sum, equals(Fraction(9304682830147, 2329089562800)));
+    });
+
+    test('Making sure that large operands are handled exactly', () {
+      // The intermediate products overflow 64-bit ints.
+      final a = Fraction(4000000000000, 4000000000001);
+      final b = Fraction(4000000000001, 4000000000000);
+
+      final product = a * b;
+      expect(product.numerator, equals(1));
+      expect(product.denominator, equals(1));
+
+      final quotient = a / a;
+      expect(quotient.numerator, equals(1));
+      expect(quotient.denominator, equals(1));
+
+      // 4e12/(4e12 + 1) + 4e12/(4e12 + 1) = 8e12/(4e12 + 1); the unreduced
+      // denominator (4e12 + 1)^2 overflows.
+      final sum = a + a;
+      expect(sum.numerator, equals(8000000000000));
+      expect(sum.denominator, equals(4000000000001));
+
+      final difference = sum - a;
+      expect(difference, equals(a));
+    });
+
+    test('Making sure that results too large for an int throw', () {
+      final big = Fraction(1099511627776); // 2^40
+
+      expect(() => big * big, throwsA(isA<FractionException>()));
+      expect(
+        () => Fraction(1, 1099511627776) / big,
+        throwsA(isA<FractionException>()),
+      );
+      expect(() {
+        var sum = Fraction(0);
+        for (var i = 1; i <= 100; i++) {
+          sum += Fraction(1, i);
+        }
+
+        return sum;
+      }, throwsA(isA<FractionException>()));
+    });
+
+    test('Making sure that large operands keep the sign on the numerator', () {
+      // Uses the BigInt path, where the product of the denominator and the
+      // negative numerator of the divisor is negative.
+      final quotient = Fraction(4000000000000, 3) / Fraction(-4000000000001, 7);
+
+      expect(quotient.numerator, equals(-28000000000000));
+      expect(quotient.denominator, equals(12000000000003));
+      expect(quotient.isNegative, isTrue);
+    });
+
+    test('Making sure that dividing by zero throws', () {
+      expect(
+        () => Fraction(1, 2) / Fraction(0),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => Fraction(4000000000000, 3) / Fraction(0, 4000000000000),
+        throwsA(isA<FractionException>()),
+      );
+    });
   });
 }

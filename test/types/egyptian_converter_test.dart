@@ -28,7 +28,7 @@ void main() {
       },
     );
 
-    test('Making sure that caching properly works', () {
+    test('Making sure that repeated calls return the same result', () {
       final egyptian = EgyptianFractionConverter(fraction: Fraction(2, 5));
 
       expect(
@@ -53,7 +53,7 @@ void main() {
       );
       expect(egyptian1 == egyptian2, isTrue);
 
-      expect(egyptian1.hashCode != egyptian2.hashCode, isTrue);
+      expect(egyptian1.hashCode == egyptian2.hashCode, isTrue);
       expect(
         egyptian1.hashCode ==
             EgyptianFractionConverter(fraction: Fraction(1, 3)).hashCode,
@@ -93,15 +93,165 @@ void main() {
       final egyptian = EgyptianFractionConverter(fraction: Fraction(5, 8));
       expect('$egyptian', equals('1/2 + 1/8'));
 
-      // Calling 'toString' twice to make sure that CI coverage also covers the
-      // case where the instance is cached
       final egyptian2 = EgyptianFractionConverter(fraction: Fraction(5, 8));
       expect('$egyptian2', equals('1/2 + 1/8'));
 
       final egyptian3 = EgyptianFractionConverter.fromMixedFraction(
         mixedFraction: MixedFraction(whole: 2, numerator: 4, denominator: 5),
       );
-      expect('$egyptian3', equals('1 + 1 + 1/2 + 1/4 + 1/20'));
+      expect('$egyptian3', equals('2 + 1/2 + 1/4 + 1/20'));
+    });
+  });
+
+  group('Regression: equality and hashing', () {
+    test('Making sure that equivalent converters work in sets', () {
+      final converters = {
+        EgyptianFractionConverter(fraction: Fraction(1, 2)),
+        EgyptianFractionConverter(fraction: Fraction(2, 4)),
+        EgyptianFractionConverter(fraction: Fraction(-3, -6)),
+      };
+
+      expect(converters, hasLength(1));
+    });
+
+    test('Making sure that equivalent fractions give the same result', () {
+      expect(
+        Fraction(10, 16).toEgyptianFraction(),
+        orderedEquals(Fraction(5, 8).toEgyptianFraction()),
+      );
+    });
+  });
+
+  group('Regression: Egyptian fractions', () {
+    test('Making sure that changing a result does not affect later calls', () {
+      Fraction(5, 8).toEgyptianFraction().clear();
+      Fraction(5, 8).toEgyptianFraction().add(Fraction(1, 3));
+
+      expect(
+        Fraction(5, 8).toEgyptianFraction(),
+        orderedEquals([Fraction(1, 2), Fraction(1, 8)]),
+      );
+    });
+
+    test('Making sure that each call returns a new list', () {
+      final converter = EgyptianFractionConverter(fraction: Fraction(2, 7));
+
+      // The old cache returned the same list from the second call onwards.
+      final first = converter.compute();
+      final second = converter.compute();
+      final third = converter.compute();
+
+      expect(identical(first, second), isFalse);
+      expect(identical(second, third), isFalse);
+    });
+
+    test('Making sure that the whole part is a single term', () {
+      expect(Fraction(1).toEgyptianFraction(), orderedEquals([Fraction(1)]));
+      expect(Fraction(3).toEgyptianFraction(), orderedEquals([Fraction(3)]));
+      expect(
+        Fraction(7, 2).toEgyptianFraction(),
+        orderedEquals([Fraction(3), Fraction(1, 2)]),
+      );
+      expect(
+        MixedFraction(
+          whole: 2,
+          numerator: 4,
+          denominator: 5,
+        ).toEgyptianFraction(),
+        orderedEquals([
+          Fraction(2),
+          Fraction(1, 2),
+          Fraction(1, 4),
+          Fraction(1, 20),
+        ]),
+      );
+    });
+
+    test(
+      'Making sure that large whole parts are fast',
+      () {
+        expect(
+          Fraction(1000000000).toEgyptianFraction(),
+          orderedEquals([Fraction(1000000000)]),
+        );
+      },
+      timeout: const Timeout(Duration(seconds: 5)),
+    );
+
+    test('Making sure that the documented example is correct', () {
+      final result = Fraction(2014, 59).toEgyptianFraction();
+
+      expect(
+        result,
+        orderedEquals([
+          Fraction(34),
+          Fraction(1, 8),
+          Fraction(1, 95),
+          Fraction(1, 14947),
+          Fraction(1, 670223480),
+        ]),
+      );
+      expect(
+        EgyptianFractionConverter(fraction: Fraction(2014, 59)).toString(),
+        equals('34 + 1/8 + 1/95 + 1/14947 + 1/670223480'),
+      );
+    });
+
+    test('Making sure that zero gives an empty result', () {
+      expect(Fraction(0).toEgyptianFraction(), isEmpty);
+      expect(EgyptianFractionConverter(fraction: Fraction(0)).toString(), '');
+    });
+
+    test('Making sure that negative values throw', () {
+      expect(
+        () => Fraction(-5, 8).toEgyptianFraction(),
+        throwsA(isA<FractionException>()),
+      );
+      expect(
+        () => MixedFraction(
+          whole: 0,
+          numerator: -1,
+          denominator: 2,
+        ).toEgyptianFraction(),
+        throwsA(isA<FractionException>()),
+      );
+    });
+
+    test('Making sure that denominators too large for an int throw instead '
+        'of overflowing', () {
+      // The last term of 5/121 is 1/1527612795642093418846225.
+      expect(
+        () => Fraction(5, 121).toEgyptianFraction(),
+        throwsA(isA<FractionException>()),
+      );
+    });
+
+    test('Making sure that results are distinct unit fractions that add up to '
+        'the original value', () {
+      for (var d = 1; d <= 30; d++) {
+        for (var n = 0; n <= 2 * d; n++) {
+          final fraction = Fraction(n, d);
+          final result = fraction.toEgyptianFraction();
+
+          // The sum is exact.
+          final sum = result.fold(Fraction(0), (a, b) => a + b);
+          expect(sum, equals(fraction), reason: '$fraction');
+
+          // Every term after the whole part is a unit fraction, and the
+          // denominators are strictly increasing.
+          final unitList = n >= d ? result.skip(1).toList() : result;
+          for (var i = 0; i < unitList.length; i++) {
+            expect(unitList[i].numerator, equals(1), reason: '$fraction');
+            if (i > 0) {
+              expect(
+                unitList[i].denominator,
+                greaterThan(unitList[i - 1].denominator),
+                reason: '$fraction',
+              );
+            }
+          }
+        }
+      }
     });
   });
 }

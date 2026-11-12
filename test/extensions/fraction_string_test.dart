@@ -15,7 +15,7 @@ void main() {
     test(
       'Making sure that invalid strings conversions throw and exception',
       () {
-        expect('1/'.toFraction, throwsA(isA<FormatException>()));
+        expect('1/'.toFraction, throwsA(isA<FractionException>()));
         expect('1/0'.toFraction, throwsA(isA<FractionException>()));
         expect('x'.toFraction, throwsA(isA<FractionException>()));
         expect('3/-6'.toFraction, throwsA(isA<FractionException>()));

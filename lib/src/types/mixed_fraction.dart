@@ -1,10 +1,10 @@
 import 'package:fraction/fraction.dart';
 import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 
-/// {@template MixedFraction}
-/// Dart representation of a 'mixed fraction', which is made up by the whole
-/// part and a proper fraction. A proper fraction is a fraction in which the
-/// relation `numerator <= denominator` is true.
+/// {@template mixed_fraction}
+/// Dart representation of a 'mixed fraction', which is made up of a whole part
+/// and a proper fraction (a fraction whose numerator is smaller than its
+/// denominator).
 ///
 /// To create a [MixedFraction] object, use one of its constructors:
 ///
@@ -18,6 +18,11 @@ import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 /// MixedFraction.fromString("1 1/2");
 /// ```
 ///
+/// The [whole], [numerator] and [denominator] values are never negative: the
+/// sign of a mixed fraction is stored separately and exposed by [isNegative].
+/// This makes it possible to represent negative values whose whole part is
+/// zero, such as `-1/2`.
+///
 /// The [MixedFraction] type is **immutable**, so methods that require changing
 /// the object's internal state return a new instance. For example, the [reduce]
 /// method returns a new [MixedFraction] object that does not depend on the
@@ -28,8 +33,8 @@ import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 ///  final f2 = MixedFraction(whole: 3, numerator: 1, denominator: 9); // 3 1/9
 ///
 ///  final sum = f1 + f2; // 8 71/72
-///  final sub = f1 - f2; // -2 17/72
-///  final mul = f1 * f2; // 18 20/72
+///  final sub = f1 - f2; // 2 55/72
+///  final mul = f1 * f2; // 18 5/18
 ///  final div = f1 / f2; // 1 199/224
 /// ```
 ///
@@ -42,160 +47,181 @@ import 'package:fraction/src/types/egyptian_fraction_converter.dart';
 ///  "1 1/2".toMixedFraction();
 /// ```
 ///
-/// If the string doesn't represent a valid fraction, a [MixedFractionException]
-/// object is thrown.
+/// If the string doesn't represent a valid mixed fraction, a
+/// [MixedFractionException] object is thrown.
 /// {@endtemplate}
 base class MixedFraction extends Rational {
-  /// {@macro MixedFraction}
+  /// {@macro mixed_fraction}
   ///
-  /// If the numerator isn't greater than the denominator, values are
-  /// transformed so that a valid mixed fraction is created. For example:
+  /// A negative sign on either the whole part or the fractional part makes the
+  /// whole value negative. For example, these all represent `-2 1/3`:
   ///
   /// ```dart
-  ///  MixedFraction(1, 7, 3);
+  ///  MixedFraction(whole: -2, numerator: 1, denominator: 3);
+  ///  MixedFraction(whole: 2, numerator: -1, denominator: 3);
+  ///  MixedFraction(whole: 2, numerator: 1, denominator: -3);
   /// ```
   ///
-  /// This constructor builds the string as '3 1/3' because '1 7/3' is not a
-  /// valid input ('7/3' is not a proper fraction).
+  /// Use a negative numerator to create a negative value with no whole part:
+  ///
+  /// ```dart
+  ///  MixedFraction(whole: 0, numerator: -1, denominator: 2); // -1/2
+  /// ```
+  ///
+  /// If the fractional part is improper, the values are normalized so that a
+  /// valid mixed fraction is created. For example,
+  /// `MixedFraction(whole: 1, numerator: 7, denominator: 3)` is `3 1/3`.
+  ///
+  /// Throws a [MixedFractionException] if [denominator] is zero, or if both the
+  /// whole part and the fractional part are negative (in which case the
+  /// intended sign is ambiguous).
   factory({
     required int whole,
     required int numerator,
     required int denominator,
   }) {
-    // Denominator cannot be zero
     if (denominator == 0) {
       throw const MixedFractionException('The denominator cannot be zero.');
     }
 
-    // The sign of the fractional part doesn't persist on the fraction itself;
-    // the negative sign only applies (by convention) to the whole part
-    final sign = Fraction(numerator, denominator).isNegative ? -1 : 1;
+    final isFractionNegative =
+        numerator != 0 && (numerator < 0) != (denominator < 0);
+
+    if (whole < 0 && isFractionNegative) {
+      throw MixedFractionException(
+        'The whole part ($whole) and the fractional part '
+        '($numerator/$denominator) cannot both be negative.',
+      );
+    }
+
+    // Moving the integer part of an improper fraction into the whole part.
     final absNumerator = numerator.abs();
     final absDenominator = denominator.abs();
+    final absWhole = whole.abs() + absNumerator ~/ absDenominator;
+    final remainder = absNumerator % absDenominator;
+    final isZero = absWhole == 0 && remainder == 0;
 
-    // In case the numerator was greater than the denominator, there'd the need
-    // to transform the fraction and make it proper. The sign of the whole part
-    // may change depending on the sign of the fractional part.
-    if (absNumerator > absDenominator) {
-      return MixedFraction._(
-        (absNumerator ~/ absDenominator + whole) * sign,
-        absNumerator % absDenominator,
-        absDenominator,
-      );
-    } else {
-      return MixedFraction._(whole * sign, absNumerator, absDenominator);
-    }
+    return MixedFraction._(
+      absWhole,
+      remainder,
+      absDenominator,
+      !isZero && (whole < 0 || isFractionNegative),
+    );
   }
 
-  /// The default constructor.
-  const new _(this.whole, this._numerator, this._denominator);
+  /// {@macro mixed_fraction}
+  const new _(
+    this.whole,
+    this._numerator,
+    this._denominator,
+    this._isNegative,
+  );
 
   /// Creates an instance of a mixed fraction from a [fraction] fraction.
   factory fromFraction(Fraction fraction) => fraction.toMixedFraction();
 
   /// Creates a [MixedFraction] object from [value]. The input string must be in
   /// the form 'a b/c' with exactly one space between the whole part and the
-  /// fraction.
+  /// fraction. The fractional part can also be a glyph.
   ///
-  /// The fractional part can also be a glyph.
-  ///
-  /// The negative sign can only stay in front of 'a' or 'b'. Some valid
-  /// examples are:
+  /// A negative sign can be placed in front of either 'a' or 'b' (but not both)
+  /// and makes the whole value negative. Some valid examples are:
   ///
   /// ```dart
-  ///  MixedFraction.fromString('-2 2/5');
-  ///  MixedFraction.fromString('1 1/3');
-  ///  MixedFraction.fromString('3 ⅐');
+  ///  MixedFraction.fromString('-2 2/5'); // -2 2/5
+  ///  MixedFraction.fromString('2 -2/5'); // -2 2/5
+  ///  MixedFraction.fromString('-0 1/2'); // -1/2
+  ///  MixedFraction.fromString('1 1/3'); // 1 1/3
+  ///  MixedFraction.fromString('3 ⅐'); // 3 1/7
   /// ```
+  ///
+  /// Throws a [MixedFractionException] if [value] is not a valid mixed
+  /// fraction.
   factory fromString(String value) {
-    const errorObj = MixedFractionException(
+    const formatError = MixedFractionException(
       "The string must be in the form 'a b/c' with exactly one space between "
       'the whole part and the fraction',
     );
 
-    // Check for the space
-    if (!value.contains(' ')) {
-      throw errorObj;
-    }
-
-    /*
-     * The 'parts' array must contain exactly 2 pieces:
-     *  - parts[0]: the whole part (an integer)
-     *  - parts[1]: the fraction (a string)
-     * */
     final parts = value.split(' ');
-
-    // Throw because this is not in the form 'a b/c'
     if (parts.length != 2) {
-      throw errorObj;
+      throw formatError;
     }
 
-    /*
-     * At this point the string is made up of 2 "parts" separated by a space. An
-     * exception can occur only if the second part is a malformed string (not a
-     * fraction)
-     * */
-    Fraction fraction;
+    final wholeMatch = _wholeRegex.firstMatch(parts.first);
+    if (wholeMatch == null) {
+      throw formatError;
+    }
 
-    // The string must be either a fraction with numbers and a slash or a glyph.
-    // If that's not the case, then a 'FractionException' is thrown.
+    final whole = int.tryParse(wholeMatch.group(2)!);
+    if (whole == null) {
+      throw MixedFractionException(
+        'The whole part of $value is too large to fit in an int.',
+      );
+    }
+
+    // The fractional part must be either 'b/c' or a glyph.
+    final fractionString = parts.last;
+    final Fraction fraction;
+
     try {
-      fraction = Fraction.fromString(parts[1]);
-    } on FractionException {
-      fraction = Fraction.fromGlyph(parts[1]);
+      fraction = fractionString.contains('/')
+          ? Fraction.fromString(fractionString)
+          : Fraction.fromGlyph(fractionString);
+    } on FractionException catch (e) {
+      throw MixedFractionException(
+        'The fractional part of $value is not valid: ${e.message}',
+      );
     }
 
-    // Fixing the potential negative signs
-    return MixedFraction(
-      whole: int.parse(parts.first),
+    // The sign is checked on the string so that '-0 1/2' is negative.
+    final isWholeNegative = wholeMatch.group(1) == '-';
+    if (isWholeNegative && fraction.isNegative) {
+      throw MixedFractionException(
+        'The whole part and the fractional part of $value cannot both be '
+        'negative.',
+      );
+    }
+
+    final result = MixedFraction(
+      whole: whole,
       numerator: fraction.numerator,
       denominator: fraction.denominator,
     );
+    return isWholeNegative ? result.negate() : result;
   }
 
-  /// Tries to give a fractional representation of a double according with the
-  /// given precision. This implementation takes inspiration from the continued
-  /// fraction algorithm.
+  /// Approximates [value] with a mixed fraction. See [Fraction.fromDouble] for
+  /// details about the algorithm and the [precision] parameter.
   ///
   /// ```dart
-  ///  MixedFraction.fromDouble(5.46) // represented as 5 + 23/50
+  ///  MixedFraction.fromDouble(5.46) // 5 23/50
   /// ```
   ///
-  /// Note that irrational numbers can **not** be represented as fractions. If
-  /// you try to use this method on π (3.1415...) for example, you won't get a
-  /// valid result:
-  ///
-  /// ```dart
-  ///  MixedFraction.fromDouble(math.pi)
-  /// ```
-  ///
-  /// The above code doesn't throw. It returns a [MixedFraction] object because
-  /// the algorithm only considers the first 10 decimal digits (since
-  /// [precision] is set to 1.0e-10).
-  ///
-  /// ```dart
-  ///  MixedFraction.fromDouble(math.pi, precision: 1.0e-20)
-  /// ```
-  ///
-  /// This example will return another different value because it considers the
-  /// first 20 digits. It's still not a fractional representation of π because
-  /// irrational numbers cannot be expressed as fractions.
-  ///
-  /// You should only use this method with rational numbers.
+  /// Throws a [FractionException] if [value] is NaN, infinite, or cannot be
+  /// represented with [int] values, or if [precision] is not positive.
   factory fromDouble(double value, {double precision = 1.0e-12}) {
-    // In this way we can reuse the continued fraction algorithm.
-    final fraction = Fraction.fromDouble(value, precision: precision);
-
-    return fraction.toMixedFraction();
+    return Fraction.fromDouble(
+      value,
+      precision: precision,
+    ).toMixedFraction();
   }
 
-  /// Whole part of the mixed fraction.
+  /// Matches the whole part of a mixed fraction string: an optional sign
+  /// followed by digits.
+  static final _wholeRegex = RegExp(r'^([+-]?)([0-9]+)$');
+
+  /// The whole part of the mixed fraction. It is never negative: use
+  /// [isNegative] to get the sign.
   final int whole;
 
-  /// The numerator of the fractional part.
+  /// Whether this mixed fraction is negative.
+  final bool _isNegative;
+
+  /// The numerator of the fractional part. It is never negative.
   final int _numerator;
 
-  /// The denominator of the fractional part.
+  /// The denominator of the fractional part. It is always positive.
   final int _denominator;
 
   @override
@@ -205,25 +231,18 @@ base class MixedFraction extends Rational {
   int get denominator => _denominator;
 
   @override
-  bool get isNegative => whole < 0;
+  bool get isNegative => _isNegative;
 
   @override
-  bool get isWhole => fractionalPart == Fraction(1);
+  bool get isWhole => numerator == 0;
 
+  /// Two mixed fractions are equal if they represent the same value. For
+  /// example, `1 3/4` and `1 6/8` are equal.
+  ///
+  /// A [MixedFraction] is never equal to a [Fraction], even if both represent
+  /// the same value.
   @override
   bool operator ==(Object other) {
-    // Two mixed fractions are equal if the whole part and the "cross product"
-    // of the fractional part is equal.
-    //
-    // ```dart
-    // final one = MixedFraction(whole: 1, numerator: 3, denominator: 4);
-    // final two = MixedFraction(whole: 1, numerator: 6, denominator: 8);
-    //
-    // print(one == two); //true
-    // ```
-    //
-    // The above example returns true because the whole part is equal (1 = 1)
-    // and the "cross product" of `one` and two` is equal (3 * 8 = 6 * 4).
     if (identical(this, other)) {
       return true;
     }
@@ -235,40 +254,57 @@ base class MixedFraction extends Rational {
     }
   }
 
+  /// Equivalent mixed fractions (such as `1 3/4` and `1 6/8`) have the same
+  /// hash code.
   @override
-  int get hashCode => Object.hash(whole, numerator, denominator);
+  int get hashCode => toFraction().hashCode;
 
   @override
   String toString() {
-    if (whole == 0) {
-      return '$numerator/$denominator';
-    }
+    final sign = isNegative ? '-' : '';
 
     if (numerator == 0) {
-      return '$whole';
+      return '$sign$whole';
     }
 
-    return '$whole $numerator/$denominator';
+    if (whole == 0) {
+      return '$sign$numerator/$denominator';
+    }
+
+    return '$sign$whole $numerator/$denominator';
   }
 
   @override
-  double toDouble() => whole + numerator / denominator;
+  double toDouble() {
+    final magnitude = whole + numerator / denominator;
+
+    return isNegative ? -magnitude : magnitude;
+  }
 
   @override
-  MixedFraction negate() => MixedFraction(
-    whole: whole * -1,
-    numerator: numerator,
-    denominator: denominator,
-  );
+  MixedFraction negate() {
+    // Zero is never negative.
+    if (whole == 0 && numerator == 0) {
+      return this;
+    }
+
+    return MixedFraction._(
+      whole,
+      numerator,
+      denominator,
+      !isNegative,
+    );
+  }
 
   @override
   MixedFraction reduce() {
-    final fractionalPart = Fraction(numerator, denominator).reduce();
+    final gcd = numerator.gcd(denominator);
 
-    return MixedFraction(
-      whole: whole,
-      numerator: fractionalPart.numerator,
-      denominator: fractionalPart.denominator,
+    return MixedFraction._(
+      whole,
+      numerator ~/ gcd,
+      denominator ~/ gcd,
+      isNegative,
     );
   }
 
@@ -278,43 +314,52 @@ base class MixedFraction extends Rational {
         mixedFraction: this,
       ).compute();
 
-  /// If possible, this method converts this [MixedFraction] instance into an
-  /// unicode glyph string. For example:
+  /// If possible, this method converts this [MixedFraction] instance into a
+  /// string where the fractional part is a Unicode glyph. For example:
   ///
   /// ```dart
   /// MixedFraction(
   ///   whole: 3,
   ///   numerator: 1,
   ///   denominator: 7,
-  /// ).toStringAsGlyph() // "⅐"
+  /// ).toStringAsGlyph() // "3 ⅐"
   /// ```
   ///
   /// If the conversion is not possible, a [FractionException] object is thrown.
   String toStringAsGlyph() {
-    final glyph = Fraction(numerator, denominator).toStringAsGlyph();
+    final glyph = fractionalPart.toStringAsGlyph();
+    final sign = isNegative ? '-' : '';
 
     if (whole == 0) {
-      return glyph;
-    } else {
-      return '$whole $glyph';
+      return '$sign$glyph';
     }
+
+    return '$sign$whole $glyph';
   }
 
   /// Converts this mixed fraction into a fraction.
   Fraction toFraction() => Fraction.fromMixedFraction(this);
 
-  /// {@template copyWith}
+  /// {@template copy_with}
   /// Creates a **deep** copy of this object with the given fields replaced
   /// with the new values.
   /// {@endtemplate}
-  MixedFraction copyWith({int? whole, int? numerator, int? denominator}) =>
-      MixedFraction(
-        whole: whole ?? this.whole,
-        numerator: numerator ?? this.numerator,
-        denominator: denominator ?? this.denominator,
-      );
+  ///
+  /// The new values are combined as in the default constructor, and then the
+  /// sign of this mixed fraction is applied to the result. For example,
+  /// copying `-2 1/3` with `whole: 5` gives `-5 1/3`.
+  MixedFraction copyWith({int? whole, int? numerator, int? denominator}) {
+    final result = MixedFraction(
+      whole: whole ?? this.whole,
+      numerator: numerator ?? this.numerator,
+      denominator: denominator ?? this.denominator,
+    );
 
-  /// Returns the fractional part of the mixed fraction as [Fraction] object.
+    return isNegative ? result.negate() : result;
+  }
+
+  /// Returns the fractional part of the mixed fraction as a [Fraction] object.
+  /// It is never negative: use [isNegative] to get the sign.
   Fraction get fractionalPart => Fraction(numerator, denominator);
 
   /// The sum between two mixed fractions.
@@ -326,7 +371,7 @@ base class MixedFraction extends Rational {
 
   /// The difference between two mixed fractions.
   MixedFraction operator -(MixedFraction other) {
-    final result = other.toFraction() - toFraction();
+    final result = toFraction() - other.toFraction();
 
     return result.toMixedFraction();
   }
@@ -348,7 +393,7 @@ base class MixedFraction extends Rational {
   /// Access the whole part, the numerator or the denominator of the fraction
   /// via index. In particular:
   ///
-  ///  - `0` refers to the whole part;
+  ///  - `0` refers to the whole part (which is never negative);
   ///  - `1` refers to the numerator;
   ///  - `2` refers to the denominator.
   ///

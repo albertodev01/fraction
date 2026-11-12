@@ -64,7 +64,7 @@ Fraction.fromGlyph("¼"); // 1/4
 Fraction(1, 2).toStringAsGlyph(); // "½"
 ```
 
-You can add, subtract, multiply, and divide fractions using the arithmetic operators. Note that results are not automatically reduced:
+You can add, subtract, multiply, and divide fractions using the arithmetic operators. Results are always in lowest terms:
 
 ```dart
 final f1 = Fraction(5, 7); // 5/7
@@ -72,7 +72,7 @@ final f2 = Fraction(1, 5); // 1/5
 
 final sum = f1 + f2; // 32/35
 final sub = f1 - f2; // 18/35
-final mul = f1 * f2; // 5/35
+final mul = f1 * f2; // 1/7
 final div = f1 / f2; // 25/7
 ```
 
@@ -93,7 +93,7 @@ print('${fraction[0]}'); // -7
 print('${fraction[1]}'); // 12
 ```
 
-In the last example, any index other than `0` or `1` throws a `FractionException`. Two fractions are equal if their cross products are equal. For example, `1/2` and `3/6` are equivalent because `1 * 6 = 3 * 2` (in fact, `3/6` reduces to `1/2`).
+In the last example, any index other than `0` or `1` throws a `FractionException`. Two fractions are equal if they represent the same value. For example, `1/2` and `3/6` are equal because `3/6` reduces to `1/2`, and they also have the same `hashCode`, so they can safely be used in sets and maps.
 
 ## Working with mixed fractions
 
@@ -120,6 +120,35 @@ You can also create new `MixedFraction` objects using extension methods:
 final mixed = "1 1/2".toMixedFraction();
 ```
 
+The `whole`, `numerator` and `denominator` values of a mixed fraction are never negative: the sign is stored separately and exposed by `isNegative`. A minus sign on either the whole part or the fractional part makes the whole value negative:
+
+```dart
+final a = MixedFraction(whole: -2, numerator: 1, denominator: 3); // -2 1/3
+final b = MixedFraction(whole: 2, numerator: -1, denominator: 3); // -2 1/3
+final c = MixedFraction(whole: 0, numerator: -1, denominator: 2); // -1/2
+
+a.whole;      // 2
+a.isNegative; // true
+a.toDouble(); // -2.3333333333333335
+
+MixedFraction.fromString("-2 1/3"); // -2 1/3
+MixedFraction.fromString("-0 1/2"); // -1/2
+```
+
+If both parts are negative (for example, `MixedFraction(whole: -2, numerator: -1, denominator: 3)` or `"-2 -1/3"`), a `MixedFractionException` is thrown because the intended sign is ambiguous.
+
+Mixed fractions support the same arithmetic operators as fractions:
+
+```dart
+final m1 = MixedFraction(whole: 5, numerator: 7, denominator: 8); // 5 7/8
+final m2 = MixedFraction(whole: 3, numerator: 1, denominator: 9); // 3 1/9
+
+final sum = m1 + m2; // 8 71/72
+final sub = m1 - m2; // 2 55/72
+final mul = m1 * m2; // 18 5/18
+final div = m1 / m2; // 1 199/224
+```
+
 Like `Fraction`, the `MixedFraction` type is **immutable**, so its internal state is guaranteed never to change. Check out the official [API documentation](https://pub.dev/documentation/fraction/latest/fraction/MixedFraction-class.html) on pub.dev for a complete overview.
 
 ## Egyptian fractions
@@ -128,7 +157,7 @@ An Egyptian fraction is a finite sum of distinct unit fractions: fractions whose
 
   - 5/8 = 1/2 + 1/8 (where "1/2 + 1/8" is the Egyptian fraction)
 
-In other words, an Egyptian fraction represents a proper or improper fraction as a sum of fractions of the form 1/x. Here's how to compute one:
+In other words, an Egyptian fraction represents a fraction as a sum of fractions of the form 1/x. If the value is 1 or greater, its whole part comes first as a single term. Here's how to compute one:
 
 ```dart
 final egyptianFraction1 = Fraction(5, 8).toEgyptianFraction();
@@ -139,10 +168,10 @@ final egyptianFraction2 = MixedFraction(
   numerator: 4,
   denominator: 5,
 ).toEgyptianFraction();
-print(egyptianFraction2.join(" + ")); // prints "1 + 1 + 1/2 + 1/4 + 1/20"
+print(egyptianFraction2.join(" + ")); // prints "2 + 1/2 + 1/4 + 1/20"
 ```
 
-The `toEgyptianFraction()` method returns a `List<Fraction>`.
+The `toEgyptianFraction()` method returns a `List<Fraction>`. It throws a `FractionException` if the value is negative, or if a denominator is too large to fit in an `int`.
 
 ## Notes
 

@@ -9,17 +9,36 @@ void main() {
 
       // Building the expected result
       final fraction = Fraction(8, 12);
-      final buffer =
-          StringBuffer()
-            ..writeln('\n > ==================== < \n')
-            ..writeln('Fraction = $fraction')
-            ..writeln('Decimal: ${fraction.toDouble()}')
-            ..writeln('Mixed: ${fraction.toMixedFraction()}\n')
-            ..writeln('Inverse: ${fraction.inverse()}')
-            ..writeln('Negate: ${fraction.negate()}')
-            ..writeln('Reduced: ${fraction.reduce()}\n')
-            ..writeln('Is proper? ${fraction.isProper}')
-            ..writeln('Is improper? ${fraction.isImproper}');
+      final buffer = StringBuffer()
+        ..writeln('\n > ==================== < \n')
+        ..writeln('Fraction = $fraction')
+        ..writeln('Decimal: ${fraction.toDouble()}')
+        ..writeln('Mixed: ${fraction.toMixedFraction()}\n')
+        ..writeln('Inverse: ${fraction.inverse()}')
+        ..writeln('Negate: ${fraction.negate()}')
+        ..writeln('Reduced: ${fraction.reduce()}\n')
+        ..writeln('Is proper? ${fraction.isProper}')
+        ..writeln('Is improper? ${fraction.isImproper}');
+
+      expect(analyzer.analyze(), equals(buffer.toString()));
+    });
+
+    test('Making sure that zero can be analyzed even though it has no '
+        'inverse', () {
+      const analyzer = FractionAnalyzer(input: '0');
+
+      // Building the expected result
+      final fraction = Fraction(0);
+      final buffer = StringBuffer()
+        ..writeln('\n > ==================== < \n')
+        ..writeln('Fraction = $fraction')
+        ..writeln('Decimal: ${fraction.toDouble()}')
+        ..writeln('Mixed: ${fraction.toMixedFraction()}\n')
+        ..writeln('Inverse: undefined')
+        ..writeln('Negate: ${fraction.negate()}')
+        ..writeln('Reduced: ${fraction.reduce()}\n')
+        ..writeln('Is proper? ${fraction.isProper}')
+        ..writeln('Is improper? ${fraction.isImproper}');
 
       expect(analyzer.analyze(), equals(buffer.toString()));
     });

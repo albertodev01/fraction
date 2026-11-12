@@ -1,3 +1,42 @@
+## 6.0.0
+ - Updated Dart SDK constraints to `^3.14.0`
+ - Dependencies update
+ - Rewrote the README and improved the inline documentation
+ - **BREAKING** (`Fraction`): arithmetic operators (`+`, `-`, `*`, `/`) now always return results in lowest terms (for example, `Fraction(5, 7) * Fraction(1, 5)` is now `1/7` instead of `5/35`).
+ - **BREAKING** (`Fraction`): arithmetic operators throw a `FractionException` when the result does not fit in an `int`, instead of silently overflowing. Dividing by zero also throws a `FractionException`.
+ - **BREAKING** (`Fraction`): `Fraction.fromString` (and `String.toFraction()`) now require the whole string to be a fraction. Strings such as `"1/2 "`, `"1/2/3"` and `"1.5"` are rejected, and every invalid input throws a `FractionException` (some used to throw a `FormatException`).
+ - **BREAKING** (`Fraction`): `Fraction.fromDouble` throws a `FractionException` if `precision` is not positive, or if the value is too large (or too close to zero) to be represented with `int` values. When the requested precision can't be reached within the `int` range, the closest approximation that fits is returned.
+ - **BREAKING** (`Fraction`): `isWhole` now works on unreduced fractions (`Fraction(16, 2).isWhole` is `true`).
+ - **BREAKING** (`Fraction`): `isProper` and `isImproper` now ignore the sign (`Fraction(-1, 2)` is proper, `Fraction(-5, 2)` is improper).
+ - **BREAKING** (`Fraction`): equivalent fractions now have the same `hashCode`, so they behave correctly in sets and maps. As a consequence, `toStringAsGlyph()` and `isFractionGlyph` also work on unreduced fractions (`Fraction(2, 4).toStringAsGlyph()` returns `½`).
+ - **BREAKING** (`MixedFraction`): the sign is now stored separately and exposed by `isNegative`. The `whole`, `numerator` and `denominator` values are never negative, so negative values with no whole part (such as `-1/2`) can now be represented. Migration:
+
+```dart
+final mixed = MixedFraction(whole: -2, numerator: 1, denominator: 3);
+
+// Old code
+mixed.whole; // -2
+
+// New code
+mixed.whole; // 2
+mixed.isNegative; // true
+mixed.toString(); // -2 1/3 (unchanged)
+```
+ - **BREAKING** (`MixedFraction`): a negative sign on either the whole part or the fractional part makes the whole value negative. If both are negative, a `MixedFractionException` is thrown (previously, the two signs cancelled out).
+ - **BREAKING** (`MixedFraction`): a fractional part equal to 1 is normalized (`3 4/4` becomes `4`), and `isWhole` is now `true` whenever there is no fractional part.
+ - **BREAKING** (`MixedFraction`): `copyWith` keeps the sign of the original mixed fraction (copying `-2 1/2` with `whole: 4` gives `-4 1/2`).
+ - **BREAKING** (`MixedFraction`): `MixedFraction.fromString` rejects a fractional part without a slash (`'1 3'`) and strings where both parts are negative (`'-1 -2/5'`). Every invalid input now throws a `MixedFractionException`. The sign can be placed on either part, and `'-0 1/2'` is parsed as `-1/2`.
+ - **BREAKING** (`MixedFraction`): zero is printed as `0` instead of `0/1`.
+ - Fixed `MixedFraction` subtraction, which computed `b - a` instead of `a - b`.
+ - Fixed `MixedFraction.toDouble()` for negative values (`-2 4/5` returned `-1.2`).
+ - Fixed `Fraction.toMixedFraction()` for negative values (`-5/4` became `-1 3/4`, and `-1/2` lost its sign).
+ - Fixed `Fraction.fromDouble` and `num.toFraction()` hanging forever on very large or very small values (such as `1e300`).
+ - Fixed `==` on `Fraction` and `MixedFraction`, which could overflow and report different values as equal.
+ - Fixed `compareTo` and the comparison operators (`<`, `<=`, `>`, `>=`), which compared `double` approximations and could give wrong results for close or large values. Comparisons are now exact.
+ - Fixed `Rational.tryParse` throwing on Unicode glyphs (such as `'½'`) instead of parsing them.
+ - Fixed the Egyptian fraction cache: modifying a returned list corrupted later results. The cache has been removed, so it no longer grows without bound.
+ - Fixed `MixedFraction.toFraction()` silently overflowing for large values.
+
 ## 5.0.5
  - Updated Dart SDK constraints to `^3.7.2` 
  - Dependencies update
@@ -173,4 +212,4 @@ Rational.tryParse('');      // null
 ## 1.0.0
 
  - `Fraction` and `MixedFraction` have been released.
- - added support to extension methods to create helpers for `num` and `string`.
+ - Added support to extension methods to create helpers for `num` and `string`.

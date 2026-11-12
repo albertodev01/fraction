@@ -24,7 +24,6 @@ linter:
     - avoid_double_and_int_checks
     - avoid_dynamic_calls
     - avoid_empty_else
-    - avoid_equals_and_hash_code_on_mutable_classes
     - avoid_escaping_inner_quotes
     - avoid_field_initializers_in_const_classes
     - avoid_final_parameters
@@ -139,7 +138,6 @@ linter:
     - prefer_const_literals_to_create_immutables
     - prefer_constructors_over_static_methods
     - prefer_contains
-    - prefer_expression_function_bodies
     - prefer_final_fields
     - prefer_final_in_for_each
     - prefer_final_locals

@@ -34,12 +34,15 @@ void main() {
         expect('x'.toMixedFraction, throwsA(isA<MixedFractionException>()));
         expect('3/-6'.toMixedFraction, throwsA(isA<MixedFractionException>()));
         expect(''.toMixedFraction, throwsA(isA<MixedFractionException>()));
-        expect('2 2/'.toMixedFraction, throwsA(isA<FormatException>()));
+        expect('2 2/'.toMixedFraction, throwsA(isA<MixedFractionException>()));
         expect(
           '1  1/2'.toMixedFraction,
           throwsA(isA<MixedFractionException>()),
         );
-        expect('-1 1/-2'.toMixedFraction, throwsA(isA<FractionException>()));
+        expect(
+          '-1 1/-2'.toMixedFraction,
+          throwsA(isA<MixedFractionException>()),
+        );
       },
     );
 
