@@ -4,17 +4,13 @@ on:
   pull_request:
     paths-ignore:
       - "**.md"
-  push:
-    branches:
-      - main
-      - develop
-      
+
 jobs:
   verify_fraction_package:
     name: fraction pub package
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
@@ -30,9 +26,7 @@ jobs:
         run: dart pub global activate coverage && dart pub global run coverage:test_with_coverage
         
       - name: Check Code Coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v3
-        with:
-          min_coverage: 100
+        run: dart pub global activate coverde && dart pub global run coverde check 100
 
   verify_fraction_example:
     name: fraction package - Dart example app
@@ -42,7 +36,7 @@ jobs:
       run:
         working-directory: example
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies

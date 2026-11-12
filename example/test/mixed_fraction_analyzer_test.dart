@@ -13,14 +13,13 @@ void main() {
         numerator: 7,
         denominator: 3,
       );
-      final buffer =
-          StringBuffer()
-            ..writeln('\n > ==================== < \n')
-            ..writeln('Mixed fraction = $mixedFraction')
-            ..writeln('Decimal: ${mixedFraction.toDouble()}')
-            ..writeln('Fraction: ${mixedFraction.toFraction()}\n')
-            ..writeln('Negate: ${mixedFraction.negate()}')
-            ..writeln('Reduced: ${mixedFraction.reduce()}');
+      final buffer = StringBuffer()
+        ..writeln('\n > ==================== < \n')
+        ..writeln('Mixed fraction = $mixedFraction')
+        ..writeln('Decimal: ${mixedFraction.toDouble()}')
+        ..writeln('Fraction: ${mixedFraction.toFraction()}\n')
+        ..writeln('Negate: ${mixedFraction.negate()}')
+        ..writeln('Reduced: ${mixedFraction.reduce()}');
 
       expect(analyzer.analyze(), equals(buffer.toString()));
     });
