@@ -4,11 +4,7 @@ on:
   pull_request:
     paths-ignore:
       - "**.md"
-  push:
-    branches:
-      - main
-      - develop
-      
+
 jobs:
   verify_fraction_package:
     name: fraction pub package
