@@ -4,13 +4,12 @@ import 'package:test/test.dart';
 
 void main() {
   group('Constructors', () {
-    test('Making sure that the class can be instantiated', () {
+    test('can be instantiated', () {
       final egyptian = EgyptianFractionConverter(fraction: Fraction(2, 5));
       expect(egyptian.fraction, equals(Fraction(2, 5)));
     });
 
-    test('Making sure that the class can correctly be instantiated with the '
-        'mixed fraction constructor', () {
+    test('can be instantiated from a mixed fraction', () {
       final mixed = MixedFraction(whole: 10, numerator: 7, denominator: 2);
       final egyptian = EgyptianFractionConverter.fromMixedFraction(
         mixedFraction: mixed,
@@ -19,7 +18,7 @@ void main() {
     });
 
     test(
-      'Making sure that the constructor throws in case of invalid fraction',
+      'the constructor throws on an invalid fraction',
       () {
         expect(
           () => EgyptianFractionConverter(fraction: Fraction(2, 0)),
@@ -28,7 +27,7 @@ void main() {
       },
     );
 
-    test('Making sure that repeated calls return the same result', () {
+    test('repeated calls return the same result', () {
       final egyptian = EgyptianFractionConverter(fraction: Fraction(2, 5));
 
       expect(
@@ -43,7 +42,7 @@ void main() {
   });
 
   group('Testing objects equality', () {
-    test('Making sure that comparison works properly', () {
+    test('comparison works', () {
       final egyptian1 = EgyptianFractionConverter(fraction: Fraction(1, 3));
       final egyptian2 = EgyptianFractionConverter(fraction: Fraction(4, 12));
 
@@ -63,7 +62,7 @@ void main() {
   });
 
   group('Testing the API', () {
-    test("Making sure that the 'compute()' method works properly'", () {
+    test("'compute()' works", () {
       final testMatrix = {
         Fraction(5, 8): [Fraction(1, 2), Fraction(1, 8)],
         Fraction(2, 3): [Fraction(1, 2), Fraction(1, 6)],
@@ -81,7 +80,7 @@ void main() {
     });
 
     test(
-      "Making sure that the 'compute()' throws is the fraction is negative'",
+      "'compute()' throws if the fraction is negative",
       () {
         final egyptian = EgyptianFractionConverter(fraction: Fraction(-2, 5));
 
@@ -89,7 +88,7 @@ void main() {
       },
     );
 
-    test("Making sure that 'toString' works properly", () {
+    test("'toString()' works", () {
       final egyptian = EgyptianFractionConverter(fraction: Fraction(5, 8));
       expect('$egyptian', equals('1/2 + 1/8'));
 
@@ -104,7 +103,7 @@ void main() {
   });
 
   group('Regression: equality and hashing', () {
-    test('Making sure that equivalent converters work in sets', () {
+    test('equivalent converters work in sets', () {
       final converters = {
         EgyptianFractionConverter(fraction: Fraction(1, 2)),
         EgyptianFractionConverter(fraction: Fraction(2, 4)),
@@ -114,7 +113,7 @@ void main() {
       expect(converters, hasLength(1));
     });
 
-    test('Making sure that equivalent fractions give the same result', () {
+    test('equivalent fractions give the same result', () {
       expect(
         Fraction(10, 16).toEgyptianFraction(),
         orderedEquals(Fraction(5, 8).toEgyptianFraction()),
@@ -123,7 +122,7 @@ void main() {
   });
 
   group('Regression: Egyptian fractions', () {
-    test('Making sure that changing a result does not affect later calls', () {
+    test('changing a result does not affect later calls', () {
       Fraction(5, 8).toEgyptianFraction().clear();
       Fraction(5, 8).toEgyptianFraction().add(Fraction(1, 3));
 
@@ -133,7 +132,7 @@ void main() {
       );
     });
 
-    test('Making sure that each call returns a new list', () {
+    test('each call returns a new list', () {
       final converter = EgyptianFractionConverter(fraction: Fraction(2, 7));
 
       // The old cache returned the same list from the second call onwards.
@@ -145,7 +144,7 @@ void main() {
       expect(identical(second, third), isFalse);
     });
 
-    test('Making sure that the whole part is a single term', () {
+    test('the whole part is a single term', () {
       expect(Fraction(1).toEgyptianFraction(), orderedEquals([Fraction(1)]));
       expect(Fraction(3).toEgyptianFraction(), orderedEquals([Fraction(3)]));
       expect(
@@ -168,7 +167,7 @@ void main() {
     });
 
     test(
-      'Making sure that large whole parts are fast',
+      'large whole parts are fast',
       () {
         expect(
           Fraction(1000000000).toEgyptianFraction(),
@@ -178,7 +177,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
     );
 
-    test('Making sure that the documented example is correct', () {
+    test('the documented example is correct', () {
       final result = Fraction(2014, 59).toEgyptianFraction();
 
       expect(
@@ -197,12 +196,12 @@ void main() {
       );
     });
 
-    test('Making sure that zero gives an empty result', () {
+    test('zero gives an empty result', () {
       expect(Fraction(0).toEgyptianFraction(), isEmpty);
       expect(EgyptianFractionConverter(fraction: Fraction(0)).toString(), '');
     });
 
-    test('Making sure that negative values throw', () {
+    test('negative values throw', () {
       expect(
         () => Fraction(-5, 8).toEgyptianFraction(),
         throwsA(isA<FractionException>()),
@@ -217,8 +216,7 @@ void main() {
       );
     });
 
-    test('Making sure that denominators too large for an int throw instead '
-        'of overflowing', () {
+    test('denominators too large for an int throw instead of overflowing', () {
       // The last term of 5/121 is 1/1527612795642093418846225.
       expect(
         () => Fraction(5, 121).toEgyptianFraction(),
@@ -226,32 +224,34 @@ void main() {
       );
     });
 
-    test('Making sure that results are distinct unit fractions that add up to '
-        'the original value', () {
-      for (var d = 1; d <= 30; d++) {
-        for (var n = 0; n <= 2 * d; n++) {
-          final fraction = Fraction(n, d);
-          final result = fraction.toEgyptianFraction();
+    test(
+      'results are distinct unit fractions adding up to the original value',
+      () {
+        for (var d = 1; d <= 30; d++) {
+          for (var n = 0; n <= 2 * d; n++) {
+            final fraction = Fraction(n, d);
+            final result = fraction.toEgyptianFraction();
 
-          // The sum is exact.
-          final sum = result.fold(Fraction(0), (a, b) => a + b);
-          expect(sum, equals(fraction), reason: '$fraction');
+            // The sum is exact.
+            final sum = result.fold(Fraction(0), (a, b) => a + b);
+            expect(sum, equals(fraction), reason: '$fraction');
 
-          // Every term after the whole part is a unit fraction, and the
-          // denominators are strictly increasing.
-          final unitList = n >= d ? result.skip(1).toList() : result;
-          for (var i = 0; i < unitList.length; i++) {
-            expect(unitList[i].numerator, equals(1), reason: '$fraction');
-            if (i > 0) {
-              expect(
-                unitList[i].denominator,
-                greaterThan(unitList[i - 1].denominator),
-                reason: '$fraction',
-              );
+            // Every term after the whole part is a unit fraction, and the
+            // denominators are strictly increasing.
+            final unitList = n >= d ? result.skip(1).toList() : result;
+            for (var i = 0; i < unitList.length; i++) {
+              expect(unitList[i].numerator, equals(1), reason: '$fraction');
+              if (i > 0) {
+                expect(
+                  unitList[i].denominator,
+                  greaterThan(unitList[i - 1].denominator),
+                  reason: '$fraction',
+                );
+              }
             }
           }
         }
-      }
-    });
+      },
+    );
   });
 }

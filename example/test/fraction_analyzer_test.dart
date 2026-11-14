@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("Testing the 'FractionAnalyzer' class", () {
-    test('Making sure that valid fractions can be analyzed', () {
+    test('valid fractions can be analyzed', () {
       const analyzer = FractionAnalyzer(input: '8/12');
 
       // Building the expected result
@@ -23,8 +23,7 @@ void main() {
       expect(analyzer.analyze(), equals(buffer.toString()));
     });
 
-    test('Making sure that zero can be analyzed even though it has no '
-        'inverse', () {
+    test('zero can be analyzed even though it has no inverse', () {
       const analyzer = FractionAnalyzer(input: '0');
 
       // Building the expected result
@@ -43,7 +42,7 @@ void main() {
       expect(analyzer.analyze(), equals(buffer.toString()));
     });
 
-    test('Making sure that invalid fractions report an error', () {
+    test('invalid fractions report an error', () {
       const analyzer = FractionAnalyzer(input: '');
 
       expect(

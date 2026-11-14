@@ -173,6 +173,22 @@ print(egyptianFraction2.join(" + ")); // prints "2 + 1/2 + 1/4 + 1/20"
 
 The `toEgyptianFraction()` method returns a `List<Fraction>`. It throws a `FractionException` if the value is negative, or if a denominator is too large to fit in an `int`.
 
+## Continued fractions
+
+A (simple) continued fraction writes a number as a whole part plus a nested chain of reciprocals:
+
+  - 7/9 = 0 + 1/(1 + 1/(3 + 1/2)), usually written as the list of terms [0; 1, 3, 2]
+
+Here's how to compute the terms:
+
+```dart
+Fraction(7, 9).toContinuedFraction(); // [0, 1, 3, 2]
+Fraction(-7, 9).toContinuedFraction(); // [-1, 4, 2]
+MixedFraction(whole: 2, numerator: 1, denominator: 3).toContinuedFraction(); // [2, 3]
+```
+
+The `toContinuedFraction()` method returns a `List<int>`. The first term is the floor of the value (so it's negative for negative values) and all the other terms are positive.
+
 ## Notes
 
 `Fraction` and `MixedFraction` are both subtypes of `Rational`, which lets you parse either kind of fraction with a single method call. For example:

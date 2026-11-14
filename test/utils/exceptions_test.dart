@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('Testing the correctness of exception objects', () {
     test(
-      'Making sure that equality comparison works for exception objects',
+      'equality works for exception objects',
       () {
         const fractionException = FractionException('Message');
         const mixedException = MixedFractionException('Message');
@@ -40,14 +40,14 @@ void main() {
       },
     );
 
-    test("Making sure that 'FractionException' prints the correct message", () {
+    test("'FractionException' prints the correct message", () {
       const exception = FractionException('Exception message');
       expect(exception.message, equals('Exception message'));
       expect('$exception', equals('FractionException: Exception message'));
     });
 
     test(
-      "Making sure that 'MixedFractionException' prints the correct message",
+      "'MixedFractionException' prints the correct message",
       () {
         const exception = MixedFractionException('Exception message');
         expect(exception.message, 'Exception message');

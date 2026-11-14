@@ -183,9 +183,6 @@ base class Fraction extends Rational {
     }
 
     final x = value.abs();
-
-    // The convergents h/k of the continued fraction are computed with BigInts
-    // so that an overflow can be detected (and not silently wrapped around).
     var h1 = BigInt.one;
     var h2 = BigInt.zero;
     var k1 = BigInt.zero;
@@ -193,8 +190,6 @@ base class Fraction extends Rational {
     var y = x;
 
     for (var i = 0; i < _maxContinuedFractionTerms; i++) {
-      // 'y' is always positive, so truncating is the same as flooring.
-      // BigInt.from() is used because double.floor() clamps large values.
       final a = BigInt.from(y);
       final h = a * h1 + h2;
       final k = a * k1 + k2;
