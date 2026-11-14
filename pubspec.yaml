@@ -1,6 +1,6 @@
 name: fraction
 description: Create, parse and do arithmetic with fractions and mixed fractions, convert them to and from numbers and strings, and compute Egyptian fraction expansions.
-version: 6.0.0
+version: 6.0.1
 repository: https://github.com/albertodev01/fraction
 homepage: https://pub.dev/packages/fraction
 

@@ -107,6 +107,46 @@ abstract base class Rational implements Comparable<Rational> {
   /// Throws a [FractionException] if this rational number is negative.
   List<Fraction> toEgyptianFraction();
 
+  /// Returns the terms `[a0, a1, ..., an]` of the simple continued fraction
+  /// of this rational number:
+  ///
+  /// ```text
+  ///  a0 + 1/(a1 + 1/(a2 + ... + 1/an))
+  /// ```
+  ///
+  /// For example, `7/9 = 0 + 1/(1 + 1/(3 + 1/2))`, so:
+  ///
+  /// ```dart
+  ///  Fraction(7, 9).toContinuedFraction() // [0, 1, 3, 2]
+  ///  Fraction(-7, 9).toContinuedFraction() // [-1, 4, 2]
+  ///  MixedFraction(
+  ///    whole: 2,
+  ///    numerator: 1,
+  ///    denominator: 3,
+  ///  ).toContinuedFraction() // [2, 3]
+  ///  Fraction(5).toContinuedFraction() // [5]
+  /// ```
+  ///
+  /// The terms are computed with the Euclidean algorithm. The first term is
+  /// the floor of the value (so it is negative for negative values) and every
+  /// other term is positive. The expansion is the canonical (shortest) one: the
+  /// last term is never `1`, unless it is the only term.
+  List<int> toContinuedFraction() {
+    var (num, den) = _exactValue();
+    final terms = <int>[];
+
+    while (den != BigInt.zero) {
+      // The remainder of BigInt is never negative, so this is floor division.
+      final remainder = num % den;
+      terms.add(((num - remainder) ~/ den).toInt());
+
+      num = den;
+      den = remainder;
+    }
+
+    return terms;
+  }
+
   /// Tries to parse [value] as a [Fraction] or a [MixedFraction], returning
   /// `null` if it is neither. Unicode glyphs (such as `½`) are also supported.
   /// For example:

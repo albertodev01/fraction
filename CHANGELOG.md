@@ -1,3 +1,6 @@
+## 6.0.1
+ - Added `toContinuedFraction()` to `Rational` (and so to `Fraction` and `MixedFraction`), which returns the terms of the simple continued fraction (for example, `Fraction(7, 9).toContinuedFraction()` is `[0, 1, 3, 2]`).
+
 ## 6.0.0
  - Updated Dart SDK constraints to `^3.14.0`
  - Dependencies update

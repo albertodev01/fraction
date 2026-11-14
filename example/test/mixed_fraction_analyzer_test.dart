@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("Testing the 'MixedFractionAnalyzer' class", () {
-    test('Making sure that valid fractions can be analyzed', () {
+    test('valid fractions can be analyzed', () {
       const analyzer = MixedFractionAnalyzer(input: '6 7/3');
 
       // Building the expected result
@@ -24,7 +24,7 @@ void main() {
       expect(analyzer.analyze(), equals(buffer.toString()));
     });
 
-    test('Making sure that invalid fractions report an error', () {
+    test('invalid fractions report an error', () {
       const analyzer = MixedFractionAnalyzer(input: '');
 
       expect(

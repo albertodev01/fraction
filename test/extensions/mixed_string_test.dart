@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("Testing the extension method on 'String'", () {
-    test('Making sure that strings are properly converted into fractions', () {
+    test('converts strings into mixed fractions', () {
       expect(
         '1 2/3'.toMixedFraction(),
         equals(MixedFraction(whole: 1, numerator: 2, denominator: 3)),
@@ -27,7 +27,7 @@ void main() {
     });
 
     test(
-      'Making sure that invalid strings conversions throw and exception',
+      'invalid strings throw an exception',
       () {
         expect('1/'.toMixedFraction, throwsA(isA<MixedFractionException>()));
         expect('1/0'.toMixedFraction, throwsA(isA<MixedFractionException>()));
@@ -47,7 +47,7 @@ void main() {
     );
 
     test(
-      'Making sure that the boolean check is safe to be used before converting',
+      'the boolean check is safe to use before converting',
       () {
         expect('1 3/5'.isMixedFraction, isTrue);
         expect('3 ¾'.isMixedFraction, isTrue);

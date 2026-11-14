@@ -34,7 +34,7 @@ final class _UnnormalizedRational extends Rational {
 void main() {
   group("Testing the 'Rational' class", () {
     test(
-      'Making sure that Fraction conversions from string correctly work',
+      'Fraction conversion from string',
       () {
         // Valid
         expect(Rational.tryParse('-1/2'), isA<Fraction>());
@@ -55,7 +55,7 @@ void main() {
     );
 
     test(
-      'Making sure that MixedFraction conversions from string correctly work',
+      'MixedFraction conversion from string',
       () {
         // Valid
         expect(Rational.tryParse('1 1/2'), isA<MixedFraction>());
@@ -74,7 +74,7 @@ void main() {
     );
 
     test(
-      'Making sure that glyphs are parsed instead of throwing',
+      'glyphs are parsed instead of throwing',
       () {
         expect(Rational.tryParse('½'), equals(Fraction(1, 2)));
         expect(Rational.tryParse('⅐'), equals(Fraction(1, 7)));
@@ -87,7 +87,7 @@ void main() {
     );
 
     test(
-      'Making sure that parsed values are normalized as documented',
+      'parsed values are normalized as documented',
       () {
         expect(
           Rational.tryParse('2 5/3'),
@@ -100,7 +100,7 @@ void main() {
 
   group("Testing comparisons on the 'Rational' class", () {
     test(
-      'Making sure that values closer than double precision are not equal',
+      'values closer than double precision are not equal',
       () {
         // Both values convert to the same double.
         final third = Fraction(1, 3);
@@ -119,7 +119,7 @@ void main() {
     );
 
     test(
-      'Making sure that integers beyond 2^53 are compared exactly',
+      'integers beyond 2^53 are compared exactly',
       () {
         // 2^53 + 1 and 2^53 convert to the same double. This test needs
         // 64-bit integers, so it only runs on the VM.
@@ -138,7 +138,7 @@ void main() {
     );
 
     test(
-      'Making sure that cross-multiplication does not overflow',
+      'cross-multiplication does not overflow',
       () {
         // These products exceed the 64-bit integer range.
         const max = 9223372036854775807;
@@ -153,7 +153,7 @@ void main() {
     );
 
     test(
-      'Making sure that equivalent fractions compare as equal',
+      'equivalent fractions compare as equal',
       () {
         expect(Fraction(1, 2).compareTo(Fraction(3, 6)), isZero);
         expect(Fraction(-1, 2).compareTo(Fraction(2, -4)), isZero);
@@ -165,7 +165,7 @@ void main() {
     );
 
     test(
-      'Making sure that signs are handled correctly',
+      'signs are handled correctly',
       () {
         expect(Fraction(-1, 2).compareTo(Fraction(1, 3)), isNegative);
         expect(Fraction(-1, 2).compareTo(Fraction(-1, 3)), isNegative);
@@ -175,7 +175,7 @@ void main() {
     );
 
     test(
-      'Making sure that mixed fractions are compared by their whole value',
+      'mixed fractions are compared by their whole value',
       () {
         final mixed = MixedFraction(whole: 2, numerator: 4, denominator: 5);
 
@@ -196,7 +196,7 @@ void main() {
     );
 
     test(
-      'Making sure that negative mixed fractions are compared correctly',
+      'negative mixed fractions are compared correctly',
       () {
         final negative = MixedFraction(whole: -2, numerator: 4, denominator: 5);
 
@@ -217,7 +217,7 @@ void main() {
     );
 
     test(
-      'Making sure that sorting uses exact comparisons',
+      'sorting uses exact comparisons',
       () {
         final values = <Rational>[
           Fraction(1, 3),
@@ -239,8 +239,7 @@ void main() {
     );
 
     test(
-      'Making sure that subclasses with a negative denominator are compared '
-      'correctly',
+      'subclasses with a negative denominator are compared correctly',
       () {
         // 1/-2 is -1/2 and -3/-4 is 3/4.
         const negativeHalf = _UnnormalizedRational(1, -2);
@@ -253,5 +252,91 @@ void main() {
         expect(Fraction(1, 2) > negativeHalf, isTrue);
       },
     );
+  });
+
+  group("Testing 'toContinuedFraction'", () {
+    test('positive fractions', () {
+      expect(Fraction(7, 9).toContinuedFraction(), orderedEquals([0, 1, 3, 2]));
+      expect(
+        Fraction(415, 93).toContinuedFraction(),
+        orderedEquals([4, 2, 6, 7]),
+      );
+      expect(Fraction(1, 2).toContinuedFraction(), orderedEquals([0, 2]));
+      expect(Fraction(3, 2).toContinuedFraction(), orderedEquals([1, 2]));
+    });
+
+    test('unreduced fractions give the same terms', () {
+      expect(
+        Fraction(14, 18).toContinuedFraction(),
+        orderedEquals([0, 1, 3, 2]),
+      );
+    });
+
+    test('whole numbers have a single term', () {
+      expect(Fraction(0).toContinuedFraction(), orderedEquals([0]));
+      expect(Fraction(1).toContinuedFraction(), orderedEquals([1]));
+      expect(Fraction(5).toContinuedFraction(), orderedEquals([5]));
+      expect(Fraction(-5).toContinuedFraction(), orderedEquals([-5]));
+      expect(Fraction(10, 2).toContinuedFraction(), orderedEquals([5]));
+    });
+
+    test('negative fractions use the floor as the first term', () {
+      expect(Fraction(-7, 9).toContinuedFraction(), orderedEquals([-1, 4, 2]));
+      expect(Fraction(7, -9).toContinuedFraction(), orderedEquals([-1, 4, 2]));
+      expect(Fraction(-3, 2).toContinuedFraction(), orderedEquals([-2, 2]));
+    });
+
+    test('mixed fractions', () {
+      expect(
+        MixedFraction(
+          whole: 2,
+          numerator: 1,
+          denominator: 3,
+        ).toContinuedFraction(),
+        orderedEquals([2, 3]),
+      );
+      expect(
+        MixedFraction(
+          whole: -2,
+          numerator: 1,
+          denominator: 3,
+        ).toContinuedFraction(),
+        orderedEquals([-3, 1, 2]),
+      );
+    });
+
+    test('unnormalized denominators are handled', () {
+      expect(
+        const _UnnormalizedRational(7, -9).toContinuedFraction(),
+        orderedEquals([-1, 4, 2]),
+      );
+    });
+
+    test('extreme values do not overflow', () {
+      const maxInt = 9007199254740991; // Largest safe integer on the web.
+      expect(
+        Fraction(maxInt, maxInt - 1).toContinuedFraction(),
+        orderedEquals([1, maxInt - 1]),
+      );
+      expect(
+        MixedFraction(
+          whole: maxInt,
+          numerator: 1,
+          denominator: 2,
+        ).toContinuedFraction(),
+        orderedEquals([maxInt, 2]),
+      );
+    });
+
+    test('the terms evaluate back to the original value', () {
+      for (final f in [Fraction(7, 9), Fraction(-355, 113), Fraction(89, 55)]) {
+        final terms = f.toContinuedFraction();
+        var value = Fraction(terms.last);
+        for (final term in terms.reversed.skip(1)) {
+          value = Fraction(term) + value.inverse();
+        }
+        expect(value, equals(f));
+      }
+    });
   });
 }

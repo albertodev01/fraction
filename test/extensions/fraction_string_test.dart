@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   group("Testing the extension method on 'String'", () {
-    test('Making sure that strings are properly converted into fractions', () {
+    test('converts strings into fractions', () {
       expect('1/3'.toFraction(), equals(Fraction(1, 3)));
       expect('-4/5'.toFraction(), equals(Fraction(-4, 5)));
       expect('5'.toFraction(), equals(Fraction(5)));
@@ -13,7 +13,7 @@ void main() {
     });
 
     test(
-      'Making sure that invalid strings conversions throw and exception',
+      'invalid strings throw an exception',
       () {
         expect('1/'.toFraction, throwsA(isA<FractionException>()));
         expect('1/0'.toFraction, throwsA(isA<FractionException>()));
@@ -24,7 +24,7 @@ void main() {
     );
 
     test(
-      'Making sure that the boolean check is safe to be used before converting',
+      'the boolean check is safe to use before converting',
       () {
         expect('3/5'.isFraction, isTrue);
         expect('-3/5'.isFraction, isTrue);
